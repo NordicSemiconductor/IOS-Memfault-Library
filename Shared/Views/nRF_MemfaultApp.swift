@@ -9,6 +9,7 @@ import SwiftUI
 
 @main
 struct nRF_MemfaultApp: App {
+    
     var body: some Scene {
         WindowGroup {
             ContentView()

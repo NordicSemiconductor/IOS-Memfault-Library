@@ -13,6 +13,8 @@
 		AAFBF8342899482B00A6655C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFBF8222899482900A6655C /* ContentView.swift */; };
 		AAFBF8352899482B00A6655C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AAFBF8232899482A00A6655C /* Assets.xcassets */; };
 		AAFBF8362899482B00A6655C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AAFBF8232899482A00A6655C /* Assets.xcassets */; };
+		AAFBF84328994C8B00A6655C /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFBF84228994C8B00A6655C /* Constant.swift */; };
+		AAFBF84428994C8B00A6655C /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFBF84228994C8B00A6655C /* Constant.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +24,7 @@
 		AAFBF8282899482B00A6655C /* nRF Memfault.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "nRF Memfault.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AAFBF82E2899482B00A6655C /* nRF Memfault.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "nRF Memfault.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AAFBF8302899482B00A6655C /* macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = macOS.entitlements; sourceTree = "<group>"; };
+		AAFBF84228994C8B00A6655C /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,8 +57,8 @@
 		AAFBF8202899482900A6655C /* Shared */ = {
 			isa = PBXGroup;
 			children = (
-				AAFBF8212899482900A6655C /* nRF_MemfaultApp.swift */,
-				AAFBF8222899482900A6655C /* ContentView.swift */,
+				AAFBF84028994C1E00A6655C /* Views */,
+				AAFBF84128994C3800A6655C /* Utilities */,
 				AAFBF8232899482A00A6655C /* Assets.xcassets */,
 			);
 			path = Shared;
@@ -78,6 +81,23 @@
 			path = macOS;
 			sourceTree = "<group>";
 		};
+		AAFBF84028994C1E00A6655C /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				AAFBF8212899482900A6655C /* nRF_MemfaultApp.swift */,
+				AAFBF8222899482900A6655C /* ContentView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		AAFBF84128994C3800A6655C /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				AAFBF84228994C8B00A6655C /* Constant.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -88,6 +108,7 @@
 				AAFBF8242899482B00A6655C /* Sources */,
 				AAFBF8252899482B00A6655C /* Frameworks */,
 				AAFBF8262899482B00A6655C /* Resources */,
+				AAFBF83F28994BDE00A6655C /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -171,6 +192,27 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		AAFBF83F28994BDE00A6655C /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(TARGET_BUILD_DIR)/$(INFOPLIST_PATH)",
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#\n# Set the build number to the current git commit count.\n# If we're using the Dev scheme, then we'll suffix the build\n# number with the current branch name, to make collisions\n# far less likely across feature branches.\n# Based on: http://w3facility.info/question/how-do-i-force-xcode-to-rebuild-the-info-plist-file-in-my-project-every-time-i-build-the-project/\n#\n# Updated with dSYM handling from http://yellowfeather.co.uk/blog/auto-incrementing-build-number-in-xcode-revisited/\n#\n# Seen here: http://blog.jaredsinclair.com/post/97193356620/the-best-of-all-possible-xcode-automated-build\n\ngit=`sh /etc/profile; which git`\nreferenceGitTag=\"git-init\"\nappBuild=`\"$git\" rev-list \"$referenceGitTag\"..HEAD --count`\nbranchName=`\"$git\" rev-parse --abbrev-ref HEAD`\necho \"buildNo $appBuild-$branchName\"\n\ndsym_plist=\"$DWARF_DSYM_FOLDER_PATH/$DWARF_DSYM_FILE_NAME/Contents/Info.plist\"\ntarget_plist=\"$TARGET_BUILD_DIR/$INFOPLIST_PATH\"\n\nfor plist in \"$target_plist\" \"$dsym_plist\"; do\n    if [ -f \"$plist\" ]; then\n        /usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $appBuild\" \"$plist\"\n        echo \"Build number set to $appBuild in ${TARGET_BUILD_DIR}/${INFOPLIST_PATH}\"\n    fi\n\ndone\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		AAFBF8242899482B00A6655C /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -178,6 +220,7 @@
 			files = (
 				AAFBF8332899482B00A6655C /* ContentView.swift in Sources */,
 				AAFBF8312899482B00A6655C /* nRF_MemfaultApp.swift in Sources */,
+				AAFBF84328994C8B00A6655C /* Constant.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -187,6 +230,7 @@
 			files = (
 				AAFBF8342899482B00A6655C /* ContentView.swift in Sources */,
 				AAFBF8322899482B00A6655C /* nRF_MemfaultApp.swift in Sources */,
+				AAFBF84428994C8B00A6655C /* Constant.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
