@@ -48,8 +48,8 @@
 		AAFBF81B2899482900A6655C = {
 			isa = PBXGroup;
 			children = (
-				AAFBF8202899482900A6655C /* Shared */,
-				AAFBF82F2899482B00A6655C /* macOS */,
+				AAFBF8452899554600A6655C /* Example App */,
+				AAFBF8462899556300A6655C /* Source */,
 				AAFBF8292899482B00A6655C /* Products */,
 			);
 			sourceTree = "<group>";
@@ -58,7 +58,6 @@
 			isa = PBXGroup;
 			children = (
 				AAFBF84028994C1E00A6655C /* Views */,
-				AAFBF84128994C3800A6655C /* Utilities */,
 				AAFBF8232899482A00A6655C /* Assets.xcassets */,
 			);
 			path = Shared;
@@ -96,6 +95,23 @@
 				AAFBF84228994C8B00A6655C /* Constant.swift */,
 			);
 			path = Utilities;
+			sourceTree = "<group>";
+		};
+		AAFBF8452899554600A6655C /* Example App */ = {
+			isa = PBXGroup;
+			children = (
+				AAFBF8202899482900A6655C /* Shared */,
+				AAFBF82F2899482B00A6655C /* macOS */,
+			);
+			path = "Example App";
+			sourceTree = "<group>";
+		};
+		AAFBF8462899556300A6655C /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				AAFBF84128994C3800A6655C /* Utilities */,
+			);
+			path = Source;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -420,6 +436,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -448,6 +465,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
