@@ -15,6 +15,8 @@
 		AAFBF8362899482B00A6655C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AAFBF8232899482A00A6655C /* Assets.xcassets */; };
 		AAFBF84328994C8B00A6655C /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFBF84228994C8B00A6655C /* Constant.swift */; };
 		AAFBF84428994C8B00A6655C /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFBF84228994C8B00A6655C /* Constant.swift */; };
+		AAFBF84A28996AA100A6655C /* AppData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFBF84928996AA100A6655C /* AppData.swift */; };
+		AAFBF84B28996AA100A6655C /* AppData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFBF84928996AA100A6655C /* AppData.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -25,6 +27,7 @@
 		AAFBF82E2899482B00A6655C /* nRF Memfault.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "nRF Memfault.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AAFBF8302899482B00A6655C /* macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = macOS.entitlements; sourceTree = "<group>"; };
 		AAFBF84228994C8B00A6655C /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
+		AAFBF84928996AA100A6655C /* AppData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppData.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -48,7 +51,7 @@
 		AAFBF81B2899482900A6655C = {
 			isa = PBXGroup;
 			children = (
-				AAFBF8452899554600A6655C /* Example App */,
+				AAFBF8452899554600A6655C /* Example */,
 				AAFBF8462899556300A6655C /* Source */,
 				AAFBF8292899482B00A6655C /* Products */,
 			);
@@ -58,6 +61,7 @@
 			isa = PBXGroup;
 			children = (
 				AAFBF84028994C1E00A6655C /* Views */,
+				AAFBF84828996A9000A6655C /* State */,
 				AAFBF8232899482A00A6655C /* Assets.xcassets */,
 			);
 			path = Shared;
@@ -97,21 +101,37 @@
 			path = Utilities;
 			sourceTree = "<group>";
 		};
-		AAFBF8452899554600A6655C /* Example App */ = {
+		AAFBF8452899554600A6655C /* Example */ = {
 			isa = PBXGroup;
 			children = (
 				AAFBF8202899482900A6655C /* Shared */,
 				AAFBF82F2899482B00A6655C /* macOS */,
 			);
-			path = "Example App";
+			path = Example;
 			sourceTree = "<group>";
 		};
 		AAFBF8462899556300A6655C /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				AAFBF84728996A7500A6655C /* Bluetooth */,
 				AAFBF84128994C3800A6655C /* Utilities */,
 			);
 			path = Source;
+			sourceTree = "<group>";
+		};
+		AAFBF84728996A7500A6655C /* Bluetooth */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Bluetooth;
+			sourceTree = "<group>";
+		};
+		AAFBF84828996A9000A6655C /* State */ = {
+			isa = PBXGroup;
+			children = (
+				AAFBF84928996AA100A6655C /* AppData.swift */,
+			);
+			path = State;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -237,6 +257,7 @@
 				AAFBF8332899482B00A6655C /* ContentView.swift in Sources */,
 				AAFBF8312899482B00A6655C /* nRF_MemfaultApp.swift in Sources */,
 				AAFBF84328994C8B00A6655C /* Constant.swift in Sources */,
+				AAFBF84A28996AA100A6655C /* AppData.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -247,6 +268,7 @@
 				AAFBF8342899482B00A6655C /* ContentView.swift in Sources */,
 				AAFBF8322899482B00A6655C /* nRF_MemfaultApp.swift in Sources */,
 				AAFBF84428994C8B00A6655C /* Constant.swift in Sources */,
+				AAFBF84B28996AA100A6655C /* AppData.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -428,7 +450,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = macOS/macOS.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Example/macOS/macOS.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -457,7 +479,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = macOS/macOS.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Example/macOS/macOS.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
