@@ -12,16 +12,25 @@ struct ContentView: View {
     @EnvironmentObject var appData: AppData
     
     var body: some View {
-        NavigationView {
+        VStack {
             ScannerView()
         }
-        .navigationTitle("Memfault")
         .toolbar {
-            Button(appData.isScanning ? "Stop" : "Start") {
+            Button(action: {
+                appData.refresh()
+            }, label: {
+                Image(systemName: "arrow.clockwise")
+            })
+            .keyboardShortcut(KeyEquivalent(Character("r")), modifiers: [.command])
+            
+            Button(action: {
                 appData.toggleScanner()
-            }
+            }, label: {
+                Image(systemName: appData.isScanning ? "stop.fill" : "play.fill")
+            })
+            .keyboardShortcut(KeyEquivalent(Character(" ")), modifiers: [])
         }
-        .frame(minWidth: 300, idealWidth: 300,
+        .frame(minWidth: 150, idealWidth: 150,
                minHeight: 500, idealHeight: 500)
     }
 }

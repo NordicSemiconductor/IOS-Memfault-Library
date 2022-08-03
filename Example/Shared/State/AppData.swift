@@ -38,6 +38,12 @@ final class AppData: ObservableObject {
 
 extension AppData {
     
+    func refresh() {
+        scannedDevices.removeAll()
+        guard !scanner.isScanning else { return }
+        toggleScanner()
+    }
+    
     func toggleScanner() {
         guard !scanner.isScanning else {
             scanner.toggle()
