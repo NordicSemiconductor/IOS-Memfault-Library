@@ -19,6 +19,8 @@
 		AAFB2FF1289A9D2E008207FE /* AdvertisementData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFB2FEF289A9D2E008207FE /* AdvertisementData.swift */; };
 		AAFB2FF3289A9E27008207FE /* RSSI.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFB2FF2289A9E27008207FE /* RSSI.swift */; };
 		AAFB2FF4289A9E27008207FE /* RSSI.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFB2FF2289A9E27008207FE /* RSSI.swift */; };
+		AAFB2FF6289AB7EB008207FE /* ScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFB2FF5289AB7EB008207FE /* ScannerView.swift */; };
+		AAFB2FF7289AB7EB008207FE /* ScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFB2FF5289AB7EB008207FE /* ScannerView.swift */; };
 		AAFBF8312899482B00A6655C /* nRF_MemfaultApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFBF8212899482900A6655C /* nRF_MemfaultApp.swift */; };
 		AAFBF8322899482B00A6655C /* nRF_MemfaultApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFBF8212899482900A6655C /* nRF_MemfaultApp.swift */; };
 		AAFBF8332899482B00A6655C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFBF8222899482900A6655C /* ContentView.swift */; };
@@ -42,6 +44,7 @@
 		AAFB2FEC289A8DB7008207FE /* CBExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CBExtensions.swift; sourceTree = "<group>"; };
 		AAFB2FEF289A9D2E008207FE /* AdvertisementData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvertisementData.swift; sourceTree = "<group>"; };
 		AAFB2FF2289A9E27008207FE /* RSSI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSSI.swift; sourceTree = "<group>"; };
+		AAFB2FF5289AB7EB008207FE /* ScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerView.swift; sourceTree = "<group>"; };
 		AAFBF8212899482900A6655C /* nRF_MemfaultApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = nRF_MemfaultApp.swift; sourceTree = "<group>"; };
 		AAFBF8222899482900A6655C /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		AAFBF8232899482A00A6655C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -112,6 +115,7 @@
 			isa = PBXGroup;
 			children = (
 				AAFBF8222899482900A6655C /* ContentView.swift */,
+				AAFB2FF5289AB7EB008207FE /* ScannerView.swift */,
 				AAFBF8212899482900A6655C /* nRF_MemfaultApp.swift */,
 			);
 			path = Views;
@@ -290,6 +294,7 @@
 				AAFBF8312899482B00A6655C /* nRF_MemfaultApp.swift in Sources */,
 				AAFB2FE7289A8C48008207FE /* ScannedDevice.swift in Sources */,
 				AAFBF84328994C8B00A6655C /* Constant.swift in Sources */,
+				AAFB2FF6289AB7EB008207FE /* ScannerView.swift in Sources */,
 				AAFB2FF0289A9D2E008207FE /* AdvertisementData.swift in Sources */,
 				AAFB2FEA289A8C95008207FE /* Logger.swift in Sources */,
 				AAFB2FF3289A9E27008207FE /* RSSI.swift in Sources */,
@@ -309,6 +314,7 @@
 				AAFBF8322899482B00A6655C /* nRF_MemfaultApp.swift in Sources */,
 				AAFB2FE8289A8C48008207FE /* ScannedDevice.swift in Sources */,
 				AAFBF84428994C8B00A6655C /* Constant.swift in Sources */,
+				AAFB2FF7289AB7EB008207FE /* ScannerView.swift in Sources */,
 				AAFB2FF1289A9D2E008207FE /* AdvertisementData.swift in Sources */,
 				AAFB2FEB289A8C95008207FE /* Logger.swift in Sources */,
 				AAFB2FF4289A9E27008207FE /* RSSI.swift in Sources */,
@@ -442,6 +448,7 @@
 				DEVELOPMENT_TEAM = P3R8YQEV4L;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "To connect to your Device, we need Bluetooth access.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -472,6 +479,7 @@
 				DEVELOPMENT_TEAM = P3R8YQEV4L;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "To connect to your Device, we need Bluetooth access.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -507,6 +515,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "To connect to your Device, we need Bluetooth access.";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -536,6 +545,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "To connect to your Device, we need Bluetooth access.";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

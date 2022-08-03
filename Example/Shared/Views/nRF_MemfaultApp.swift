@@ -10,9 +10,12 @@ import SwiftUI
 @main
 struct nRF_MemfaultApp: App {
     
+    let appData = AppData()
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(appData)
         }
     }
 }

@@ -9,10 +9,17 @@ import SwiftUI
 
 struct ContentView: View {
     
+    @EnvironmentObject var appData: AppData
+    
     var body: some View {
-        VStack {
-            Text("Hello, world!")
-                .padding()
+        NavigationView {
+            ScannerView()
+        }
+        .navigationTitle("Memfault")
+        .toolbar {
+            Button(appData.isScanning ? "Stop" : "Start") {
+                appData.toggleScanner()
+            }
         }
         .frame(minWidth: 300, idealWidth: 300,
                minHeight: 500, idealHeight: 500)
