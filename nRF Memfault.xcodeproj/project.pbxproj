@@ -7,6 +7,18 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AAFB2FE4289A89CD008207FE /* Scanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFB2FE3289A89CD008207FE /* Scanner.swift */; };
+		AAFB2FE5289A89CD008207FE /* Scanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFB2FE3289A89CD008207FE /* Scanner.swift */; };
+		AAFB2FE7289A8C48008207FE /* ScannedDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFB2FE6289A8C48008207FE /* ScannedDevice.swift */; };
+		AAFB2FE8289A8C48008207FE /* ScannedDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFB2FE6289A8C48008207FE /* ScannedDevice.swift */; };
+		AAFB2FEA289A8C95008207FE /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFB2FE9289A8C95008207FE /* Logger.swift */; };
+		AAFB2FEB289A8C95008207FE /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFB2FE9289A8C95008207FE /* Logger.swift */; };
+		AAFB2FED289A8DB7008207FE /* CBExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFB2FEC289A8DB7008207FE /* CBExtensions.swift */; };
+		AAFB2FEE289A8DB7008207FE /* CBExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFB2FEC289A8DB7008207FE /* CBExtensions.swift */; };
+		AAFB2FF0289A9D2E008207FE /* AdvertisementData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFB2FEF289A9D2E008207FE /* AdvertisementData.swift */; };
+		AAFB2FF1289A9D2E008207FE /* AdvertisementData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFB2FEF289A9D2E008207FE /* AdvertisementData.swift */; };
+		AAFB2FF3289A9E27008207FE /* RSSI.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFB2FF2289A9E27008207FE /* RSSI.swift */; };
+		AAFB2FF4289A9E27008207FE /* RSSI.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFB2FF2289A9E27008207FE /* RSSI.swift */; };
 		AAFBF8312899482B00A6655C /* nRF_MemfaultApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFBF8212899482900A6655C /* nRF_MemfaultApp.swift */; };
 		AAFBF8322899482B00A6655C /* nRF_MemfaultApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFBF8212899482900A6655C /* nRF_MemfaultApp.swift */; };
 		AAFBF8332899482B00A6655C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFBF8222899482900A6655C /* ContentView.swift */; };
@@ -17,9 +29,19 @@
 		AAFBF84428994C8B00A6655C /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFBF84228994C8B00A6655C /* Constant.swift */; };
 		AAFBF84A28996AA100A6655C /* AppData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFBF84928996AA100A6655C /* AppData.swift */; };
 		AAFBF84B28996AA100A6655C /* AppData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFBF84928996AA100A6655C /* AppData.swift */; };
+		AAFBF84D2899742E00A6655C /* DeviceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFBF84C2899742E00A6655C /* DeviceManager.swift */; };
+		AAFBF84E2899742E00A6655C /* DeviceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFBF84C2899742E00A6655C /* DeviceManager.swift */; };
+		AAFBF8532899747600A6655C /* BluetoothError.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFBF8522899747600A6655C /* BluetoothError.swift */; };
+		AAFBF8542899747600A6655C /* BluetoothError.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFBF8522899747600A6655C /* BluetoothError.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		AAFB2FE3289A89CD008207FE /* Scanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scanner.swift; sourceTree = "<group>"; };
+		AAFB2FE6289A8C48008207FE /* ScannedDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannedDevice.swift; sourceTree = "<group>"; };
+		AAFB2FE9289A8C95008207FE /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
+		AAFB2FEC289A8DB7008207FE /* CBExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CBExtensions.swift; sourceTree = "<group>"; };
+		AAFB2FEF289A9D2E008207FE /* AdvertisementData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvertisementData.swift; sourceTree = "<group>"; };
+		AAFB2FF2289A9E27008207FE /* RSSI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSSI.swift; sourceTree = "<group>"; };
 		AAFBF8212899482900A6655C /* nRF_MemfaultApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = nRF_MemfaultApp.swift; sourceTree = "<group>"; };
 		AAFBF8222899482900A6655C /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		AAFBF8232899482A00A6655C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -28,6 +50,8 @@
 		AAFBF8302899482B00A6655C /* macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = macOS.entitlements; sourceTree = "<group>"; };
 		AAFBF84228994C8B00A6655C /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
 		AAFBF84928996AA100A6655C /* AppData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppData.swift; sourceTree = "<group>"; };
+		AAFBF84C2899742E00A6655C /* DeviceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceManager.swift; sourceTree = "<group>"; };
+		AAFBF8522899747600A6655C /* BluetoothError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothError.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,8 +111,8 @@
 		AAFBF84028994C1E00A6655C /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				AAFBF8212899482900A6655C /* nRF_MemfaultApp.swift */,
 				AAFBF8222899482900A6655C /* ContentView.swift */,
+				AAFBF8212899482900A6655C /* nRF_MemfaultApp.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -97,6 +121,7 @@
 			isa = PBXGroup;
 			children = (
 				AAFBF84228994C8B00A6655C /* Constant.swift */,
+				AAFB2FE9289A8C95008207FE /* Logger.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -122,6 +147,13 @@
 		AAFBF84728996A7500A6655C /* Bluetooth */ = {
 			isa = PBXGroup;
 			children = (
+				AAFBF8522899747600A6655C /* BluetoothError.swift */,
+				AAFBF84C2899742E00A6655C /* DeviceManager.swift */,
+				AAFB2FE3289A89CD008207FE /* Scanner.swift */,
+				AAFB2FE6289A8C48008207FE /* ScannedDevice.swift */,
+				AAFB2FEF289A9D2E008207FE /* AdvertisementData.swift */,
+				AAFB2FEC289A8DB7008207FE /* CBExtensions.swift */,
+				AAFB2FF2289A9E27008207FE /* RSSI.swift */,
 			);
 			path = Bluetooth;
 			sourceTree = "<group>";
@@ -256,8 +288,16 @@
 			files = (
 				AAFBF8332899482B00A6655C /* ContentView.swift in Sources */,
 				AAFBF8312899482B00A6655C /* nRF_MemfaultApp.swift in Sources */,
+				AAFB2FE7289A8C48008207FE /* ScannedDevice.swift in Sources */,
 				AAFBF84328994C8B00A6655C /* Constant.swift in Sources */,
+				AAFB2FF0289A9D2E008207FE /* AdvertisementData.swift in Sources */,
+				AAFB2FEA289A8C95008207FE /* Logger.swift in Sources */,
+				AAFB2FF3289A9E27008207FE /* RSSI.swift in Sources */,
+				AAFB2FED289A8DB7008207FE /* CBExtensions.swift in Sources */,
 				AAFBF84A28996AA100A6655C /* AppData.swift in Sources */,
+				AAFBF84D2899742E00A6655C /* DeviceManager.swift in Sources */,
+				AAFB2FE4289A89CD008207FE /* Scanner.swift in Sources */,
+				AAFBF8532899747600A6655C /* BluetoothError.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -267,8 +307,16 @@
 			files = (
 				AAFBF8342899482B00A6655C /* ContentView.swift in Sources */,
 				AAFBF8322899482B00A6655C /* nRF_MemfaultApp.swift in Sources */,
+				AAFB2FE8289A8C48008207FE /* ScannedDevice.swift in Sources */,
 				AAFBF84428994C8B00A6655C /* Constant.swift in Sources */,
+				AAFB2FF1289A9D2E008207FE /* AdvertisementData.swift in Sources */,
+				AAFB2FEB289A8C95008207FE /* Logger.swift in Sources */,
+				AAFB2FF4289A9E27008207FE /* RSSI.swift in Sources */,
+				AAFB2FEE289A8DB7008207FE /* CBExtensions.swift in Sources */,
 				AAFBF84B28996AA100A6655C /* AppData.swift in Sources */,
+				AAFBF84E2899742E00A6655C /* DeviceManager.swift in Sources */,
+				AAFB2FE5289A89CD008207FE /* Scanner.swift in Sources */,
+				AAFBF8542899747600A6655C /* BluetoothError.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

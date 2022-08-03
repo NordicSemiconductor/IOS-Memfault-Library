@@ -9,4 +9,5 @@ import Foundation
 
 final class AppData: ObservableObject {
     
+    
 }
