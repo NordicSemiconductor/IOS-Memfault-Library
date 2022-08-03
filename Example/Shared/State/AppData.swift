@@ -12,6 +12,7 @@ final class AppData: ObservableObject {
     // MARK: Public
     
     @Published var isScanning: Bool
+    @Published var scannedDevices: Set<ScannedDevice>
     
     // MARK: Private
     
@@ -22,6 +23,7 @@ final class AppData: ObservableObject {
     init() {
         self.scanner = Scanner()
         self.isScanning = scanner.isScanning
+        self.scannedDevices = []
         
         _ = scanner.turnOnBluetoothRadio()
         Task { @MainActor in
@@ -42,9 +44,9 @@ extension AppData {
             return
         }
 
-        Task {
+        Task { @MainActor in
             for await newDevice in scanner.scan().values {
-                print(newDevice.name)
+                scannedDevices.insert(newDevice)
             }
         }
     }

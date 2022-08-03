@@ -7,15 +7,29 @@
 
 import SwiftUI
 
+// MARK: - ScannerView
+
 struct ScannerView: View {
     
+    @EnvironmentObject var appData: AppData
+    
     var body: some View {
-        Text("Hello, World!")
+        List {
+            let scannedDevicesList = Array(appData.scannedDevices)
+            ForEach(scannedDevicesList) { scannedDevice in
+                Text(scannedDevice.name)
+            }
+        }
     }
 }
 
+// MARK: - Preview
+
+#if DEBUG
 struct ScannerView_Previews: PreviewProvider {
+    
     static var previews: some View {
         ScannerView()
     }
 }
+#endif

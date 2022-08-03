@@ -114,8 +114,8 @@
 		AAFBF84028994C1E00A6655C /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				AAFBF8222899482900A6655C /* ContentView.swift */,
 				AAFB2FF5289AB7EB008207FE /* ScannerView.swift */,
+				AAFBF8222899482900A6655C /* ContentView.swift */,
 				AAFBF8212899482900A6655C /* nRF_MemfaultApp.swift */,
 			);
 			path = Views;

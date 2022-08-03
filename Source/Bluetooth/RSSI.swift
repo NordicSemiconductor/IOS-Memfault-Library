@@ -9,11 +9,11 @@ import Foundation
 
 // MARK: - RSSI
 
-struct RSSI: ExpressibleByIntegerLiteral, Equatable, Hashable {
+public struct RSSI: ExpressibleByIntegerLiteral, Equatable, Hashable {
     
     // MARK: Condition
     
-    typealias IntegerLiteralType = Int
+    public typealias IntegerLiteralType = Int
     
     enum Condition: Int {
         case outOfRange = 127
@@ -39,7 +39,7 @@ struct RSSI: ExpressibleByIntegerLiteral, Equatable, Hashable {
     
     // MARK: Init
     
-    init(integerLiteral value: Int) {
+    public init(integerLiteral value: Int) {
         self.value = value
         self.condition = Condition(value: value)
     }

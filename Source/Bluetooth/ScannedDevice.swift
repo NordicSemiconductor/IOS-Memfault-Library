@@ -9,23 +9,25 @@
 import Foundation
 import CoreBluetooth
 
-struct ScannedDevice: Identifiable {
+public struct ScannedDevice: Identifiable {
     
     // MARK: Properties
     
-    let name: String
-    let id: String
-    let uuid: UUID
-    let rssi: RSSI
-    let advertisementData: AdvertisementData
-    let isConnectable: Bool
+    public var id: String {
+        return uuid
+    }
+    
+    public let name: String
+    public let uuid: String
+    public let rssi: RSSI
+    public let advertisementData: AdvertisementData
+    public let isConnectable: Bool
     
     // MARK: Init
     
     init(name: String, uuid: UUID, rssi: RSSI, advertisementData: AdvertisementData) {
         self.name = name
-        self.id = advertisementData.advertisedID() ?? uuid.uuidString
-        self.uuid = uuid
+        self.uuid = uuid.uuidString
         self.rssi = rssi
         self.advertisementData = advertisementData
         self.isConnectable = advertisementData.isConnectable ?? false
@@ -33,15 +35,32 @@ struct ScannedDevice: Identifiable {
     
     init(peripheral: CBPeripheral, advertisementData: [String: Any], rssi: NSNumber) {
         self.name = advertisementData[CBAdvertisementDataLocalNameKey] as? String ?? "N/A"
+        self.uuid = peripheral.identifier.uuidString
+        self.rssi = RSSI(integerLiteral: rssi.intValue)
         let advertisementData = AdvertisementData(advertisementData)
         self.advertisementData = advertisementData
-        self.rssi = RSSI(integerLiteral: rssi.intValue)
-        self.id = advertisementData.advertisedID() ?? peripheral.identifier.uuidString
-        self.uuid = peripheral.identifier
         self.isConnectable = advertisementData.isConnectable ?? false
     }
-    
-    static func == (lhs: ScannedDevice, rhs: ScannedDevice) -> Bool {
-        return lhs.id == rhs.id && lhs.isConnectable == rhs.isConnectable
+}
+
+// MARK: - Equatable
+
+extension ScannedDevice: Equatable {
+
+    public static func == (lhs: ScannedDevice, rhs: CBPeripheral) -> Bool {
+        return lhs.uuid == rhs.identifier.uuidString
+    }
+
+    public static func == (lhs: ScannedDevice, rhs: ScannedDevice) -> Bool {
+        return lhs.uuid == rhs.uuid
+    }
+}
+
+// MARK: - Hashable
+
+extension ScannedDevice: Hashable {
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(uuid)
     }
 }

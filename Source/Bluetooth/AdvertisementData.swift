@@ -9,7 +9,7 @@
 import Foundation
 import CoreBluetooth
 
-struct AdvertisementData {
+public struct AdvertisementData: Hashable {
     
     // MARK: - Properties
     
