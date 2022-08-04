@@ -64,3 +64,13 @@ extension ScannedDevice: Hashable {
         hasher.combine(uuid)
     }
 }
+
+// MARK: - Debug
+
+#if DEBUG
+extension ScannedDevice {
+    
+    static let sample = ScannedDevice(name: "Test Device", uuid: UUID(), rssi: .outOfRange, advertisementData: .connectableMock)
+    static let unconnectableSample = ScannedDevice(name: "#AlonsoAlpineAstonMartinPiastriRicciardoMclarenMess", uuid: UUID(), rssi: .outOfRange, advertisementData: .unconnectableMock)
+}
+#endif

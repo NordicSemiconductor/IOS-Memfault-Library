@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AA22DDCA289B4162003366FA /* DeviceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA22DDC9289B4162003366FA /* DeviceView.swift */; };
+		AA22DDCB289B4162003366FA /* DeviceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA22DDC9289B4162003366FA /* DeviceView.swift */; };
 		AAFB2FE4289A89CD008207FE /* Scanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFB2FE3289A89CD008207FE /* Scanner.swift */; };
 		AAFB2FE5289A89CD008207FE /* Scanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFB2FE3289A89CD008207FE /* Scanner.swift */; };
 		AAFB2FE7289A8C48008207FE /* ScannedDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFB2FE6289A8C48008207FE /* ScannedDevice.swift */; };
@@ -38,6 +40,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		AA22DDC9289B4162003366FA /* DeviceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceView.swift; sourceTree = "<group>"; };
 		AAFB2FE3289A89CD008207FE /* Scanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scanner.swift; sourceTree = "<group>"; };
 		AAFB2FE6289A8C48008207FE /* ScannedDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannedDevice.swift; sourceTree = "<group>"; };
 		AAFB2FE9289A8C95008207FE /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
@@ -75,6 +78,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		AA22DDC8289B414A003366FA /* Scanner */ = {
+			isa = PBXGroup;
+			children = (
+				AA22DDC9289B4162003366FA /* DeviceView.swift */,
+				AAFB2FF5289AB7EB008207FE /* ScannerView.swift */,
+			);
+			path = Scanner;
+			sourceTree = "<group>";
+		};
 		AAFBF81B2899482900A6655C = {
 			isa = PBXGroup;
 			children = (
@@ -114,7 +126,7 @@
 		AAFBF84028994C1E00A6655C /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				AAFB2FF5289AB7EB008207FE /* ScannerView.swift */,
+				AA22DDC8289B414A003366FA /* Scanner */,
 				AAFBF8222899482900A6655C /* ContentView.swift */,
 				AAFBF8212899482900A6655C /* nRF_MemfaultApp.swift */,
 			);
@@ -300,6 +312,7 @@
 				AAFB2FF3289A9E27008207FE /* RSSI.swift in Sources */,
 				AAFB2FED289A8DB7008207FE /* CBExtensions.swift in Sources */,
 				AAFBF84A28996AA100A6655C /* AppData.swift in Sources */,
+				AA22DDCA289B4162003366FA /* DeviceView.swift in Sources */,
 				AAFBF84D2899742E00A6655C /* DeviceManager.swift in Sources */,
 				AAFB2FE4289A89CD008207FE /* Scanner.swift in Sources */,
 				AAFBF8532899747600A6655C /* BluetoothError.swift in Sources */,
@@ -320,6 +333,7 @@
 				AAFB2FF4289A9E27008207FE /* RSSI.swift in Sources */,
 				AAFB2FEE289A8DB7008207FE /* CBExtensions.swift in Sources */,
 				AAFBF84B28996AA100A6655C /* AppData.swift in Sources */,
+				AA22DDCB289B4162003366FA /* DeviceView.swift in Sources */,
 				AAFBF84E2899742E00A6655C /* DeviceManager.swift in Sources */,
 				AAFB2FE5289A89CD008207FE /* Scanner.swift in Sources */,
 				AAFBF8542899747600A6655C /* BluetoothError.swift in Sources */,

@@ -17,7 +17,7 @@ struct ScannerView: View {
         List {
             let scannedDevicesList = Array(appData.scannedDevices)
             ForEach(scannedDevicesList) { scannedDevice in
-                Text(scannedDevice.name)
+                DeviceView(scannedDevice)
             }
         }
     }
