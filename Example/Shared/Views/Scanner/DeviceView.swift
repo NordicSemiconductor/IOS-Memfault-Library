@@ -15,11 +15,11 @@ struct DeviceView: View {
     
     // MARK: Private
     
-    private let device: ScannedDevice
+    private let device: Device
     
     // MARK: Init
     
-    init(_ device: ScannedDevice) {
+    init(_ device: Device) {
         self.device = device
     }
     

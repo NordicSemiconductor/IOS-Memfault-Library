@@ -12,7 +12,7 @@ final class AppData: ObservableObject {
     // MARK: Public
     
     @Published var isScanning: Bool
-    @Published var scannedDevices: [ScannedDevice]
+    @Published var scannedDevices: [Device]
     
     // MARK: Private
     
@@ -21,7 +21,9 @@ final class AppData: ObservableObject {
     // MARK: Init
     
     init() {
-        self.scanner = Scanner()
+        self.scanner = Scanner() { peripheral, advertisementData, RSSI in
+            return Device(peripheral: peripheral, advertisementData: advertisementData, rssi: RSSI)
+        }
         self.isScanning = scanner.isScanning
         self.scannedDevices = []
         
@@ -51,13 +53,14 @@ extension AppData {
         }
 
         Task { @MainActor in
-            for await newDevice in scanner.scan().values where !scannedDevices.contains(newDevice) {
-                scannedDevices.append(newDevice)
+            for await anyDevice in scanner.scan().values {
+                guard let device = anyDevice as? Device, !scannedDevices.contains(device) else { continue }
+                scannedDevices.append(device)
             }
         }
     }
     
-    func connect(to device: ScannedDevice) {
+    func connect(to device: Device) {
         guard let i = scannedDevices.firstIndex(of: device) else { return }
         var copy = scannedDevices[i]
         copy.state = .connecting

@@ -1,36 +1,32 @@
 //
-//  ScannedDevice.swift
+//  Device.swift
 //  nRF Memfault
 //
-//  Created by Dinesh Harjani on 8/3/21.
 //  Created by Dinesh Harjani on 3/8/22.
 //
 
 import Foundation
 import CoreBluetooth
 
-// MARK: - ScannedDevice
+// MARK: - Device
 
-public struct ScannedDevice: Identifiable {
-    
-    // MARK: ConnectedState
-    
-    public enum ConnectedState: Int {
-        case notConnectable
-        case connecting, connected, disconnecting, disconnected
-    }
+struct Device: ScannerDevice, Identifiable {
     
     // MARK: Properties
     
-    public var id: String {
+    var id: String {
         return uuid
     }
     
-    public let name: String
-    public let uuid: String
-    public let rssi: RSSI
-    public let advertisementData: AdvertisementData
-    public internal(set) var state: ConnectedState
+    var isConnectable: Bool {
+        return state != .notConnectable
+    }
+    
+    let name: String
+    let uuid: String
+    let rssi: RSSI
+    let advertisementData: AdvertisementData
+    var state: ConnectedState
     
     // MARK: Init
     
@@ -54,20 +50,20 @@ public struct ScannedDevice: Identifiable {
 
 // MARK: - Equatable
 
-extension ScannedDevice: Equatable {
+extension Device: Equatable {
 
-    public static func == (lhs: ScannedDevice, rhs: CBPeripheral) -> Bool {
+    public static func == (lhs: Device, rhs: CBPeripheral) -> Bool {
         return lhs.uuid == rhs.identifier.uuidString
     }
 
-    public static func == (lhs: ScannedDevice, rhs: ScannedDevice) -> Bool {
+    public static func == (lhs: Device, rhs: Device) -> Bool {
         return lhs.uuid == rhs.uuid && lhs.state == rhs.state
     }
 }
 
 // MARK: - Hashable
 
-extension ScannedDevice: Hashable {
+extension Device: Hashable {
 
     public func hash(into hasher: inout Hasher) {
         hasher.combine(uuid)
@@ -77,9 +73,9 @@ extension ScannedDevice: Hashable {
 // MARK: - Debug
 
 #if DEBUG
-extension ScannedDevice {
+extension Device {
     
-    static let sample = ScannedDevice(name: "Test Device", uuid: UUID(), rssi: .outOfRange, advertisementData: .connectableMock)
-    static let unconnectableSample = ScannedDevice(name: "#AlonsoAlpineAstonMartinPiastriRicciardoMclarenMess", uuid: UUID(), rssi: .outOfRange, advertisementData: .unconnectableMock)
+    static let sample = Device(name: "Test Device", uuid: UUID(), rssi: .outOfRange, advertisementData: .connectableMock)
+    static let unconnectableSample = Device(name: "#AlonsoAlpineAstonMartinPiastriRicciardoMclarenMess", uuid: UUID(), rssi: .outOfRange, advertisementData: .unconnectableMock)
 }
 #endif

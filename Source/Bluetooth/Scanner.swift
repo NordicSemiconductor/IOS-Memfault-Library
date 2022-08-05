@@ -36,7 +36,7 @@ final class Scanner: NSObject {
     
     private lazy var logger = Logger(Self.self)
     private lazy var bluetoothManager = CBCentralManager(delegate: self, queue: nil)
-    private (set) lazy var devicePublisher = PassthroughSubject<ScannedDevice, Never>()
+    private (set) lazy var devicePublisher = PassthroughSubject<any ScannerDevice, Never>()
     
     @Published private (set) var managerState: CBManagerState = .unknown
     
@@ -45,6 +45,16 @@ final class Scanner: NSObject {
     @Published private (set) var isScanning = false
     
     private var cancellable = Set<AnyCancellable>()
+    
+    // MARK: - Init
+    
+    typealias ScannerDeviceBuilder = (_ peripheral: CBPeripheral,
+                                      _ advertisementData: [String: Any], _ RSSI: NSNumber) -> (any ScannerDevice)
+    private let newDevice: ScannerDeviceBuilder
+    
+    init(_ newDeviceBuilder: @escaping ScannerDeviceBuilder) {
+        self.newDevice = newDeviceBuilder
+    }
 }
 
 // MARK: - API
@@ -66,13 +76,13 @@ extension Scanner {
         shouldScan.toggle()
     }
     
-    func scan(with conditions: [Condition] = [.matchingAll]) -> AnyPublisher<ScannedDevice, Never> {
+    func scan(with conditions: [Condition] = [.matchingAll]) -> AnyPublisher<any ScannerDevice, Never> {
         scanConditions = conditions
         
         return turnOnBluetoothRadio()
             .filter { $0 == .poweredOn }
             .combineLatest($shouldScan, $scanConditions)
-            .flatMap { (_, isScanning, scanConditions) -> PassthroughSubject<ScannedDevice, Never> in
+            .flatMap { (_, isScanning, scanConditions) -> PassthroughSubject<any ScannerDevice, Never> in
                 if isScanning {
                     let scanServices = scanConditions.flatMap { $0.scanServices() }
                     self.bluetoothManager.scanForPeripherals(withServices: scanServices,
@@ -95,10 +105,9 @@ extension Scanner: CBCentralManagerDelegate {
     
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral,
                         advertisementData: [String : Any], rssi RSSI: NSNumber) {
-        let device = ScannedDevice(peripheral: peripheral, advertisementData: advertisementData,
-                                   rssi: RSSI)
+        let device = newDevice(peripheral, advertisementData, RSSI)
         if scanConditions.contains(where: { $0 == .connectable }) {
-            if device.advertisementData.isConnectable == true {
+            if device.isConnectable == true {
                 devicePublisher.send(device)
             }
         } else {
