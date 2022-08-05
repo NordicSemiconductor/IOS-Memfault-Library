@@ -12,7 +12,7 @@ final class AppData: ObservableObject {
     // MARK: Public
     
     @Published var isScanning: Bool
-    @Published var scannedDevices: Set<ScannedDevice>
+    @Published var scannedDevices: [ScannedDevice]
     
     // MARK: Private
     
@@ -51,9 +51,16 @@ extension AppData {
         }
 
         Task { @MainActor in
-            for await newDevice in scanner.scan().values {
-                scannedDevices.insert(newDevice)
+            for await newDevice in scanner.scan().values where !scannedDevices.contains(newDevice) {
+                scannedDevices.append(newDevice)
             }
         }
+    }
+    
+    func connect(to device: ScannedDevice) {
+        guard let i = scannedDevices.firstIndex(of: device) else { return }
+        var copy = scannedDevices[i]
+        copy.state = .connecting
+        scannedDevices[i] = copy
     }
 }

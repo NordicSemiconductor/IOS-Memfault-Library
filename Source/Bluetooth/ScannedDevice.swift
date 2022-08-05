@@ -9,7 +9,16 @@
 import Foundation
 import CoreBluetooth
 
+// MARK: - ScannedDevice
+
 public struct ScannedDevice: Identifiable {
+    
+    // MARK: ConnectedState
+    
+    public enum ConnectedState: Int {
+        case notConnectable
+        case connecting, connected, disconnecting, disconnected
+    }
     
     // MARK: Properties
     
@@ -21,7 +30,7 @@ public struct ScannedDevice: Identifiable {
     public let uuid: String
     public let rssi: RSSI
     public let advertisementData: AdvertisementData
-    public let isConnectable: Bool
+    public internal(set) var state: ConnectedState
     
     // MARK: Init
     
@@ -30,7 +39,7 @@ public struct ScannedDevice: Identifiable {
         self.uuid = uuid.uuidString
         self.rssi = rssi
         self.advertisementData = advertisementData
-        self.isConnectable = advertisementData.isConnectable ?? false
+        self.state = (advertisementData.isConnectable ?? false) ? .disconnected : .notConnectable
     }
     
     init(peripheral: CBPeripheral, advertisementData: [String: Any], rssi: NSNumber) {
@@ -39,7 +48,7 @@ public struct ScannedDevice: Identifiable {
         self.rssi = RSSI(integerLiteral: rssi.intValue)
         let advertisementData = AdvertisementData(advertisementData)
         self.advertisementData = advertisementData
-        self.isConnectable = advertisementData.isConnectable ?? false
+        self.state = (advertisementData.isConnectable ?? false) ? .disconnected : .notConnectable
     }
 }
 
@@ -52,7 +61,7 @@ extension ScannedDevice: Equatable {
     }
 
     public static func == (lhs: ScannedDevice, rhs: ScannedDevice) -> Bool {
-        return lhs.uuid == rhs.uuid
+        return lhs.uuid == rhs.uuid && lhs.state == rhs.state
     }
 }
 
