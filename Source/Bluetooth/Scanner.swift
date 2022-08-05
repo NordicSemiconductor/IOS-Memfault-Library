@@ -38,13 +38,15 @@ final class Scanner: NSObject {
     private lazy var bluetoothManager = CBCentralManager(delegate: self, queue: nil)
     private (set) lazy var devicePublisher = PassthroughSubject<any ScannerDevice, Never>()
     
-    @Published private (set) var managerState: CBManagerState = .unknown
+    @Published private(set) var managerState: CBManagerState = .unknown
     
     @Published private var scanConditions: [Condition] = [.matchingAll]
     @Published private var shouldScan = false
-    @Published private (set) var isScanning = false
+    @Published private(set) var isScanning = false
     
     private var cancellable = Set<AnyCancellable>()
+    
+    private var continuations = [String: CheckedContinuation<Any, Error>]()
     
     // MARK: - Init
     
@@ -97,6 +99,25 @@ extension Scanner {
             }
             .eraseToAnyPublisher()
     }
+    
+    func connect(to device: any ScannerDevice) async throws -> Result<Bool, Never> {
+        guard let uuid = UUID(uuidString: device.uuid),
+              let peripheral = bluetoothManager.retrievePeripherals(withIdentifiers: [uuid]).first else {
+            throw BluetoothError.cantRetrievePeripheral
+        }
+        
+        peripheral.delegate = self
+        do {
+            try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Any, Error>) -> Void in
+                continuations[device.uuid] = continuation
+                bluetoothManager.connect(peripheral)
+            }
+            return .success(true)
+        }
+        catch {
+            return .success(false)
+        }
+    }
 }
 
 // MARK: - CBCentralManagerDelegate
@@ -122,5 +143,15 @@ extension Scanner: CBCentralManagerDelegate {
         if central.state != .poweredOn {
             shouldScan = false
         }
+    }
+    
+    func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
+        guard let continuation = continuations[peripheral.identifier.uuidString] else { return }
+        continuation.resume(returning: true)
+    }
+    
+    func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
+        guard let continuation = continuations[peripheral.identifier.uuidString] else { return }
+        continuation.resume(returning: false)
     }
 }

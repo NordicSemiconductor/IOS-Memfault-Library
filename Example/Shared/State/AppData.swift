@@ -65,5 +65,18 @@ extension AppData {
         var copy = scannedDevices[i]
         copy.state = .connecting
         scannedDevices[i] = copy
+        
+        Task {
+            do {
+                switch try await scanner.connect(to: device) {
+                case .success(let a):
+                    var connectionCopy = scannedDevices[i]
+                    connectionCopy.state = a ? .connected : .disconnected
+                    scannedDevices[i] = connectionCopy
+                }
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
     }
 }
