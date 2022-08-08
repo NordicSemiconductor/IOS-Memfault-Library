@@ -72,7 +72,14 @@ extension AppData {
             
             do {
                 try await scanner.connect(to: device.uuid)
+                print("Connecting to \(device.name)")
                 await updateDeviceConnectionState(of: device, to: .connected)
+                print("Connected to \(device.name)")
+                print("Discovering \(device.name)'s Services...")
+                let cbServices = try await scanner.discoverServices(of: device.uuid)
+                for service in cbServices {
+                    print("Discovered Service \(service.uuid)")
+                }
             } catch {
                 print(error.localizedDescription)
             }
@@ -83,9 +90,11 @@ extension AppData {
     
     func disconnect(from device: Device) {
         Task {
+            print("Disconnecting from \(device.name)")
             await updateDeviceConnectionState(of: device, to: .disconnecting)
             do {
                 try await scanner.disconnect(from: device.uuid)
+                print("Disconnected from \(device.name)")
                 await updateDeviceConnectionState(of: device, to: .disconnected)
             } catch {
                 print(error.localizedDescription)

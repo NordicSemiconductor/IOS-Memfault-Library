@@ -56,6 +56,8 @@ final class Scanner: NSObject {
 
 extension Scanner {
     
+    // MARK: Scan
+    
     /**
      Needs to be called before any attempt to Scan is made.
      
@@ -93,6 +95,8 @@ extension Scanner {
             .eraseToAnyPublisher()
     }
     
+    // MARK: Connect
+    
     func connect(to deviceUUID: String) async throws {
         guard let uuid = UUID(uuidString: deviceUUID),
               let peripheral = bluetoothManager.retrievePeripherals(withIdentifiers: [uuid]).first else {
@@ -115,6 +119,8 @@ extension Scanner {
         }
     }
     
+    // MARK: Discover Services
+    
     func discoverServices(_ serviceUUIDs: [String] = [], of deviceUUID: String) async throws -> [CBService] {
         guard let peripheral = connectedPeripherals[deviceUUID] else {
             throw BluetoothError.cantRetrievePeripheral
@@ -130,7 +136,6 @@ extension Scanner {
             }
             connectedPeripherals[deviceUUID] = peripheralWithServices
             continuations.removeValue(forKey: deviceUUID)
-            
             return peripheralWithServices.services ?? []
         }
         catch {
@@ -138,6 +143,8 @@ extension Scanner {
             throw BluetoothError.coreBluetoothError(description: error.localizedDescription)
         }
     }
+    
+    // MARK: Disconnect
     
     func disconnect(from deviceUUID: String) async throws {
         guard let peripheral = connectedPeripherals[deviceUUID] else {
