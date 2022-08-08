@@ -41,11 +41,15 @@ final class AppData: ObservableObject {
 
 extension AppData {
     
+    // MARK: Refresh
+    
     func refresh() {
         scannedDevices.removeAll()
         guard !scanner.isScanning else { return }
         toggleScanner()
     }
+    
+    // MARK: Scan
     
     func toggleScanner() {
         guard !scanner.isScanning else {
@@ -61,19 +65,16 @@ extension AppData {
         }
     }
     
+    // MARK: Connect
+    
     func connect(to device: Device) {
-        guard let i = scannedDevices.firstIndex(of: device) else { return }
-        var copy = scannedDevices[i]
-        copy.state = .connecting
-        scannedDevices[i] = copy
-        
-        Task { @MainActor in
+        Task {
+            await updateDeviceConnectionState(of: device, to: .connecting)
+            
             do {
                 switch try await scanner.connect(to: device) {
-                case .success(let a):
-                    var connectionCopy = scannedDevices[i]
-                    connectionCopy.state = a ? .connected : .disconnected
-                    scannedDevices[i] = connectionCopy
+                case .success(let newState):
+                    await updateDeviceConnectionState(of: device, to: newState)
                 }
             } catch {
                 print(error.localizedDescription)
@@ -81,23 +82,34 @@ extension AppData {
         }
     }
     
+    // MARK: Disconnect
+    
     func disconnect(from device: Device) {
-        guard let i = scannedDevices.firstIndex(of: device) else { return }
-        var copy = scannedDevices[i]
-        copy.state = .disconnecting
-        scannedDevices[i] = copy
-        
-        Task { @MainActor in
+        Task {
+            await updateDeviceConnectionState(of: device, to: .disconnecting)
             do {
                 switch try await scanner.disconnect(from: device) {
-                case .success(let a):
-                    var connectionCopy = scannedDevices[i]
-                    connectionCopy.state = a ? .disconnected : .connected
-                    scannedDevices[i] = connectionCopy
+                case .success(let newState):
+                    await updateDeviceConnectionState(of: device, to: newState)
                 }
             } catch {
                 print(error.localizedDescription)
             }
+        }
+    }
+}
+
+// MARK: - Private
+
+@MainActor
+private extension AppData {
+    
+    func updateDeviceConnectionState(of device: Device, to newState: ConnectedState) async {
+        Task { @MainActor in
+            guard let i = scannedDevices.firstIndex(where: { $0.uuid == device.uuid }) else { return }
+            var connectionCopy = scannedDevices[i]
+            connectionCopy.state = newState
+            scannedDevices[i] = connectionCopy
         }
     }
 }

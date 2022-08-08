@@ -103,7 +103,7 @@ extension Scanner {
             .eraseToAnyPublisher()
     }
     
-    func connect(to device: any ScannerDevice) async throws -> Result<Bool, Never> {
+    func connect(to device: any ScannerDevice) async throws -> Result<ConnectedState, Never> {
         guard let uuid = UUID(uuidString: device.uuid),
               let peripheral = bluetoothManager.retrievePeripherals(withIdentifiers: [uuid]).first else {
             throw BluetoothError.cantRetrievePeripheral
@@ -117,15 +117,15 @@ extension Scanner {
                 bluetoothManager.connect(peripheral)
             }
             continuations.removeValue(forKey: device.uuid)
-            return .success(true)
+            return .success(.connected)
         }
         catch {
             continuations.removeValue(forKey: device.uuid)
-            return .success(false)
+            throw BluetoothError.coreBluetoothError(description: error.localizedDescription)
         }
     }
     
-    func disconnect(from device: any ScannerDevice) async throws -> Result<Bool, Never> {
+    func disconnect(from device: any ScannerDevice) async throws -> Result<ConnectedState, Never> {
         guard let peripheral = connectedPeripherals[device.uuid] else {
             throw BluetoothError.cantRetrievePeripheral
         }
@@ -138,11 +138,11 @@ extension Scanner {
                 bluetoothManager.cancelPeripheralConnection(peripheral)
             }
             continuations.removeValue(forKey: device.uuid)
-            return .success(true)
+            return .success(.disconnected)
         }
         catch {
-            continuations.removeValue(forKey: device.uuid)
-            return .success(false)
+            print(error.localizedDescription)
+            return .success(ConnectedState.from(peripheral.state))
         }
     }
 }
@@ -188,7 +188,7 @@ extension Scanner: CBCentralManagerDelegate {
         guard let continuation = continuations[peripheral.identifier.uuidString] else { return }
         connectedPeripherals.removeValue(forKey: peripheral.identifier.uuidString)
         if let error = error {
-            continuation.resume(returning: false)
+            continuation.resume(throwing: BluetoothError.coreBluetoothError(description: error.localizedDescription))
         } else {
             // Success.
             continuation.resume(returning: true)
