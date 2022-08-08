@@ -7,12 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		AA16A490289D1D420075F7CE /* ScannerDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA16A48F289D1D420075F7CE /* ScannerDevice.swift */; };
-		AA16A491289D1D420075F7CE /* ScannerDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA16A48F289D1D420075F7CE /* ScannerDevice.swift */; };
 		AA22DDCA289B4162003366FA /* DeviceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA22DDC9289B4162003366FA /* DeviceView.swift */; };
 		AA22DDCB289B4162003366FA /* DeviceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA22DDC9289B4162003366FA /* DeviceView.swift */; };
-		AA304D7328A1360F00210567 /* DeviceAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA304D7228A1360F00210567 /* DeviceAttributes.swift */; };
-		AA304D7428A1360F00210567 /* DeviceAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA304D7228A1360F00210567 /* DeviceAttributes.swift */; };
 		AAFB2FE4289A89CD008207FE /* Scanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFB2FE3289A89CD008207FE /* Scanner.swift */; };
 		AAFB2FE5289A89CD008207FE /* Scanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFB2FE3289A89CD008207FE /* Scanner.swift */; };
 		AAFB2FE7289A8C48008207FE /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFB2FE6289A8C48008207FE /* Device.swift */; };
@@ -44,9 +40,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		AA16A48F289D1D420075F7CE /* ScannerDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerDevice.swift; sourceTree = "<group>"; };
 		AA22DDC9289B4162003366FA /* DeviceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceView.swift; sourceTree = "<group>"; };
-		AA304D7228A1360F00210567 /* DeviceAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceAttributes.swift; sourceTree = "<group>"; };
 		AAFB2FE3289A89CD008207FE /* Scanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scanner.swift; sourceTree = "<group>"; };
 		AAFB2FE6289A8C48008207FE /* Device.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
 		AAFB2FE9289A8C95008207FE /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
@@ -172,7 +166,6 @@
 				AAFBF8522899747600A6655C /* BluetoothError.swift */,
 				AAFBF84C2899742E00A6655C /* DeviceManager.swift */,
 				AAFB2FEF289A9D2E008207FE /* AdvertisementData.swift */,
-				AA16A48F289D1D420075F7CE /* ScannerDevice.swift */,
 				AAFB2FE3289A89CD008207FE /* Scanner.swift */,
 				AAFB2FEC289A8DB7008207FE /* CBExtensions.swift */,
 				AAFB2FF2289A9E27008207FE /* RSSI.swift */,
@@ -184,7 +177,6 @@
 			isa = PBXGroup;
 			children = (
 				AAFB2FE6289A8C48008207FE /* Device.swift */,
-				AA304D7228A1360F00210567 /* DeviceAttributes.swift */,
 				AAFBF84928996AA100A6655C /* AppData.swift */,
 			);
 			path = State;
@@ -323,9 +315,7 @@
 				AA22DDCA289B4162003366FA /* DeviceView.swift in Sources */,
 				AAFBF84D2899742E00A6655C /* DeviceManager.swift in Sources */,
 				AAFB2FE4289A89CD008207FE /* Scanner.swift in Sources */,
-				AA304D7328A1360F00210567 /* DeviceAttributes.swift in Sources */,
 				AAFBF8532899747600A6655C /* BluetoothError.swift in Sources */,
-				AA16A490289D1D420075F7CE /* ScannerDevice.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -346,9 +336,7 @@
 				AA22DDCB289B4162003366FA /* DeviceView.swift in Sources */,
 				AAFBF84E2899742E00A6655C /* DeviceManager.swift in Sources */,
 				AAFB2FE5289A89CD008207FE /* Scanner.swift in Sources */,
-				AA304D7428A1360F00210567 /* DeviceAttributes.swift in Sources */,
 				AAFBF8542899747600A6655C /* BluetoothError.swift in Sources */,
-				AA16A491289D1D420075F7CE /* ScannerDevice.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

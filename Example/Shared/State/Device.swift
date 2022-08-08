@@ -10,7 +10,7 @@ import CoreBluetooth
 
 // MARK: - Device
 
-struct Device: ScannerDevice, Identifiable {
+struct Device: Identifiable {
     
     // MARK: Properties
     
@@ -27,7 +27,7 @@ struct Device: ScannerDevice, Identifiable {
     let rssi: RSSI
     let advertisementData: AdvertisementData
     var state: ConnectedState
-    var services: [BluetoothService]
+    var services: [CBService]
     
     // MARK: Init
     
@@ -70,6 +70,29 @@ extension Device: Hashable {
 
     public func hash(into hasher: inout Hasher) {
         hasher.combine(uuid)
+    }
+}
+
+// MARK: ConnectedState
+
+public enum ConnectedState: Int {
+    
+    case notConnectable
+    case connecting, connected, disconnecting, disconnected
+    
+    static func from(_ cbState: CBPeripheralState) -> ConnectedState {
+        switch cbState {
+        case .connecting:
+            return .connecting
+        case .connected:
+            return .connected
+        case .disconnecting:
+            return .disconnecting
+        case .disconnected:
+            fallthrough
+        default:
+            return .disconnected
+        }
     }
 }
 

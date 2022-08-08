@@ -36,7 +36,9 @@ final class Scanner: NSObject {
     
     private lazy var logger = Logger(Self.self)
     private lazy var bluetoothManager = CBCentralManager(delegate: self, queue: nil)
-    private (set) lazy var devicePublisher = PassthroughSubject<any ScannerDevice, Never>()
+    
+    typealias ScanData = (peripheral: CBPeripheral, advertisementData: [String: Any], RSSI: NSNumber)
+    private (set) lazy var devicePublisher = PassthroughSubject<ScanData, Never>()
     
     @Published private(set) var managerState: CBManagerState = .unknown
     
@@ -48,23 +50,6 @@ final class Scanner: NSObject {
     
     private var connectedPeripherals = [String: CBPeripheral]()
     private var continuations = [String: CheckedContinuation<CBPeripheral, Error>]()
-    
-    // MARK: - Init
-    
-    typealias ScannerDeviceBuilder = (_ peripheral: CBPeripheral,
-                                      _ state: ConnectedState,
-                                      _ advertisementData: [String: Any],
-                                      _ RSSI: NSNumber) -> (any ScannerDevice)
-    private let newDevice: ScannerDeviceBuilder
-    
-    typealias ServiceBuilder = (_ service: CBService) -> (BluetoothService?)
-    private let newService : ServiceBuilder
-    
-    init(_ newDeviceBuilder: @escaping ScannerDeviceBuilder,
-         _ newServiceBuilder: @escaping ServiceBuilder) {
-        self.newDevice = newDeviceBuilder
-        self.newService = newServiceBuilder
-    }
 }
 
 // MARK: - API
@@ -86,13 +71,13 @@ extension Scanner {
         shouldScan.toggle()
     }
     
-    func scan(with conditions: [Condition] = [.matchingAll]) -> AnyPublisher<any ScannerDevice, Never> {
+    func scan(with conditions: [Condition] = [.matchingAll]) -> AnyPublisher<ScanData, Never> {
         scanConditions = conditions
         
         return turnOnBluetoothRadio()
             .filter { $0 == .poweredOn }
             .combineLatest($shouldScan, $scanConditions)
-            .flatMap { (_, isScanning, scanConditions) -> PassthroughSubject<any ScannerDevice, Never> in
+            .flatMap { (_, isScanning, scanConditions) -> PassthroughSubject<ScanData, Never> in
                 if isScanning {
                     let scanServices = scanConditions.flatMap { $0.scanServices() }
                     self.bluetoothManager.scanForPeripherals(withServices: scanServices,
@@ -108,73 +93,69 @@ extension Scanner {
             .eraseToAnyPublisher()
     }
     
-    func connect(to device: any ScannerDevice) async throws {
-        guard let uuid = UUID(uuidString: device.uuid),
+    func connect(to deviceUUID: String) async throws {
+        guard let uuid = UUID(uuidString: deviceUUID),
               let peripheral = bluetoothManager.retrievePeripherals(withIdentifiers: [uuid]).first else {
             throw BluetoothError.cantRetrievePeripheral
         }
         
         peripheral.delegate = self
-        guard continuations[device.uuid] == nil else { throw BluetoothError.operationInProgress }
+        guard continuations[deviceUUID] == nil else { throw BluetoothError.operationInProgress }
         do {
             let connectedPeripheral = try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<CBPeripheral, Error>) -> Void in
-                continuations[device.uuid] = continuation
+                continuations[deviceUUID] = continuation
                 bluetoothManager.connect(peripheral)
             }
-            connectedPeripherals[device.uuid] = connectedPeripheral
-            continuations.removeValue(forKey: device.uuid)
+            connectedPeripherals[deviceUUID] = connectedPeripheral
+            continuations.removeValue(forKey: deviceUUID)
         }
         catch {
-            continuations.removeValue(forKey: device.uuid)
+            continuations.removeValue(forKey: deviceUUID)
             throw BluetoothError.coreBluetoothError(description: error.localizedDescription)
         }
     }
     
-    func discoverServices(_ serviceUUIDs: [String] = [], of device: any ScannerDevice) async throws -> [BluetoothService] {
-        guard let peripheral = connectedPeripherals[device.uuid] else {
+    func discoverServices(_ serviceUUIDs: [String] = [], of deviceUUID: String) async throws -> [CBService] {
+        guard let peripheral = connectedPeripherals[deviceUUID] else {
             throw BluetoothError.cantRetrievePeripheral
         }
         peripheral.delegate = self
-        guard continuations[device.uuid] == nil else { throw BluetoothError.operationInProgress }
+        guard continuations[deviceUUID] == nil else { throw BluetoothError.operationInProgress }
         
         do {
             let peripheralWithServices = try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<CBPeripheral, Error>) -> Void in
-                continuations[device.uuid] = continuation
+                continuations[deviceUUID] = continuation
                 let cbUUIDServices = serviceUUIDs.map { CBUUID(string: $0) }
                 peripheral.discoverServices(cbUUIDServices)
             }
-            connectedPeripherals[device.uuid] = peripheralWithServices
-            continuations.removeValue(forKey: device.uuid)
+            connectedPeripherals[deviceUUID] = peripheralWithServices
+            continuations.removeValue(forKey: deviceUUID)
             
-            let peripheralServices = peripheralWithServices.services ?? []
-            let services = peripheralServices.compactMap { cbService in
-                newService(cbService)
-            }
-            return services
+            return peripheralWithServices.services ?? []
         }
         catch {
-            continuations.removeValue(forKey: device.uuid)
+            continuations.removeValue(forKey: deviceUUID)
             throw BluetoothError.coreBluetoothError(description: error.localizedDescription)
         }
     }
     
-    func disconnect(from device: any ScannerDevice) async throws {
-        guard let peripheral = connectedPeripherals[device.uuid] else {
+    func disconnect(from deviceUUID: String) async throws {
+        guard let peripheral = connectedPeripherals[deviceUUID] else {
             throw BluetoothError.cantRetrievePeripheral
         }
         
         peripheral.delegate = self
-        guard continuations[device.uuid] == nil else { throw BluetoothError.operationInProgress }
+        guard continuations[deviceUUID] == nil else { throw BluetoothError.operationInProgress }
         do {
             let disconnectedPeripheral = try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<CBPeripheral, Error>) -> Void in
-                continuations[device.uuid] = continuation
+                continuations[deviceUUID] = continuation
                 bluetoothManager.cancelPeripheralConnection(peripheral)
             }
             connectedPeripherals.removeValue(forKey: disconnectedPeripheral.identifier.uuidString)
-            continuations.removeValue(forKey: device.uuid)
+            continuations.removeValue(forKey: deviceUUID)
         }
         catch {
-            continuations.removeValue(forKey: device.uuid)
+            continuations.removeValue(forKey: deviceUUID)
             throw BluetoothError.coreBluetoothError(description: error.localizedDescription)
         }
     }
@@ -186,14 +167,13 @@ extension Scanner: CBCentralManagerDelegate {
     
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral,
                         advertisementData: [String : Any], rssi RSSI: NSNumber) {
-        let device = newDevice(peripheral, ConnectedState.from(peripheral.state),
-                               advertisementData, RSSI)
+        let isConnectable = (advertisementData[CBAdvertisementDataIsConnectable] as? NSNumber)?.boolValue
         if scanConditions.contains(where: { $0 == .connectable }) {
-            if device.isConnectable == true {
-                devicePublisher.send(device)
+            if isConnectable ?? false {
+                devicePublisher.send((peripheral, advertisementData, RSSI))
             }
         } else {
-            devicePublisher.send(device)
+            devicePublisher.send((peripheral, advertisementData, RSSI))
         }
     }
     

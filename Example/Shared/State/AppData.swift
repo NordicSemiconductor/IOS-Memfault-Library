@@ -21,12 +21,7 @@ final class AppData: ObservableObject {
     // MARK: Init
     
     init() {
-        self.scanner = Scanner({ peripheral, state, advertisementData, RSSI in
-            return Device(peripheral: peripheral, state: state, advertisementData: advertisementData,
-                          rssi: RSSI)
-        }, { service in
-            return DeviceService(uuid: service.uuid.uuidString, characteristics: [])
-        })
+        self.scanner = Scanner()
         self.isScanning = scanner.isScanning
         self.scannedDevices = []
         
@@ -60,8 +55,10 @@ extension AppData {
         }
 
         Task { @MainActor in
-            for await anyDevice in scanner.scan().values {
-                guard let device = anyDevice as? Device, !scannedDevices.contains(device) else { continue }
+            for await scanData in scanner.scan().values {
+                let state = ConnectedState.from(scanData.peripheral.state)
+                let device = Device(peripheral: scanData.peripheral, state: state, advertisementData: scanData.advertisementData, rssi: scanData.RSSI)
+                guard !scannedDevices.contains(device) else { continue }
                 scannedDevices.append(device)
             }
         }
@@ -74,7 +71,7 @@ extension AppData {
             await updateDeviceConnectionState(of: device, to: .connecting)
             
             do {
-                try await scanner.connect(to: device)
+                try await scanner.connect(to: device.uuid)
                 await updateDeviceConnectionState(of: device, to: .connected)
             } catch {
                 print(error.localizedDescription)
@@ -88,7 +85,7 @@ extension AppData {
         Task {
             await updateDeviceConnectionState(of: device, to: .disconnecting)
             do {
-                try await scanner.disconnect(from: device)
+                try await scanner.disconnect(from: device.uuid)
                 await updateDeviceConnectionState(of: device, to: .disconnected)
             } catch {
                 print(error.localizedDescription)
