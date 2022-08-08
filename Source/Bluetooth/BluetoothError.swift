@@ -18,6 +18,8 @@ enum BluetoothError: LocalizedError {
     case cantRetrievePeripheral
     case expectedServiceNotFound, noCharacteristicsForService, noServicesForPeripheral
     
+    case operationInProgress
+    
     // MARK: Descriptpion
     
     var errorDescription: String? { localizedDescription }
@@ -41,6 +43,8 @@ enum BluetoothError: LocalizedError {
             return "CBPeripheral does not declare any Service(s)."
         case .noCharacteristicsForService:
             return "CBPeripheral does not declare any Characteristic(s)."
+        case .operationInProgress:
+            return "An operation with this CBPeripheral is already in progress."
         }
     }
 }

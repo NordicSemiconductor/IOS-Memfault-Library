@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CoreBluetooth
 
 // MARK: - ScannerDevice
 
@@ -21,6 +22,22 @@ public protocol ScannerDevice {
 // MARK: - ConnectedState
 
 public enum ConnectedState: Int {
+    
     case notConnectable
     case connecting, connected, disconnecting, disconnected
+    
+    static func from(_ cbState: CBPeripheralState) -> ConnectedState {
+        switch cbState {
+        case .connecting:
+            return .connecting
+        case .connected:
+            return .connected
+        case .disconnecting:
+            return .disconnecting
+        case .disconnected:
+            fallthrough
+        default:
+            return .disconnected
+        }
+    }
 }

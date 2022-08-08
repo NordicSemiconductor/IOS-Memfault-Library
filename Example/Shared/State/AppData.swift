@@ -21,8 +21,9 @@ final class AppData: ObservableObject {
     // MARK: Init
     
     init() {
-        self.scanner = Scanner() { peripheral, advertisementData, RSSI in
-            return Device(peripheral: peripheral, advertisementData: advertisementData, rssi: RSSI)
+        self.scanner = Scanner() { peripheral, state, advertisementData, RSSI in
+            return Device(peripheral: peripheral, state: state, advertisementData: advertisementData,
+                          rssi: RSSI)
         }
         self.isScanning = scanner.isScanning
         self.scannedDevices = []
@@ -66,12 +67,32 @@ extension AppData {
         copy.state = .connecting
         scannedDevices[i] = copy
         
-        Task {
+        Task { @MainActor in
             do {
                 switch try await scanner.connect(to: device) {
                 case .success(let a):
                     var connectionCopy = scannedDevices[i]
                     connectionCopy.state = a ? .connected : .disconnected
+                    scannedDevices[i] = connectionCopy
+                }
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
+    func disconnect(from device: Device) {
+        guard let i = scannedDevices.firstIndex(of: device) else { return }
+        var copy = scannedDevices[i]
+        copy.state = .disconnecting
+        scannedDevices[i] = copy
+        
+        Task { @MainActor in
+            do {
+                switch try await scanner.disconnect(from: device) {
+                case .success(let a):
+                    var connectionCopy = scannedDevices[i]
+                    connectionCopy.state = a ? .disconnected : .connected
                     scannedDevices[i] = connectionCopy
                 }
             } catch {

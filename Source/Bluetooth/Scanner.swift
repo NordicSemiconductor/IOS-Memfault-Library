@@ -46,12 +46,15 @@ final class Scanner: NSObject {
     
     private var cancellable = Set<AnyCancellable>()
     
+    private var connectedPeripherals = [String: CBPeripheral]()
     private var continuations = [String: CheckedContinuation<Any, Error>]()
     
     // MARK: - Init
     
     typealias ScannerDeviceBuilder = (_ peripheral: CBPeripheral,
-                                      _ advertisementData: [String: Any], _ RSSI: NSNumber) -> (any ScannerDevice)
+                                      _ state: ConnectedState,
+                                      _ advertisementData: [String: Any],
+                                      _ RSSI: NSNumber) -> (any ScannerDevice)
     private let newDevice: ScannerDeviceBuilder
     
     init(_ newDeviceBuilder: @escaping ScannerDeviceBuilder) {
@@ -107,14 +110,38 @@ extension Scanner {
         }
         
         peripheral.delegate = self
+        guard continuations[device.uuid] == nil else { throw BluetoothError.operationInProgress }
         do {
             try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Any, Error>) -> Void in
                 continuations[device.uuid] = continuation
                 bluetoothManager.connect(peripheral)
             }
+            continuations.removeValue(forKey: device.uuid)
             return .success(true)
         }
         catch {
+            continuations.removeValue(forKey: device.uuid)
+            return .success(false)
+        }
+    }
+    
+    func disconnect(from device: any ScannerDevice) async throws -> Result<Bool, Never> {
+        guard let peripheral = connectedPeripherals[device.uuid] else {
+            throw BluetoothError.cantRetrievePeripheral
+        }
+        
+        peripheral.delegate = self
+        guard continuations[device.uuid] == nil else { throw BluetoothError.operationInProgress }
+        do {
+            try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Any, Error>) -> Void in
+                continuations[device.uuid] = continuation
+                bluetoothManager.cancelPeripheralConnection(peripheral)
+            }
+            continuations.removeValue(forKey: device.uuid)
+            return .success(true)
+        }
+        catch {
+            continuations.removeValue(forKey: device.uuid)
             return .success(false)
         }
     }
@@ -126,7 +153,8 @@ extension Scanner: CBCentralManagerDelegate {
     
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral,
                         advertisementData: [String : Any], rssi RSSI: NSNumber) {
-        let device = newDevice(peripheral, advertisementData, RSSI)
+        let device = newDevice(peripheral, ConnectedState.from(peripheral.state),
+                               advertisementData, RSSI)
         if scanConditions.contains(where: { $0 == .connectable }) {
             if device.isConnectable == true {
                 devicePublisher.send(device)
@@ -147,11 +175,23 @@ extension Scanner: CBCentralManagerDelegate {
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         guard let continuation = continuations[peripheral.identifier.uuidString] else { return }
+        connectedPeripherals[peripheral.identifier.uuidString] = peripheral
         continuation.resume(returning: true)
     }
     
     func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
         guard let continuation = continuations[peripheral.identifier.uuidString] else { return }
         continuation.resume(returning: false)
+    }
+    
+    func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
+        guard let continuation = continuations[peripheral.identifier.uuidString] else { return }
+        connectedPeripherals.removeValue(forKey: peripheral.identifier.uuidString)
+        if let error = error {
+            continuation.resume(returning: false)
+        } else {
+            // Success.
+            continuation.resume(returning: true)
+        }
     }
 }

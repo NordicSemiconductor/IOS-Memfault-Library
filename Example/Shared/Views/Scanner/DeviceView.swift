@@ -43,7 +43,7 @@ struct DeviceView: View {
                     })
                 case .connected:
                     Button("Disconnect", action: {
-                        // No-op.
+                        appData.disconnect(from: device)
                     })
                 case .connecting:
                     ProgressView()
@@ -51,7 +51,7 @@ struct DeviceView: View {
                         .padding(.trailing)
                     
                     Button("Connecting...", action: {
-                        // No-op.
+                        appData.disconnect(from: device)
                     })
                 case .disconnecting:
                     ProgressView()

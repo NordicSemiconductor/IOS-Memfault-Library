@@ -38,13 +38,13 @@ struct Device: ScannerDevice, Identifiable {
         self.state = (advertisementData.isConnectable ?? false) ? .disconnected : .notConnectable
     }
     
-    init(peripheral: CBPeripheral, advertisementData: [String: Any], rssi: NSNumber) {
+    init(peripheral: CBPeripheral, state: ConnectedState, advertisementData: [String: Any], rssi: NSNumber) {
         self.name = advertisementData[CBAdvertisementDataLocalNameKey] as? String ?? "N/A"
         self.uuid = peripheral.identifier.uuidString
         self.rssi = RSSI(integerLiteral: rssi.intValue)
         let advertisementData = AdvertisementData(advertisementData)
         self.advertisementData = advertisementData
-        self.state = (advertisementData.isConnectable ?? false) ? .disconnected : .notConnectable
+        self.state = (advertisementData.isConnectable ?? false) ? state : .notConnectable
     }
 }
 
