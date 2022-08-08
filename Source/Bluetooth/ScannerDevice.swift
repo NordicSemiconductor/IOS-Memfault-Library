@@ -17,6 +17,27 @@ public protocol ScannerDevice {
     var rssi: RSSI { get }
     var isConnectable: Bool { get }
     var state: ConnectedState { get set }
+    var services: [BluetoothService] { get set }
+}
+
+// MARK: - Attribute(s)
+
+public protocol DeviceAttribute {
+    
+    var uuid: String { get }
+}
+
+public protocol BluetoothService: DeviceAttribute {
+    
+    var characteristics: [BluetoothCharacteristic] { get set }
+}
+
+public protocol BluetoothCharacteristic: DeviceAttribute {
+    
+    var descriptors: [BluetoothDescriptor] { get set }
+}
+
+public protocol BluetoothDescriptor: DeviceAttribute {
 }
 
 // MARK: - ConnectedState

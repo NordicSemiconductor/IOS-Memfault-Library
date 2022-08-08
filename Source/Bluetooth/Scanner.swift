@@ -57,8 +57,13 @@ final class Scanner: NSObject {
                                       _ RSSI: NSNumber) -> (any ScannerDevice)
     private let newDevice: ScannerDeviceBuilder
     
-    init(_ newDeviceBuilder: @escaping ScannerDeviceBuilder) {
+    typealias ServiceBuilder = (_ service: CBService) -> (BluetoothService?)
+    private let newService : ServiceBuilder
+    
+    init(_ newDeviceBuilder: @escaping ScannerDeviceBuilder,
+         _ newServiceBuilder: @escaping ServiceBuilder) {
         self.newDevice = newDeviceBuilder
+        self.newService = newServiceBuilder
     }
 }
 
@@ -125,6 +130,34 @@ extension Scanner {
         }
     }
     
+    func discoverServices(_ serviceUUIDs: [String] = [], of device: any ScannerDevice) async throws -> [BluetoothService] {
+        guard let peripheral = connectedPeripherals[device.uuid] else {
+            throw BluetoothError.cantRetrievePeripheral
+        }
+        peripheral.delegate = self
+        guard continuations[device.uuid] == nil else { throw BluetoothError.operationInProgress }
+        
+        do {
+            let peripheralWithServices = try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<CBPeripheral, Error>) -> Void in
+                continuations[device.uuid] = continuation
+                let cbUUIDServices = serviceUUIDs.map { CBUUID(string: $0) }
+                peripheral.discoverServices(cbUUIDServices)
+            }
+            connectedPeripherals[device.uuid] = peripheralWithServices
+            continuations.removeValue(forKey: device.uuid)
+            
+            let peripheralServices = peripheralWithServices.services ?? []
+            let services = peripheralServices.compactMap { cbService in
+                newService(cbService)
+            }
+            return services
+        }
+        catch {
+            continuations.removeValue(forKey: device.uuid)
+            throw BluetoothError.coreBluetoothError(description: error.localizedDescription)
+        }
+    }
+    
     func disconnect(from device: any ScannerDevice) async throws {
         guard let peripheral = connectedPeripherals[device.uuid] else {
             throw BluetoothError.cantRetrievePeripheral
@@ -184,6 +217,21 @@ extension Scanner: CBCentralManagerDelegate {
     }
     
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
+        guard let continuation = continuations[peripheral.identifier.uuidString] else { return }
+        if let error = error {
+            continuation.resume(throwing: BluetoothError.coreBluetoothError(description: error.localizedDescription))
+        } else {
+            // Success.
+            continuation.resume(returning: peripheral)
+        }
+    }
+}
+
+// MARK: - CBPeripheralDelegate
+
+extension Scanner: CBPeripheralDelegate {
+    
+    func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
         guard let continuation = continuations[peripheral.identifier.uuidString] else { return }
         if let error = error {
             continuation.resume(throwing: BluetoothError.coreBluetoothError(description: error.localizedDescription))

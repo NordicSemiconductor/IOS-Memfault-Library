@@ -27,6 +27,7 @@ struct Device: ScannerDevice, Identifiable {
     let rssi: RSSI
     let advertisementData: AdvertisementData
     var state: ConnectedState
+    var services: [BluetoothService]
     
     // MARK: Init
     
@@ -36,6 +37,7 @@ struct Device: ScannerDevice, Identifiable {
         self.rssi = rssi
         self.advertisementData = advertisementData
         self.state = (advertisementData.isConnectable ?? false) ? .disconnected : .notConnectable
+        self.services = []
     }
     
     init(peripheral: CBPeripheral, state: ConnectedState, advertisementData: [String: Any], rssi: NSNumber) {
@@ -45,6 +47,7 @@ struct Device: ScannerDevice, Identifiable {
         self.rssi = RSSI(integerLiteral: rssi.intValue)
         self.advertisementData = advertisementData
         self.state = (advertisementData.isConnectable ?? false) ? state : .notConnectable
+        self.services = []
     }
 }
 

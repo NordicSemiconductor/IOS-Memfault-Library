@@ -21,10 +21,12 @@ final class AppData: ObservableObject {
     // MARK: Init
     
     init() {
-        self.scanner = Scanner() { peripheral, state, advertisementData, RSSI in
+        self.scanner = Scanner({ peripheral, state, advertisementData, RSSI in
             return Device(peripheral: peripheral, state: state, advertisementData: advertisementData,
                           rssi: RSSI)
-        }
+        }, { service in
+            return DeviceService(uuid: service.uuid.uuidString, characteristics: [])
+        })
         self.isScanning = scanner.isScanning
         self.scannedDevices = []
         
