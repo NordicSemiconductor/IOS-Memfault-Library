@@ -31,7 +31,7 @@ struct Device: ScannerDevice, Identifiable {
     // MARK: Init
     
     init(name: String, uuid: UUID, rssi: RSSI, advertisementData: AdvertisementData) {
-        self.name = name
+        self.name = advertisementData.localName ?? name
         self.uuid = uuid.uuidString
         self.rssi = rssi
         self.advertisementData = advertisementData
@@ -39,10 +39,10 @@ struct Device: ScannerDevice, Identifiable {
     }
     
     init(peripheral: CBPeripheral, state: ConnectedState, advertisementData: [String: Any], rssi: NSNumber) {
-        self.name = advertisementData[CBAdvertisementDataLocalNameKey] as? String ?? "N/A"
+        let advertisementData = AdvertisementData(advertisementData)
+        self.name = advertisementData.localName ?? (peripheral.name ?? "N/A")
         self.uuid = peripheral.identifier.uuidString
         self.rssi = RSSI(integerLiteral: rssi.intValue)
-        let advertisementData = AdvertisementData(advertisementData)
         self.advertisementData = advertisementData
         self.state = (advertisementData.isConnectable ?? false) ? state : .notConnectable
     }
