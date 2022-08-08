@@ -72,10 +72,8 @@ extension AppData {
             await updateDeviceConnectionState(of: device, to: .connecting)
             
             do {
-                switch try await scanner.connect(to: device) {
-                case .success(let newState):
-                    await updateDeviceConnectionState(of: device, to: newState)
-                }
+                try await scanner.connect(to: device)
+                await updateDeviceConnectionState(of: device, to: .connected)
             } catch {
                 print(error.localizedDescription)
             }
@@ -88,10 +86,8 @@ extension AppData {
         Task {
             await updateDeviceConnectionState(of: device, to: .disconnecting)
             do {
-                switch try await scanner.disconnect(from: device) {
-                case .success(let newState):
-                    await updateDeviceConnectionState(of: device, to: newState)
-                }
+                try await scanner.disconnect(from: device)
+                await updateDeviceConnectionState(of: device, to: .disconnected)
             } catch {
                 print(error.localizedDescription)
             }

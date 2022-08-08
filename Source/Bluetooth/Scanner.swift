@@ -103,7 +103,7 @@ extension Scanner {
             .eraseToAnyPublisher()
     }
     
-    func connect(to device: any ScannerDevice) async throws -> Result<ConnectedState, Never> {
+    func connect(to device: any ScannerDevice) async throws {
         guard let uuid = UUID(uuidString: device.uuid),
               let peripheral = bluetoothManager.retrievePeripherals(withIdentifiers: [uuid]).first else {
             throw BluetoothError.cantRetrievePeripheral
@@ -112,12 +112,11 @@ extension Scanner {
         peripheral.delegate = self
         guard continuations[device.uuid] == nil else { throw BluetoothError.operationInProgress }
         do {
-            try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Any, Error>) -> Void in
+            _ = try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Any, Error>) -> Void in
                 continuations[device.uuid] = continuation
                 bluetoothManager.connect(peripheral)
             }
             continuations.removeValue(forKey: device.uuid)
-            return .success(.connected)
         }
         catch {
             continuations.removeValue(forKey: device.uuid)
@@ -125,7 +124,7 @@ extension Scanner {
         }
     }
     
-    func disconnect(from device: any ScannerDevice) async throws -> Result<ConnectedState, Never> {
+    func disconnect(from device: any ScannerDevice) async throws {
         guard let peripheral = connectedPeripherals[device.uuid] else {
             throw BluetoothError.cantRetrievePeripheral
         }
@@ -133,16 +132,15 @@ extension Scanner {
         peripheral.delegate = self
         guard continuations[device.uuid] == nil else { throw BluetoothError.operationInProgress }
         do {
-            try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Any, Error>) -> Void in
+            _ = try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Any, Error>) -> Void in
                 continuations[device.uuid] = continuation
                 bluetoothManager.cancelPeripheralConnection(peripheral)
             }
             continuations.removeValue(forKey: device.uuid)
-            return .success(.disconnected)
         }
         catch {
-            print(error.localizedDescription)
-            return .success(ConnectedState.from(peripheral.state))
+            continuations.removeValue(forKey: device.uuid)
+            throw BluetoothError.coreBluetoothError(description: error.localizedDescription)
         }
     }
 }
@@ -176,12 +174,12 @@ extension Scanner: CBCentralManagerDelegate {
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         guard let continuation = continuations[peripheral.identifier.uuidString] else { return }
         connectedPeripherals[peripheral.identifier.uuidString] = peripheral
-        continuation.resume(returning: true)
+        continuation.resume(returning: ())
     }
     
     func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
         guard let continuation = continuations[peripheral.identifier.uuidString] else { return }
-        continuation.resume(returning: false)
+        continuation.resume(returning: ())
     }
     
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
@@ -191,7 +189,7 @@ extension Scanner: CBCentralManagerDelegate {
             continuation.resume(throwing: BluetoothError.coreBluetoothError(description: error.localizedDescription))
         } else {
             // Success.
-            continuation.resume(returning: true)
+            continuation.resume(returning: ())
         }
     }
 }
