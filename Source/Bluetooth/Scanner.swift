@@ -34,22 +34,22 @@ final class Scanner: NSObject {
     
     // MARK: - Private Properties
     
-    private lazy var logger = Logger(Self.self)
+    internal lazy var logger = Logger(Self.self)
     private lazy var bluetoothManager = CBCentralManager(delegate: self, queue: nil)
     
     typealias ScanData = (peripheral: CBPeripheral, advertisementData: [String: Any], RSSI: NSNumber)
     private (set) lazy var devicePublisher = PassthroughSubject<ScanData, Never>()
     
-    @Published private(set) var managerState: CBManagerState = .unknown
+    @Published internal var managerState: CBManagerState = .unknown
     
-    @Published private var scanConditions: [Condition] = [.matchingAll]
-    @Published private var shouldScan = false
+    @Published internal var scanConditions: [Condition] = [.matchingAll]
+    @Published internal var shouldScan = false
     @Published private(set) var isScanning = false
     
     private var cancellable = Set<AnyCancellable>()
     
+    internal var continuations = [String: CheckedContinuation<CBPeripheral, Error>]()
     private var connectedPeripherals = [String: CBPeripheral]()
-    private var continuations = [String: CheckedContinuation<CBPeripheral, Error>]()
 }
 
 // MARK: - API
@@ -164,67 +164,6 @@ extension Scanner {
         catch {
             continuations.removeValue(forKey: deviceUUID)
             throw BluetoothError.coreBluetoothError(description: error.localizedDescription)
-        }
-    }
-}
-
-// MARK: - CBCentralManagerDelegate
-
-extension Scanner: CBCentralManagerDelegate {
-    
-    func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral,
-                        advertisementData: [String : Any], rssi RSSI: NSNumber) {
-        let isConnectable = (advertisementData[CBAdvertisementDataIsConnectable] as? NSNumber)?.boolValue
-        if scanConditions.contains(where: { $0 == .connectable }) {
-            if isConnectable ?? false {
-                devicePublisher.send((peripheral, advertisementData, RSSI))
-            }
-        } else {
-            devicePublisher.send((peripheral, advertisementData, RSSI))
-        }
-    }
-    
-    func centralManagerDidUpdateState(_ central: CBCentralManager) {
-        managerState = central.state
-        logger.info("Bluetooth changed state: \(central.state)")
-        
-        if central.state != .poweredOn {
-            shouldScan = false
-        }
-    }
-    
-    func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
-        guard let continuation = continuations[peripheral.identifier.uuidString] else { return }
-        continuation.resume(returning: peripheral)
-    }
-    
-    func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
-        guard let continuation = continuations[peripheral.identifier.uuidString] else { return }
-        continuation.resume(returning: peripheral)
-    }
-    
-    func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
-        guard let continuation = continuations[peripheral.identifier.uuidString] else { return }
-        if let error = error {
-            continuation.resume(throwing: BluetoothError.coreBluetoothError(description: error.localizedDescription))
-        } else {
-            // Success.
-            continuation.resume(returning: peripheral)
-        }
-    }
-}
-
-// MARK: - CBPeripheralDelegate
-
-extension Scanner: CBPeripheralDelegate {
-    
-    func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
-        guard let continuation = continuations[peripheral.identifier.uuidString] else { return }
-        if let error = error {
-            continuation.resume(throwing: BluetoothError.coreBluetoothError(description: error.localizedDescription))
-        } else {
-            // Success.
-            continuation.resume(returning: peripheral)
         }
     }
 }
