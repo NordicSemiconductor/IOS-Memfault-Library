@@ -10,12 +10,12 @@ import CoreBluetooth
 
 // MARK: - Device
 
-struct Device: Identifiable {
+struct Device: Identifiable, ScannerDevice {
     
     // MARK: Properties
     
     var id: String {
-        return uuid
+        return uuidString
     }
     
     var isConnectable: Bool {
@@ -23,7 +23,7 @@ struct Device: Identifiable {
     }
     
     let name: String
-    let uuid: String
+    let uuidString: String
     let rssi: RSSI
     let advertisementData: AdvertisementData
     var state: ConnectedState
@@ -33,7 +33,7 @@ struct Device: Identifiable {
     
     init(name: String, uuid: UUID, rssi: RSSI, advertisementData: AdvertisementData) {
         self.name = advertisementData.localName ?? name
-        self.uuid = uuid.uuidString
+        self.uuidString = uuid.uuidString
         self.rssi = rssi
         self.advertisementData = advertisementData
         self.state = (advertisementData.isConnectable ?? false) ? .disconnected : .notConnectable
@@ -43,7 +43,7 @@ struct Device: Identifiable {
     init(peripheral: CBPeripheral, state: ConnectedState, advertisementData: [String: Any], rssi: NSNumber) {
         let advertisementData = AdvertisementData(advertisementData)
         self.name = advertisementData.localName ?? (peripheral.name ?? "N/A")
-        self.uuid = peripheral.identifier.uuidString
+        self.uuidString = peripheral.identifier.uuidString
         self.rssi = RSSI(integerLiteral: rssi.intValue)
         self.advertisementData = advertisementData
         self.state = (advertisementData.isConnectable ?? false) ? state : .notConnectable
@@ -56,11 +56,11 @@ struct Device: Identifiable {
 extension Device: Equatable {
 
     public static func == (lhs: Device, rhs: CBPeripheral) -> Bool {
-        return lhs.uuid == rhs.identifier.uuidString
+        return lhs.uuidString == rhs.identifier.uuidString
     }
 
     public static func == (lhs: Device, rhs: Device) -> Bool {
-        return lhs.uuid == rhs.uuid && lhs.state == rhs.state
+        return lhs.uuidString == rhs.uuidString && lhs.state == rhs.state
     }
 }
 
@@ -69,7 +69,8 @@ extension Device: Equatable {
 extension Device: Hashable {
 
     public func hash(into hasher: inout Hasher) {
-        hasher.combine(uuid)
+        hasher.combine(uuidString)
+        hasher.combine(state)
     }
 }
 

@@ -97,7 +97,11 @@ extension Scanner {
     
     // MARK: Connect
     
-    func connect(to deviceUUID: String) async throws {
+    func connect<T: ScannerDevice>(to device: T) async throws {
+        try await connect(toDeviceWithUUID: device.uuidString)
+    }
+    
+    func connect(toDeviceWithUUID deviceUUID: String) async throws {
         guard let uuid = UUID(uuidString: deviceUUID),
               let peripheral = bluetoothManager.retrievePeripherals(withIdentifiers: [uuid]).first else {
             throw BluetoothError.cantRetrievePeripheral
@@ -121,7 +125,11 @@ extension Scanner {
     
     // MARK: Discover Services
     
-    func discoverServices(_ serviceUUIDs: [String] = [], of deviceUUID: String) async throws -> [CBService] {
+    func discoverServices<T: ScannerDevice>(_ serviceUUIDs: [String] = [], of device: T) async throws -> [CBService] {
+        try await discoverServices(serviceUUIDs, ofDeviceWithUUID: device.uuidString)
+    }
+    
+    func discoverServices(_ serviceUUIDs: [String] = [], ofDeviceWithUUID deviceUUID: String) async throws -> [CBService] {
         guard let peripheral = connectedPeripherals[deviceUUID] else {
             throw BluetoothError.cantRetrievePeripheral
         }
@@ -146,7 +154,11 @@ extension Scanner {
     
     // MARK: Disconnect
     
-    func disconnect(from deviceUUID: String) async throws {
+    func disconnect<T: ScannerDevice>(from device: T) async throws {
+        try await disconnect(fromWithUUID: device.uuidString)
+    }
+    
+    func disconnect(fromWithUUID deviceUUID: String) async throws {
         guard let peripheral = connectedPeripherals[deviceUUID] else {
             throw BluetoothError.cantRetrievePeripheral
         }

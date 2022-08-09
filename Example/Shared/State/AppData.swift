@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import OSLog
 
 final class AppData: ObservableObject {
     
@@ -17,6 +18,7 @@ final class AppData: ObservableObject {
     // MARK: Private
     
     private let scanner: Scanner
+    private let logger: Logger
     
     // MARK: Init
     
@@ -24,6 +26,7 @@ final class AppData: ObservableObject {
         self.scanner = Scanner()
         self.isScanning = scanner.isScanning
         self.scannedDevices = []
+        self.logger = Logger(Self.self)
         
         _ = scanner.turnOnBluetoothRadio()
         Task { @MainActor in
@@ -71,17 +74,17 @@ extension AppData {
             await updateDeviceConnectionState(of: device, to: .connecting)
             
             do {
-                try await scanner.connect(to: device.uuid)
-                print("Connecting to \(device.name)")
+                try await scanner.connect(to: device)
+                logger.info("Connecting to \(device.name)")
                 await updateDeviceConnectionState(of: device, to: .connected)
-                print("Connected to \(device.name)")
-                print("Discovering \(device.name)'s Services...")
-                let cbServices = try await scanner.discoverServices(of: device.uuid)
+                logger.info("Connected to \(device.name)")
+                logger.info("Discovering \(device.name)'s Services...")
+                let cbServices = try await scanner.discoverServices(of: device)
                 for service in cbServices {
-                    print("Discovered Service \(service.uuid)")
+                    logger.info("Discovered Service \(service.uuid)")
                 }
             } catch {
-                print(error.localizedDescription)
+                logger.error("\(error.localizedDescription)")
             }
         }
     }
@@ -90,14 +93,14 @@ extension AppData {
     
     func disconnect(from device: Device) {
         Task {
-            print("Disconnecting from \(device.name)")
+            logger.info("Disconnecting from \(device.name)")
             await updateDeviceConnectionState(of: device, to: .disconnecting)
             do {
-                try await scanner.disconnect(from: device.uuid)
-                print("Disconnected from \(device.name)")
+                try await scanner.disconnect(from: device)
+                logger.info("Disconnected from \(device.name)")
                 await updateDeviceConnectionState(of: device, to: .disconnected)
             } catch {
-                print(error.localizedDescription)
+                logger.error("\(error.localizedDescription)")
             }
         }
     }
@@ -110,7 +113,7 @@ private extension AppData {
     
     func updateDeviceConnectionState(of device: Device, to newState: ConnectedState) async {
         Task { @MainActor in
-            guard let i = scannedDevices.firstIndex(where: { $0.uuid == device.uuid }) else { return }
+            guard let i = scannedDevices.firstIndex(where: { $0.uuidString == device.uuidString }) else { return }
             var connectionCopy = scannedDevices[i]
             connectionCopy.state = newState
             scannedDevices[i] = connectionCopy
