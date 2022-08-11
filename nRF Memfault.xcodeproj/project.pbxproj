@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		AA22DDCA289B4162003366FA /* DeviceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA22DDC9289B4162003366FA /* DeviceView.swift */; };
 		AA22DDCB289B4162003366FA /* DeviceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA22DDC9289B4162003366FA /* DeviceView.swift */; };
+		AA281D0928A506B100D49C9C /* iOSCommonLibraries in Frameworks */ = {isa = PBXBuildFile; productRef = AA281D0828A506B100D49C9C /* iOSCommonLibraries */; };
+		AA281D0C28A506C100D49C9C /* iOSCommonLibraries in Frameworks */ = {isa = PBXBuildFile; productRef = AA281D0B28A506C100D49C9C /* iOSCommonLibraries */; };
 		AAEED86D28A26440002284A2 /* Scanner+CBCentralManagerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAEED86C28A26440002284A2 /* Scanner+CBCentralManagerDelegate.swift */; };
 		AAEED86E28A26440002284A2 /* Scanner+CBCentralManagerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAEED86C28A26440002284A2 /* Scanner+CBCentralManagerDelegate.swift */; };
 		AAEED87028A26528002284A2 /* Scanner+CBPeripheralDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAEED86F28A26528002284A2 /* Scanner+CBPeripheralDelegate.swift */; };
@@ -74,6 +76,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AA281D0928A506B100D49C9C /* iOSCommonLibraries in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -81,6 +84,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AA281D0C28A506C100D49C9C /* iOSCommonLibraries in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -96,12 +100,20 @@
 			path = Scanner;
 			sourceTree = "<group>";
 		};
+		AA281D0A28A506C100D49C9C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		AAFBF81B2899482900A6655C = {
 			isa = PBXGroup;
 			children = (
 				AAFBF8452899554600A6655C /* Example */,
 				AAFBF8462899556300A6655C /* Source */,
 				AAFBF8292899482B00A6655C /* Products */,
+				AA281D0A28A506C100D49C9C /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -211,6 +223,9 @@
 			dependencies = (
 			);
 			name = "nRF Memfault (iOS)";
+			packageProductDependencies = (
+				AA281D0828A506B100D49C9C /* iOSCommonLibraries */,
+			);
 			productName = "nRF Memfault (iOS)";
 			productReference = AAFBF8282899482B00A6655C /* nRF Memfault.app */;
 			productType = "com.apple.product-type.application";
@@ -228,6 +243,9 @@
 			dependencies = (
 			);
 			name = "nRF Memfault (macOS)";
+			packageProductDependencies = (
+				AA281D0B28A506C100D49C9C /* iOSCommonLibraries */,
+			);
 			productName = "nRF Memfault (macOS)";
 			productReference = AAFBF82E2899482B00A6655C /* nRF Memfault.app */;
 			productType = "com.apple.product-type.application";
@@ -259,6 +277,9 @@
 				Base,
 			);
 			mainGroup = AAFBF81B2899482900A6655C;
+			packageReferences = (
+				AA281D0728A506B100D49C9C /* XCRemoteSwiftPackageReference "IOS-Common-Libraries" */,
+			);
 			productRefGroup = AAFBF8292899482B00A6655C /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -624,6 +645,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		AA281D0728A506B100D49C9C /* XCRemoteSwiftPackageReference "IOS-Common-Libraries" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/NordicPlayground/IOS-Common-Libraries";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		AA281D0828A506B100D49C9C /* iOSCommonLibraries */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AA281D0728A506B100D49C9C /* XCRemoteSwiftPackageReference "IOS-Common-Libraries" */;
+			productName = iOSCommonLibraries;
+		};
+		AA281D0B28A506C100D49C9C /* iOSCommonLibraries */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AA281D0728A506B100D49C9C /* XCRemoteSwiftPackageReference "IOS-Common-Libraries" */;
+			productName = iOSCommonLibraries;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = AAFBF81C2899482900A6655C /* Project object */;
 }
