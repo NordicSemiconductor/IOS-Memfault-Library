@@ -19,6 +19,11 @@ struct ScannerView: View {
                 DeviceView(scannedDevice)
             }
         }
+        #if os(iOS)
+        .refreshable {
+            appData.refresh()
+        }
+        #endif
     }
 }
 

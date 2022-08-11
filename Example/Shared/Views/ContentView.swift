@@ -16,10 +16,24 @@ struct ContentView: View {
         #if os(iOS)
         ScannerView()
             .setTitle("nRF Memfault")
-            .wrapInNavigationViewForiOS(with: .nordicBlue)
             .toolbar {
-                commonToolbar()
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button(action: {
+                        appData.refresh()
+                    }, label: {
+                        Image(systemName: "arrow.clockwise")
+                    })
+                }
+                
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: {
+                        appData.toggleScanner()
+                    }, label: {
+                        Image(systemName: appData.isScanning ? "stop.fill" : "play.fill")
+                    })
+                }
             }
+            .wrapInNavigationViewForiOS(with: .nordicBlue)
             .onAppear() {
                 appData.toggleScanner()
             }
@@ -28,7 +42,19 @@ struct ContentView: View {
             ScannerView()
         }
         .toolbar {
-            commonToolbar()
+            Button(action: {
+                appData.refresh()
+            }, label: {
+                Image(systemName: "arrow.clockwise")
+            })
+            .keyboardShortcut(KeyEquivalent(Character("r")), modifiers: [.command])
+
+            Button(action: {
+                appData.toggleScanner()
+            }, label: {
+                Image(systemName: appData.isScanning ? "stop.fill" : "play.fill")
+            })
+            .keyboardShortcut(KeyEquivalent(Character(" ")), modifiers: [])
         }
         .onAppear() {
             appData.toggleScanner()
@@ -36,23 +62,6 @@ struct ContentView: View {
         .frame(minWidth: 150, idealWidth: 150,
                minHeight: 500, idealHeight: 500)
         #endif
-    }
-    
-    @ViewBuilder
-    func commonToolbar() -> some View {
-        Button(action: {
-            appData.refresh()
-        }, label: {
-            Image(systemName: "arrow.clockwise")
-        })
-        .keyboardShortcut(KeyEquivalent(Character("r")), modifiers: [.command])
-
-        Button(action: {
-            appData.toggleScanner()
-        }, label: {
-            Image(systemName: appData.isScanning ? "stop.fill" : "play.fill")
-        })
-        .keyboardShortcut(KeyEquivalent(Character(" ")), modifiers: [])
     }
 }
 
