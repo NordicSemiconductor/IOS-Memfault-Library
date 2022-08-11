@@ -34,17 +34,17 @@ extension Scanner: CBCentralManagerDelegate {
     }
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
-        guard let continuation = continuations[peripheral.identifier.uuidString] else { return }
+        guard case .connection(let continuation)? = continuations[peripheral.identifier.uuidString] else { return }
         continuation.resume(returning: peripheral)
     }
     
     func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
-        guard let continuation = continuations[peripheral.identifier.uuidString] else { return }
+        guard case .connection(let continuation)? = continuations[peripheral.identifier.uuidString] else { return }
         continuation.resume(returning: peripheral)
     }
     
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
-        guard let continuation = continuations[peripheral.identifier.uuidString] else { return }
+        guard case .connection(let continuation)? = continuations[peripheral.identifier.uuidString] else { return }
         if let error = error {
             continuation.resume(throwing: BluetoothError.coreBluetoothError(description: error.localizedDescription))
         } else {

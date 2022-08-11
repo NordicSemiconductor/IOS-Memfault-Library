@@ -15,7 +15,7 @@ enum BluetoothError: LocalizedError {
     
     case bluetoothPoweredOff
     case failedToConnect, failedToDiscoverCharacteristics, failedToDiscoverServices
-    case cantRetrievePeripheral
+    case cantRetrievePeripheral, cantRetrieveService(_ uuid: String), cantRetrieveCharacteristic(_ uuid: String)
     case expectedServiceNotFound, noCharacteristicsForService, noServicesForPeripheral
     
     case operationInProgress, coreBluetoothError(description: String)
@@ -33,6 +33,10 @@ enum BluetoothError: LocalizedError {
             return "Failed to connect to CBPeripheral."
         case .cantRetrievePeripheral:
             return "Can't retrieve CBPeripheral."
+        case .cantRetrieveService(let name):
+            return "Can't retrieve CBService \(name)."
+        case .cantRetrieveCharacteristic(let name):
+            return "Can't retrieve CBCharacteristic \(name)."
         case .failedToDiscoverCharacteristics:
             return "Failed to Discover CBPeripheral's Characteristic(s)."
         case .failedToDiscoverServices:

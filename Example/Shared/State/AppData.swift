@@ -7,6 +7,7 @@
 
 import Foundation
 import OSLog
+import CoreBluetooth
 
 final class AppData: ObservableObject {
     
@@ -80,11 +81,28 @@ extension AppData {
                 logger.info("Connected to \(device.name)")
                 logger.info("Discovering \(device.name)'s Services...")
                 let cbServices = try await scanner.discoverServices(of: device)
-                for service in cbServices {
-                    logger.info("Discovered Service \(service.uuid)")
+                
+                guard let mdsService = cbServices.first(where: { $0.uuid == .MDS }) else {
+                    logger.error("MDS Service not found.")
+                    logger.info("Disconnecting...")
+                    disconnect(from: device)
+                    return
                 }
+                
+                logger.info("Discovering MDS' Characteristics...")
+                let characteristics = try await scanner.discoverCharacteristics(ofService: mdsService.uuid.uuidString, ofDeviceWithUUID: device.uuidString)
+                
+                logger.info("Reading Data URI...")
+                let dataUri = try await scanner.readCharacteristic(withUUID: CBUUID.MDSDataURICharacteristic.uuidString, inServiceWithUUID: CBUUID.MDS.uuidString, from: device)
+                print(dataUri)
+                
+                logger.info("Reading Auth Data...")
+                let authData = try await scanner.readCharacteristic(withUUID: CBUUID.MDSAuthCharacteristic.uuidString, inServiceWithUUID: CBUUID.MDS.uuidString, from: device)
+                print(authData)
             } catch {
                 logger.error("\(error.localizedDescription)")
+                logger.info("Disconnecting...")
+                disconnect(from: device)
             }
         }
     }
@@ -107,6 +125,13 @@ extension AppData {
 }
 
 // MARK: - Private
+
+private extension CBUUID {
+    
+    static let MDS = CBUUID(string: "54220000-F6A5-4007-A371-722F4EBD8436")
+    static let MDSDataURICharacteristic = CBUUID(string: "54220003-f6a5-4007-a371-722f4ebd8436")
+    static let MDSAuthCharacteristic = CBUUID(string: "54220004-f6a5-4007-a371-722f4ebd8436")
+}
 
 @MainActor
 private extension AppData {

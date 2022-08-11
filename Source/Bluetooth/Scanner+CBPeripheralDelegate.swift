@@ -13,12 +13,31 @@ import CoreBluetooth
 extension Scanner: CBPeripheralDelegate {
     
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
-        guard let continuation = continuations[peripheral.identifier.uuidString] else { return }
+        guard case .connection(let continuation)? = continuations[peripheral.identifier.uuidString] else { return }
         if let error = error {
             continuation.resume(throwing: BluetoothError.coreBluetoothError(description: error.localizedDescription))
         } else {
             // Success.
             continuation.resume(returning: peripheral)
+        }
+    }
+    
+    func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
+        guard case .updatedService(let continuation)? = continuations[peripheral.identifier.uuidString] else { return }
+        if let error = error {
+            continuation.resume(throwing: BluetoothError.coreBluetoothError(description: error.localizedDescription))
+        } else {
+            // Success.
+            continuation.resume(returning: service)
+        }
+    }
+    
+    func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
+        guard case .attribute(let continuation)? = continuations[peripheral.identifier.uuidString] else { return }
+        if let error = error {
+            continuation.resume(throwing: BluetoothError.coreBluetoothError(description: error.localizedDescription))
+        } else {
+            continuation.resume(returning: characteristic.value)
         }
     }
 }
