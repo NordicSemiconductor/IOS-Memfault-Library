@@ -97,12 +97,20 @@ extension AppData {
                 let characteristics = try await scanner.discoverCharacteristics(ofService: mdsService.uuid.uuidString, ofDeviceWithUUID: device.uuidString)
                 
                 logger.info("Reading Data URI...")
-                let dataUri = try await scanner.readCharacteristic(withUUID: CBUUID.MDSDataURICharacteristic.uuidString, inServiceWithUUID: CBUUID.MDS.uuidString, from: device)
-                print(dataUri)
+                guard let uriData = try await scanner.readCharacteristic(withUUID: CBUUID.MDSDataURICharacteristic.uuidString, inServiceWithUUID: CBUUID.MDS.uuidString, from: device),
+                      let uriString = String(data: uriData, encoding: .utf8),
+                      let uriURL = URL(string: uriString) else {
+//                    throw LocalizedError
+                    return
+                }
                 
                 logger.info("Reading Auth Data...")
-                let authData = try await scanner.readCharacteristic(withUUID: CBUUID.MDSAuthCharacteristic.uuidString, inServiceWithUUID: CBUUID.MDS.uuidString, from: device)
-                print(authData)
+                guard let authData = try await scanner.readCharacteristic(withUUID: CBUUID.MDSAuthCharacteristic.uuidString, inServiceWithUUID: CBUUID.MDS.uuidString, from: device),
+                      let authString = String(data: authData, encoding: .utf8) else {
+                    // throw Error
+                    return
+                }
+                
             } catch {
                 logger.error("\(error.localizedDescription)")
                 logger.info("Disconnecting...")
