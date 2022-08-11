@@ -46,7 +46,7 @@ struct DeviceView: View {
                     Button("Disconnect", action: {
                         appData.disconnect(from: device)
                     })
-                    .foregroundColor(.nordicBlue)
+                    .foregroundColor(.nordicFall)
                 case .connecting:
                     ProgressView()
                         .frame(width: 6, height: 6)
