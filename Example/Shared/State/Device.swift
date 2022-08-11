@@ -22,7 +22,7 @@ struct Device: Identifiable, ScannerDevice {
         return state != .notConnectable
     }
     
-    let name: String
+    private(set) var name: String
     let uuidString: String
     let rssi: RSSI
     let advertisementData: AdvertisementData
@@ -49,6 +49,12 @@ struct Device: Identifiable, ScannerDevice {
         self.advertisementData = advertisementData
         self.state = (advertisementData.isConnectable ?? false) ? state : .notConnectable
         self.services = []
+    }
+    
+    // MARK: API
+    
+    mutating func update(from advertisingData: [String: Any]) {
+        self.name = advertisementData.localName ?? name
     }
 }
 

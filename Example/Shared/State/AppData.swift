@@ -62,8 +62,12 @@ extension AppData {
             for await scanData in scanner.scan().values {
                 let state = ConnectedState.from(scanData.peripheral.state)
                 let device = Device(peripheral: scanData.peripheral, state: state, advertisementData: scanData.advertisementData, rssi: scanData.RSSI)
-                guard !scannedDevices.contains(device) else { continue }
-                scannedDevices.append(device)
+                
+                if let i = scannedDevices.firstIndex(of: device) {
+                    scannedDevices[i].update(from: scanData.advertisementData)
+                } else {
+                    scannedDevices.append(device)
+                }
             }
         }
     }
