@@ -36,15 +36,17 @@ struct DeviceView: View {
                 case .notConnectable:
                     Text("Not Connectable")
                         .font(.caption)
-                        .foregroundColor(.secondary)
+                        .foregroundColor(.nordicMiddleGrey)
                 case .disconnected:
                     Button("Connect", action: {
                         appData.connect(to: device)
                     })
+                    .foregroundColor(.nordicBlue)
                 case .connected:
                     Button("Disconnect", action: {
                         appData.disconnect(from: device)
                     })
+                    .foregroundColor(.nordicBlue)
                 case .connecting:
                     ProgressView()
                         .frame(width: 6, height: 6)
@@ -53,12 +55,14 @@ struct DeviceView: View {
                     Button("Connecting...", action: {
                         appData.disconnect(from: device)
                     })
+                    .foregroundColor(.nordicBlue)
                 case .disconnecting:
                     ProgressView()
                         .frame(width: 6, height: 6)
                         .padding(.trailing)
                     
                     Text("Disconnecting...")
+                        .foregroundColor(.nordicMiddleGrey)
                 }
             }
         }
@@ -74,7 +78,9 @@ struct DeviceView_Previews: PreviewProvider {
     
     static var previews: some View {
         Group {
-            DeviceView(.sample)
+            ForEach(ConnectedState.allCases, id: \.self) { connState in
+                DeviceView(.sample(for: connState))
+            }
         }
         .previewLayout(.sizeThatFits)
     }

@@ -31,12 +31,13 @@ struct Device: Identifiable, ScannerDevice {
     
     // MARK: Init
     
-    init(name: String, uuid: UUID, rssi: RSSI, advertisementData: AdvertisementData) {
+    init(name: String, uuid: UUID, rssi: RSSI, advertisementData: AdvertisementData,
+         state: ConnectedState? = nil) {
         self.name = advertisementData.localName ?? name
         self.uuidString = uuid.uuidString
         self.rssi = rssi
         self.advertisementData = advertisementData
-        self.state = (advertisementData.isConnectable ?? false) ? .disconnected : .notConnectable
+        self.state = state ?? ((advertisementData.isConnectable ?? false) ? .disconnected : .notConnectable)
         self.services = []
     }
     
@@ -76,7 +77,7 @@ extension Device: Hashable {
 
 // MARK: ConnectedState
 
-public enum ConnectedState: Int {
+public enum ConnectedState: Int, CaseIterable {
     
     case notConnectable
     case connecting, connected, disconnecting, disconnected
@@ -102,7 +103,13 @@ public enum ConnectedState: Int {
 #if DEBUG
 extension Device {
     
-    static let sample = Device(name: "Test Device", uuid: UUID(), rssi: .outOfRange, advertisementData: .connectableMock)
-    static let unconnectableSample = Device(name: "#AlonsoAlpineAstonMartinPiastriRicciardoMclarenMess", uuid: UUID(), rssi: .outOfRange, advertisementData: .unconnectableMock)
+    static func sample(for connectedState: ConnectedState) -> Device {
+        switch connectedState {
+        case .notConnectable:
+            return Device(name: "#AlonsoAlpineAstonMartinPiastriRicciardoMclarenMess", uuid: UUID(), rssi: .outOfRange, advertisementData: .unconnectableMock)
+        case .connecting, .connected, .disconnecting, .disconnected:
+            return Device(name: "Test Device", uuid: UUID(), rssi: .outOfRange, advertisementData: .connectableMock, state: connectedState)
+        }
+    }
 }
 #endif

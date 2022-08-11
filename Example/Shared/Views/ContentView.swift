@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import iOS_Common_Libraries
 
 struct ContentView: View {
     
@@ -13,18 +14,15 @@ struct ContentView: View {
     
     var body: some View {
         #if os(iOS)
-        NavigationView {
-            ScannerView()
-                .background(.green)
-        }
-        .navigationTitle("nRF Memfault")
-        .navigationViewStyle(StackNavigationViewStyle())
-        .toolbar {
-            commonToolbar()
-        }
-        .onAppear() {
-            appData.toggleScanner()
-        }
+        ScannerView()
+            .setTitle("nRF Memfault")
+            .wrapInNavigationViewForiOS(with: .nordicBlue)
+            .toolbar {
+                commonToolbar()
+            }
+            .onAppear() {
+                appData.toggleScanner()
+            }
         #else
         VStack {
             ScannerView()
