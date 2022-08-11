@@ -32,6 +32,24 @@ extension Scanner: CBPeripheralDelegate {
         }
     }
     
+    func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {
+        guard case .attribute(let continuation)? = continuations[peripheral.identifier.uuidString] else { return }
+        if let error = error {
+            continuation.resume(throwing: BluetoothError.coreBluetoothError(description: error.localizedDescription))
+        } else {
+            continuation.resume(returning: characteristic.value)
+        }
+    }
+    
+    func peripheral(_ peripheral: CBPeripheral, didUpdateNotificationStateFor characteristic: CBCharacteristic, error: Error?) {
+        guard case .notificationChange(let continuation)? = continuations[peripheral.identifier.uuidString] else { return }
+        if let error = error {
+            continuation.resume(throwing: BluetoothError.coreBluetoothError(description: error.localizedDescription))
+        } else {
+            continuation.resume(returning: characteristic.isNotifying)
+        }
+    }
+    
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
         guard case .attribute(let continuation)? = continuations[peripheral.identifier.uuidString] else { return }
         if let error = error {

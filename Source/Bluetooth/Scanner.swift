@@ -19,6 +19,7 @@ final class Scanner: NSObject {
         case connection(_ continuation: CheckedContinuation<CBPeripheral, Error>)
         case updatedService(_ continuation: CheckedContinuation<CBService, Error>)
         case attribute(_ continuation: CheckedContinuation<Data?, Error>)
+        case notificationChange(_ continuation: CheckedContinuation<Bool, Error>)
     }
     
     // MARK: - Condition
@@ -212,6 +213,69 @@ extension Scanner {
                 peripheral.readValue(for: cbCharacteristic)
             }
             return readData
+        }
+        catch {
+            throw BluetoothError.coreBluetoothError(description: error.localizedDescription)
+        }
+    }
+    
+    func writeCharacteristic<T: ScannerDevice>(_ data: Data,
+                                               writeType: CBCharacteristicWriteType = .withoutResponse,
+                                               toCharacteristicWithUUID characteristicUUID: String,
+                                               inServiceWithUUID serviceUUID: String,
+                                               from device: T) async throws -> Data? {
+        guard let peripheral = connectedPeripherals[device.uuidString] else {
+            throw BluetoothError.cantRetrievePeripheral
+        }
+        peripheral.delegate = self
+        
+        guard let cbService = peripheral.services?.first(where: { $0.uuid.uuidString == serviceUUID }),
+              let cbCharacteristic = cbService.characteristics?.first(where: { $0.uuid.uuidString == characteristicUUID }) else {
+            throw BluetoothError.cantRetrieveCharacteristic(characteristicUUID)
+        }
+        
+        guard continuations[device.uuidString] == nil else { throw BluetoothError.operationInProgress }
+        defer {
+            continuations.removeValue(forKey: device.uuidString)
+        }
+        
+        do {
+            let writeData = try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Data?, Error>) -> Void in
+                continuations[device.uuidString] = .attribute(continuation)
+                peripheral.writeValue(data, for: cbCharacteristic, type: writeType)
+            }
+            return writeData
+        }
+        catch {
+            throw BluetoothError.coreBluetoothError(description: error.localizedDescription)
+        }
+    }
+    
+    func setNotify<T: ScannerDevice>(_ notify: Bool,
+                                     toCharacteristicWithUUID characteristicUUID: String,
+                                     inServiceWithUUID serviceUUID: String,
+                                     from device: T) async throws -> Bool {
+        guard let peripheral = connectedPeripherals[device.uuidString] else {
+            throw BluetoothError.cantRetrievePeripheral
+        }
+        peripheral.delegate = self
+        
+        guard let cbService = peripheral.services?.first(where: { $0.uuid.uuidString == serviceUUID }),
+              let cbCharacteristic = cbService.characteristics?.first(where: { $0.uuid.uuidString == characteristicUUID }) else {
+            throw BluetoothError.cantRetrieveCharacteristic(characteristicUUID)
+        }
+        
+        guard continuations[device.uuidString] == nil else { throw BluetoothError.operationInProgress }
+        defer {
+            continuations.removeValue(forKey: device.uuidString)
+        }
+        
+        do {
+            let isNotifying = try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Bool, Error>) -> Void in
+                continuations[device.uuidString] = .notificationChange(continuation)
+                peripheral.setNotifyValue(notify, for: cbCharacteristic)
+            }
+            return isNotifying
         }
         catch {
             throw BluetoothError.coreBluetoothError(description: error.localizedDescription)
