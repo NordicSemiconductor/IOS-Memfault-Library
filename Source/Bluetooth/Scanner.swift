@@ -191,6 +191,22 @@ extension Scanner {
     
     // MARK: Read
     
+    func data<T: ScannerDevice>(fromCharacteristic characteristic: CBCharacteristic,
+                                inService service: CBService,
+                                device: T) -> AsyncCharacteristicData {
+        return data(fromCharacteristicWithUUID: characteristic.uuid.uuidString, inServiceWithUUID: service.uuid.uuidString, device: device)
+    }
+    
+    func data<T: ScannerDevice>(fromCharacteristicWithUUID characteristicUUID: String,
+                                inServiceWithUUID serviceUUID: String,
+                                device: T) -> AsyncCharacteristicData {
+        let stream = AsyncThrowingStream<AsyncStreamValue, Error> { continuation in
+            connectedStreams[device.uuidString]?.append(continuation)
+        }
+        return AsyncCharacteristicData(serviceUUID: serviceUUID, characteristicUUID: characteristicUUID,
+                                       stream: stream)
+    }
+    
     func readCharacteristic<T: ScannerDevice>(withUUID characteristicUUID: String,
                                               inServiceWithUUID serviceUUID: String,
                                               from device: T) async throws -> Data? {
@@ -218,6 +234,8 @@ extension Scanner {
             throw BluetoothError.coreBluetoothError(description: error.localizedDescription)
         }
     }
+    
+    // MARK: Write
     
     func writeCharacteristic<T: ScannerDevice>(_ data: Data,
                                                writeType: CBCharacteristicWriteType = .withoutResponse,
@@ -251,6 +269,8 @@ extension Scanner {
         }
     }
     
+    // MARK: Notify
+    
     func setNotify<T: ScannerDevice>(_ notify: Bool,
                                      toCharacteristicWithUUID characteristicUUID: String,
                                      inServiceWithUUID serviceUUID: String,
@@ -280,22 +300,6 @@ extension Scanner {
         catch {
             throw BluetoothError.coreBluetoothError(description: error.localizedDescription)
         }
-    }
-    
-    func data<T: ScannerDevice>(fromCharacteristic characteristic: CBCharacteristic,
-                                inService service: CBService,
-                                device: T) -> AsyncCharacteristicData {
-        return data(fromCharacteristicWithUUID: characteristic.uuid.uuidString, inServiceWithUUID: service.uuid.uuidString, device: device)
-    }
-    
-    func data<T: ScannerDevice>(fromCharacteristicWithUUID characteristicUUID: String,
-                                inServiceWithUUID serviceUUID: String,
-                                device: T) -> AsyncCharacteristicData {
-        let stream = AsyncThrowingStream<AsyncStreamValue, Error> { continuation in
-            connectedStreams[device.uuidString]?.append(continuation)
-        }
-        return AsyncCharacteristicData(serviceUUID: serviceUUID, characteristicUUID: characteristicUUID,
-                                       stream: stream)
     }
     
     // MARK: Disconnect
