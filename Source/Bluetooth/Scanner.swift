@@ -58,12 +58,7 @@ final class Scanner: NSObject {
     internal var continuations = [String: AwaitContinuation]()
     private var connectedPeripherals = [String: CBPeripheral]()
     
-//    enum ConnectedStreamValueOperationSource {
-//        case read
-//        case notification
-//    }
-    typealias ConnectedStreamValue = (characteristic: CBCharacteristic, data: Data?)
-    internal var connectedStreams = [String: [AsyncThrowingStream<ConnectedStreamValue, Error>.Continuation]]()
+    internal var connectedStreams = [String: [AsyncThrowingStream<AsyncStreamValue, Error>.Continuation]]()
 }
 
 // MARK: - API
@@ -211,13 +206,10 @@ extension Scanner {
         
         do {
             var readData: Data? = nil
-            
-            let characteristicReadStream = listenTo(toCharacteristicWithUUID: characteristicUUID, inServiceWithUUID: serviceUUID, from: device)
-                .filter { $0.characteristic.uuid.uuidString == characteristicUUID }
-            
+            let readStream = data(fromCharacteristic: cbCharacteristic, inService: cbService, device: device)
             peripheral.readValue(for: cbCharacteristic)
-            for try await newValue in characteristicReadStream {
-                readData = newValue.data
+            for try await newValue in readStream {
+                readData = newValue
                 break // we're only interested in the first 'read' Value.
             }
             return readData
@@ -290,12 +282,20 @@ extension Scanner {
         }
     }
     
-    func listenTo<T: ScannerDevice>(toCharacteristicWithUUID characteristicUUID: String,
-                                    inServiceWithUUID serviceUUID: String,
-                                    from device: T) -> AsyncThrowingStream<ConnectedStreamValue, Error> {
-        return AsyncThrowingStream<ConnectedStreamValue, Error> { continuation in
+    func data<T: ScannerDevice>(fromCharacteristic characteristic: CBCharacteristic,
+                                inService service: CBService,
+                                device: T) -> AsyncCharacteristicData {
+        return data(fromCharacteristicWithUUID: characteristic.uuid.uuidString, inServiceWithUUID: service.uuid.uuidString, device: device)
+    }
+    
+    func data<T: ScannerDevice>(fromCharacteristicWithUUID characteristicUUID: String,
+                                inServiceWithUUID serviceUUID: String,
+                                device: T) -> AsyncCharacteristicData {
+        let stream = AsyncThrowingStream<AsyncStreamValue, Error> { continuation in
             connectedStreams[device.uuidString]?.append(continuation)
         }
+        return AsyncCharacteristicData(serviceUUID: serviceUUID, characteristicUUID: characteristicUUID,
+                                       stream: stream)
     }
     
     // MARK: Disconnect
