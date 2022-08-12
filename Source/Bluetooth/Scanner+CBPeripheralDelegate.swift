@@ -51,11 +51,15 @@ extension Scanner: CBPeripheralDelegate {
     }
     
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
-        guard case .attribute(let continuation)? = continuations[peripheral.identifier.uuidString] else { return }
         if let error = error {
-            continuation.resume(throwing: BluetoothError.coreBluetoothError(description: error.localizedDescription))
+            let rethrow = BluetoothError.coreBluetoothError(description: error.localizedDescription)
+            connectedStreams[peripheral.identifier.uuidString]?.forEach {
+                $0.finish(throwing: rethrow)
+            }
         } else {
-            continuation.resume(returning: characteristic.value)
+            connectedStreams[peripheral.identifier.uuidString]?.forEach {
+                $0.yield((characteristic, characteristic.value))
+            }
         }
     }
 }

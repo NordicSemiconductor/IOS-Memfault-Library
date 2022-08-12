@@ -34,6 +34,7 @@ extension Scanner: CBCentralManagerDelegate {
     }
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
+        connectedStreams[peripheral.identifier.uuidString] = [AsyncThrowingStream<ConnectedStreamValue, Error>.Continuation]()
         guard case .connection(let continuation)? = continuations[peripheral.identifier.uuidString] else { return }
         continuation.resume(returning: peripheral)
     }
@@ -46,9 +47,16 @@ extension Scanner: CBCentralManagerDelegate {
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
         guard case .connection(let continuation)? = continuations[peripheral.identifier.uuidString] else { return }
         if let error = error {
-            continuation.resume(throwing: BluetoothError.coreBluetoothError(description: error.localizedDescription))
+            let rethrow = BluetoothError.coreBluetoothError(description: error.localizedDescription)
+            continuation.resume(throwing: rethrow)
+            connectedStreams[peripheral.identifier.uuidString]?.forEach {
+                $0.finish(throwing: rethrow)
+            }
         } else {
             // Success.
+            connectedStreams[peripheral.identifier.uuidString]?.forEach {
+                $0.finish()
+            }
             continuation.resume(returning: peripheral)
         }
     }

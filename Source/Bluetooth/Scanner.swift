@@ -57,6 +57,13 @@ final class Scanner: NSObject {
     
     internal var continuations = [String: AwaitContinuation]()
     private var connectedPeripherals = [String: CBPeripheral]()
+    
+//    enum ConnectedStreamValueOperationSource {
+//        case read
+//        case notification
+//    }
+    typealias ConnectedStreamValue = (characteristic: CBCharacteristic, data: Data?)
+    internal var connectedStreams = [String: [AsyncThrowingStream<ConnectedStreamValue, Error>.Continuation]]()
 }
 
 // MARK: - API
@@ -196,21 +203,22 @@ extension Scanner {
             throw BluetoothError.cantRetrievePeripheral
         }
         peripheral.delegate = self
-        
+
         guard let cbService = peripheral.services?.first(where: { $0.uuid.uuidString == serviceUUID }),
               let cbCharacteristic = cbService.characteristics?.first(where: { $0.uuid.uuidString == characteristicUUID }) else {
             throw BluetoothError.cantRetrieveCharacteristic(characteristicUUID)
         }
         
-        guard continuations[device.uuidString] == nil else { throw BluetoothError.operationInProgress }
-        defer {
-            continuations.removeValue(forKey: device.uuidString)
-        }
-        
         do {
-            let readData = try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Data?, Error>) -> Void in
-                continuations[device.uuidString] = .attribute(continuation)
-                peripheral.readValue(for: cbCharacteristic)
+            var readData: Data? = nil
+            
+            let characteristicReadStream = listenTo(toCharacteristicWithUUID: characteristicUUID, inServiceWithUUID: serviceUUID, from: device)
+                .filter { $0.characteristic.uuid.uuidString == characteristicUUID }
+            
+            peripheral.readValue(for: cbCharacteristic)
+            for try await newValue in characteristicReadStream {
+                readData = newValue.data
+                break // we're only interested in the first 'read' Value.
             }
             return readData
         }
@@ -279,6 +287,14 @@ extension Scanner {
         }
         catch {
             throw BluetoothError.coreBluetoothError(description: error.localizedDescription)
+        }
+    }
+    
+    func listenTo<T: ScannerDevice>(toCharacteristicWithUUID characteristicUUID: String,
+                                    inServiceWithUUID serviceUUID: String,
+                                    from device: T) -> AsyncThrowingStream<ConnectedStreamValue, Error> {
+        return AsyncThrowingStream<ConnectedStreamValue, Error> { continuation in
+            connectedStreams[device.uuidString]?.append(continuation)
         }
     }
     
