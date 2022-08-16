@@ -96,6 +96,14 @@ extension AppData {
                 logger.info("Discovering MDS' Characteristics...")
                 let characteristics = try await scanner.discoverCharacteristics(ofService: mdsService.uuid.uuidString, ofDeviceWithUUID: device.uuidString)
                 
+                logger.info("Reading Device Identifier...")
+                guard let uriData = try await scanner.readCharacteristic(withUUID: CBUUID.MDSDeviceIdentifierCharacteristic.uuidString, inServiceWithUUID: CBUUID.MDS.uuidString, from: device),
+                      let deviceIdentifierString = String(data: uriData, encoding: .utf8) else {
+//                    throw LocalizedError
+                    return
+                }
+                logger.debug("Device Identifier: \(deviceIdentifierString)")
+                
                 logger.info("Reading Data URI...")
                 guard let uriData = try await scanner.readCharacteristic(withUUID: CBUUID.MDSDataURICharacteristic.uuidString, inServiceWithUUID: CBUUID.MDS.uuidString, from: device),
                       let uriString = String(data: uriData, encoding: .utf8),
@@ -103,6 +111,7 @@ extension AppData {
 //                    throw LocalizedError
                     return
                 }
+                logger.debug("Data URI: \(uriURL.absoluteString)")
                 
                 logger.info("Reading Auth Data...")
                 guard let authData = try await scanner.readCharacteristic(withUUID: CBUUID.MDSAuthCharacteristic.uuidString, inServiceWithUUID: CBUUID.MDS.uuidString, from: device),
@@ -110,6 +119,7 @@ extension AppData {
                     // throw Error
                     return
                 }
+                logger.debug("Auth Data: \(authString)")
                 
                 let isNotifying = try await scanner.setNotify(true, toCharacteristicWithUUID: CBUUID.MDSDataExportCharacteristic.uuidString, inServiceWithUUID: CBUUID.MDS.uuidString, from: device)
                 print(isNotifying)
@@ -143,6 +153,7 @@ extension AppData {
 private extension CBUUID {
     
     static let MDS = CBUUID(string: "54220000-F6A5-4007-A371-722F4EBD8436")
+    static let MDSDeviceIdentifierCharacteristic = CBUUID(string: "54220002-f6a5-4007-a371-722f4ebd8436")
     static let MDSDataURICharacteristic = CBUUID(string: "54220003-f6a5-4007-a371-722f4ebd8436")
     static let MDSAuthCharacteristic = CBUUID(string: "54220004-f6a5-4007-a371-722f4ebd8436")
     static let MDSDataExportCharacteristic = CBUUID(string: "54220005-f6a5-4007-a371-722f4ebd8436")
