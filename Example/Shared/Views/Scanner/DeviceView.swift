@@ -23,12 +23,12 @@ struct DeviceView: View {
         self.device = device
     }
     
+    // MARK: View
+    
     var shouldShowConnectedInformation: Bool {
         return device.state == .connected
                 || device.state == .disconnecting
     }
-    
-    // MARK: View
     
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {

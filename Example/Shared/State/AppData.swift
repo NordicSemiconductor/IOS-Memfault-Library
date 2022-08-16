@@ -15,6 +15,7 @@ final class AppData: ObservableObject {
     
     @Published var isScanning: Bool
     @Published var scannedDevices: [Device]
+    @Published var openDevice: Device?
     
     // MARK: Private
     
@@ -27,6 +28,7 @@ final class AppData: ObservableObject {
         self.scanner = Scanner()
         self.isScanning = scanner.isScanning
         self.scannedDevices = []
+        self.openDevice = nil
         self.logger = Logger(Self.self)
         
         _ = scanner.turnOnBluetoothRadio()
@@ -129,6 +131,8 @@ extension AppData {
                 let writeResult = try await scanner.writeCharacteristic(Data(repeating: 1, count: 1), writeType: .withResponse, toCharacteristicWithUUID: CBUUID.MDSDataExportCharacteristic.uuidString, inServiceWithUUID: CBUUID.MDS.uuidString, from: device)
                 logger.debug("Write Enable Result: \(writeResult ?? Data())")
                 await updateStreamingStatus(of: device, to: true)
+                
+                openDevice = device
             } catch {
                 logger.error("\(error.localizedDescription)")
                 logger.info("Disconnecting...")

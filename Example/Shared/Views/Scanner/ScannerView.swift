@@ -18,6 +18,12 @@ struct ScannerView: View {
             ForEach(appData.scannedDevices) { scannedDevice in
                 DeviceView(scannedDevice)
             }
+            
+            if let openDevice = appData.openDevice {
+                NavigationLink(destination: DeviceUploadView(openDevice), tag: openDevice, selection: $appData.openDevice, label: {
+                    DeviceView(openDevice)
+                })
+            }
         }
         #if os(iOS)
         .refreshable {
