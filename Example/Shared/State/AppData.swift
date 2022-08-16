@@ -99,7 +99,7 @@ extension AppData {
                 let characteristics = try await scanner.discoverCharacteristics(ofService: mdsService.uuid.uuidString, ofDeviceWithUUID: device.uuidString)
                 
                 logger.info("Reading Device Identifier...")
-                guard let uriData = try await scanner.readCharacteristic(withUUID: CBUUID.MDSDeviceIdentifierCharacteristic.uuidString, inServiceWithUUID: CBUUID.MDS.uuidString, from: device),
+                guard let uriData = try await scanner.readCharacteristic(withUUID: .MDSDeviceIdentifierCharacteristic, inServiceWithUUID: .MDS, from: device),
                       let deviceIdentifierString = String(data: uriData, encoding: .utf8) else {
 //                    throw LocalizedError
                     return
@@ -107,7 +107,7 @@ extension AppData {
                 logger.debug("Device Identifier: \(deviceIdentifierString)")
                 
                 logger.info("Reading Data URI...")
-                guard let uriData = try await scanner.readCharacteristic(withUUID: CBUUID.MDSDataURICharacteristic.uuidString, inServiceWithUUID: CBUUID.MDS.uuidString, from: device),
+                guard let uriData = try await scanner.readCharacteristic(withUUID: .MDSDataURICharacteristic, inServiceWithUUID: .MDS, from: device),
                       let uriString = String(data: uriData, encoding: .utf8),
                       let uriURL = URL(string: uriString) else {
 //                    throw LocalizedError
@@ -116,19 +116,19 @@ extension AppData {
                 logger.debug("Data URI: \(uriURL.absoluteString)")
                 
                 logger.info("Reading Auth Data...")
-                guard let authData = try await scanner.readCharacteristic(withUUID: CBUUID.MDSAuthCharacteristic.uuidString, inServiceWithUUID: CBUUID.MDS.uuidString, from: device),
+                guard let authData = try await scanner.readCharacteristic(withUUID: .MDSAuthCharacteristic, inServiceWithUUID: .MDS, from: device),
                       let authString = String(data: authData, encoding: .utf8) else {
                     // throw Error
                     return
                 }
                 logger.debug("Auth Data: \(authString)")
                 
-                let isNotifying = try await scanner.setNotify(true, toCharacteristicWithUUID: CBUUID.MDSDataExportCharacteristic.uuidString, inServiceWithUUID: CBUUID.MDS.uuidString, from: device)
+                let isNotifying = try await scanner.setNotify(true, toCharacteristicWithUUID: .MDSDataExportCharacteristic, inServiceWithUUID: .MDS, from: device)
                 await updateNotifyingStatus(of: device, to: isNotifying)
                 
                 logger.debug("setNotify: \(isNotifying)")
                 
-                let writeResult = try await scanner.writeCharacteristic(Data(repeating: 1, count: 1), writeType: .withResponse, toCharacteristicWithUUID: CBUUID.MDSDataExportCharacteristic.uuidString, inServiceWithUUID: CBUUID.MDS.uuidString, from: device)
+                let writeResult = try await scanner.writeCharacteristic(Data(repeating: 1, count: 1), writeType: .withResponse, toCharacteristicWithUUID: .MDSDataExportCharacteristic, inServiceWithUUID: .MDS, from: device)
                 logger.debug("Write Enable Result: \(writeResult ?? Data())")
                 await updateStreamingStatus(of: device, to: true)
                 
@@ -151,13 +151,13 @@ extension AppData {
             if device.streamingEnabled {
                 logger.debug("Disabling Streaming from \(device.name).")
                 _ = try await scanner.writeCharacteristic(
-                    Data(repeating: 0, count: 0), writeType: .withResponse, toCharacteristicWithUUID: CBUUID.MDSDataExportCharacteristic.uuidString, inServiceWithUUID: CBUUID.MDS.uuidString, from: device)
+                    Data(repeating: 0, count: 0), writeType: .withResponse, toCharacteristicWithUUID: .MDSDataExportCharacteristic, inServiceWithUUID: .MDS, from: device)
                 await updateNotifyingStatus(of: device, to: false)
             }
             
             if device.notificationsEnabled {
                 logger.debug("Turning Off Notifications from \(device.name).")
-                _ = try await scanner.setNotify(false, toCharacteristicWithUUID: CBUUID.MDSDataExportCharacteristic.uuidString, inServiceWithUUID: CBUUID.MDS.uuidString, from: device)
+                _ = try await scanner.setNotify(false, toCharacteristicWithUUID: .MDSDataExportCharacteristic, inServiceWithUUID: .MDS, from: device)
                 await updateStreamingStatus(of: device, to: false)
             }
             

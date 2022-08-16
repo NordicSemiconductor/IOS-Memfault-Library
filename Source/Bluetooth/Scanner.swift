@@ -207,17 +207,23 @@ extension Scanner {
                                        stream: stream)
     }
     
-    func readCharacteristic<T: ScannerDevice>(withUUID characteristicUUID: String,
-                                              inServiceWithUUID serviceUUID: String,
+    func readCharacteristic<T: ScannerDevice>(withUUID characteristicUUID: CBUUID,
+                                              inServiceWithUUID serviceUUID: CBUUID,
+                                              from device: T) async throws -> Data? {
+        return try await readCharacteristic(withUUIDString: characteristicUUID.uuidString, inServiceWithUUIDString: serviceUUID.uuidString, from: device)
+    }
+    
+    func readCharacteristic<T: ScannerDevice>(withUUIDString characteristicUUIDString: String,
+                                              inServiceWithUUIDString serviceUUIDString: String,
                                               from device: T) async throws -> Data? {
         guard let peripheral = connectedPeripherals[device.uuidString] else {
             throw BluetoothError.cantRetrievePeripheral
         }
         peripheral.delegate = self
 
-        guard let cbService = peripheral.services?.first(where: { $0.uuid.uuidString == serviceUUID }),
-              let cbCharacteristic = cbService.characteristics?.first(where: { $0.uuid.uuidString == characteristicUUID }) else {
-            throw BluetoothError.cantRetrieveCharacteristic(characteristicUUID)
+        guard let cbService = peripheral.services?.first(where: { $0.uuid.uuidString == serviceUUIDString }),
+              let cbCharacteristic = cbService.characteristics?.first(where: { $0.uuid.uuidString == characteristicUUIDString }) else {
+            throw BluetoothError.cantRetrieveCharacteristic(characteristicUUIDString)
         }
         
         do {
@@ -239,17 +245,25 @@ extension Scanner {
     
     func writeCharacteristic<T: ScannerDevice>(_ data: Data,
                                                writeType: CBCharacteristicWriteType = .withoutResponse,
-                                               toCharacteristicWithUUID characteristicUUID: String,
-                                               inServiceWithUUID serviceUUID: String,
+                                               toCharacteristicWithUUID characteristicUUID: CBUUID,
+                                               inServiceWithUUID serviceUUID: CBUUID,
+                                               from device: T) async throws -> Data? {
+        return try await writeCharacteristic(data, writeType: writeType, toCharacteristicWithUUIDString: characteristicUUID.uuidString, inServiceWithUUIDString: serviceUUID.uuidString, from: device)
+    }
+    
+    func writeCharacteristic<T: ScannerDevice>(_ data: Data,
+                                               writeType: CBCharacteristicWriteType = .withoutResponse,
+                                               toCharacteristicWithUUIDString characteristicUUIDString: String,
+                                               inServiceWithUUIDString serviceUUIDString: String,
                                                from device: T) async throws -> Data? {
         guard let peripheral = connectedPeripherals[device.uuidString] else {
             throw BluetoothError.cantRetrievePeripheral
         }
         peripheral.delegate = self
         
-        guard let cbService = peripheral.services?.first(where: { $0.uuid.uuidString == serviceUUID }),
-              let cbCharacteristic = cbService.characteristics?.first(where: { $0.uuid.uuidString == characteristicUUID }) else {
-            throw BluetoothError.cantRetrieveCharacteristic(characteristicUUID)
+        guard let cbService = peripheral.services?.first(where: { $0.uuid.uuidString == serviceUUIDString }),
+              let cbCharacteristic = cbService.characteristics?.first(where: { $0.uuid.uuidString == characteristicUUIDString }) else {
+            throw BluetoothError.cantRetrieveCharacteristic(characteristicUUIDString)
         }
         
         guard continuations[device.uuidString] == nil else { throw BluetoothError.operationInProgress }
@@ -272,17 +286,24 @@ extension Scanner {
     // MARK: Notify
     
     func setNotify<T: ScannerDevice>(_ notify: Bool,
-                                     toCharacteristicWithUUID characteristicUUID: String,
-                                     inServiceWithUUID serviceUUID: String,
+                                     toCharacteristicWithUUID characteristicUUID: CBUUID,
+                                     inServiceWithUUID serviceUUID: CBUUID,
+                                     from device: T) async throws -> Bool {
+        return try await setNotify(notify, toCharacteristicWithUUIDString: characteristicUUID.uuidString, inServiceWithUUIDString: serviceUUID.uuidString, from: device)
+    }
+    
+    func setNotify<T: ScannerDevice>(_ notify: Bool,
+                                     toCharacteristicWithUUIDString characteristicUUIDString: String,
+                                     inServiceWithUUIDString serviceUUIDString: String,
                                      from device: T) async throws -> Bool {
         guard let peripheral = connectedPeripherals[device.uuidString] else {
             throw BluetoothError.cantRetrievePeripheral
         }
         peripheral.delegate = self
         
-        guard let cbService = peripheral.services?.first(where: { $0.uuid.uuidString == serviceUUID }),
-              let cbCharacteristic = cbService.characteristics?.first(where: { $0.uuid.uuidString == characteristicUUID }) else {
-            throw BluetoothError.cantRetrieveCharacteristic(characteristicUUID)
+        guard let cbService = peripheral.services?.first(where: { $0.uuid.uuidString == serviceUUIDString }),
+              let cbCharacteristic = cbService.characteristics?.first(where: { $0.uuid.uuidString == characteristicUUIDString }) else {
+            throw BluetoothError.cantRetrieveCharacteristic(characteristicUUIDString)
         }
         
         guard continuations[device.uuidString] == nil else { throw BluetoothError.operationInProgress }
