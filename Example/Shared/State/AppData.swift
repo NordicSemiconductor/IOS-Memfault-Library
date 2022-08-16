@@ -142,6 +142,8 @@ extension AppData {
     func disconnect(from device: Device) {
         Task {
             logger.info("Disconnecting from \(device.name)")
+            await updateDeviceConnectionState(of: device, to: .disconnecting)
+            
             if device.streamingEnabled {
                 logger.debug("Disabling Streaming from \(device.name).")
                 _ = try await scanner.writeCharacteristic(
@@ -155,7 +157,6 @@ extension AppData {
                 await updateStreamingStatus(of: device, to: false)
             }
             
-            await updateDeviceConnectionState(of: device, to: .disconnecting)
             do {
                 try await scanner.disconnect(from: device)
                 logger.info("Disconnected from \(device.name)")
@@ -185,7 +186,6 @@ private extension AppData {
         Task { @MainActor in
             guard let i = scannedDevices.firstIndex(where: { $0.uuidString == device.uuidString }) else { return }
             scannedDevices[i].connectionStateChanged(to: newState)
-            objectWillChange.send()
         }
     }
     
@@ -193,7 +193,6 @@ private extension AppData {
         Task { @MainActor in
             guard let i = scannedDevices.firstIndex(where: { $0.uuidString == device.uuidString }) else { return }
             scannedDevices[i].updateNotifyingStatus(to: isNotifying)
-            objectWillChange.send()
         }
     }
     
@@ -201,7 +200,6 @@ private extension AppData {
         Task { @MainActor in
             guard let i = scannedDevices.firstIndex(where: { $0.uuidString == device.uuidString }) else { return }
             scannedDevices[i].updateStreamingStatus(to: isStreaming)
-            objectWillChange.send()
         }
     }
 }

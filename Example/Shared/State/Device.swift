@@ -22,10 +22,6 @@ struct Device: Identifiable, ScannerDevice {
         return state != .notConnectable
     }
     
-    var isConnected: Bool {
-        return state == .connected
-    }
-    
     private(set) var name: String
     let uuidString: String
     let rssi: RSSI
@@ -89,7 +85,10 @@ extension Device: Equatable {
     }
 
     public static func == (lhs: Device, rhs: Device) -> Bool {
-        return lhs.uuidString == rhs.uuidString && lhs.state == rhs.state
+        return lhs.uuidString == rhs.uuidString
+            && lhs.state == rhs.state
+            && lhs.notificationsEnabled == rhs.notificationsEnabled
+            && lhs.streamingEnabled == rhs.streamingEnabled
     }
 }
 
@@ -100,6 +99,8 @@ extension Device: Hashable {
     public func hash(into hasher: inout Hasher) {
         hasher.combine(uuidString)
         hasher.combine(state)
+        hasher.combine(notificationsEnabled)
+        hasher.combine(streamingEnabled)
     }
 }
 

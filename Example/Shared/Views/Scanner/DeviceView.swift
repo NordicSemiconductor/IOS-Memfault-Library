@@ -23,10 +23,15 @@ struct DeviceView: View {
         self.device = device
     }
     
+    var shouldShowConnectedInformation: Bool {
+        return device.state == .connected
+                || device.state == .disconnecting
+    }
+    
     // MARK: View
     
     var body: some View {
-        VStack {
+        VStack(alignment: .leading, spacing: 4) {
             HStack {
                 Text(device.name)
                 
@@ -41,6 +46,7 @@ struct DeviceView: View {
                     Button("Connect", action: {
                         appData.connect(to: device)
                     })
+                    .font(.callout)
                     .foregroundColor(.nordicBlue)
                 case .connected:
                     Button("Disconnect", action: {
@@ -55,6 +61,7 @@ struct DeviceView: View {
                     Button("Connecting...", action: {
                         appData.disconnect(from: device)
                     })
+                    .font(.callout)
                     .foregroundColor(.nordicBlue)
                 case .disconnecting:
                     ProgressView()
@@ -62,14 +69,23 @@ struct DeviceView: View {
                         .padding(.trailing)
                     
                     Text("Disconnecting...")
+                        .font(.callout)
                         .foregroundColor(.nordicMiddleGrey)
                 }
             }
             
-            if device.isConnected {
-                Label(device.notificationsEnabled ? "Notifications Enabled" : "Notifications Disabled", systemImage: "")
+            if shouldShowConnectedInformation {
+                Label(device.notificationsEnabled ? "Notifications Enabled" : "Notifications Disabled", systemImage: "arrow.down")
+                    .font(.caption)
+                    .foregroundColor(device.notificationsEnabled ? .nordicBlue : .nordicMiddleGrey)
+                    .tint(device.notificationsEnabled ? .nordicBlue : .nordicMiddleGrey)
+                    .padding(.horizontal, 4)
                 
-                Label(device.streamingEnabled ? "Data Streaming Enabled" : "Data Streaming Disabled", systemImage: "")
+                Label(device.streamingEnabled ? "Data Streaming Enabled" : "Data Streaming Disabled", systemImage: "antenna.radiowaves.left.and.right")
+                    .font(.caption)
+                    .foregroundColor(device.notificationsEnabled ? .nordicGrass : .nordicMiddleGrey)
+                    .tint(device.notificationsEnabled ? .nordicBlue : .nordicMiddleGrey)
+                    .padding(.horizontal, 4)
             }
         }
         .padding(4)
