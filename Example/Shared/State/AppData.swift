@@ -123,6 +123,10 @@ extension AppData {
                 
                 let isNotifying = try await scanner.setNotify(true, toCharacteristicWithUUID: CBUUID.MDSDataExportCharacteristic.uuidString, inServiceWithUUID: CBUUID.MDS.uuidString, from: device)
                 print(isNotifying)
+                logger.debug("setNotify: \(isNotifying)")
+                
+                let writeResult = try await scanner.writeCharacteristic(Data(repeating: 1, count: 1), writeType: .withResponse, toCharacteristicWithUUID: CBUUID.MDSDataExportCharacteristic.uuidString, inServiceWithUUID: CBUUID.MDS.uuidString, from: device)
+                logger.debug("Write Enable Result: \(writeResult ?? Data())")
             } catch {
                 logger.error("\(error.localizedDescription)")
                 logger.info("Disconnecting...")
