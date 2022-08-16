@@ -122,11 +122,13 @@ extension AppData {
                 logger.debug("Auth Data: \(authString)")
                 
                 let isNotifying = try await scanner.setNotify(true, toCharacteristicWithUUID: CBUUID.MDSDataExportCharacteristic.uuidString, inServiceWithUUID: CBUUID.MDS.uuidString, from: device)
-                print(isNotifying)
+                await updateNotifyingStatus(of: device, to: isNotifying)
+                
                 logger.debug("setNotify: \(isNotifying)")
                 
                 let writeResult = try await scanner.writeCharacteristic(Data(repeating: 1, count: 1), writeType: .withResponse, toCharacteristicWithUUID: CBUUID.MDSDataExportCharacteristic.uuidString, inServiceWithUUID: CBUUID.MDS.uuidString, from: device)
                 logger.debug("Write Enable Result: \(writeResult ?? Data())")
+                await updateStreamingStatus(of: device, to: true)
             } catch {
                 logger.error("\(error.localizedDescription)")
                 logger.info("Disconnecting...")
@@ -140,6 +142,19 @@ extension AppData {
     func disconnect(from device: Device) {
         Task {
             logger.info("Disconnecting from \(device.name)")
+            if device.streamingEnabled {
+                logger.debug("Disabling Streaming from \(device.name).")
+                _ = try await scanner.writeCharacteristic(
+                    Data(repeating: 0, count: 0), writeType: .withResponse, toCharacteristicWithUUID: CBUUID.MDSDataExportCharacteristic.uuidString, inServiceWithUUID: CBUUID.MDS.uuidString, from: device)
+                await updateNotifyingStatus(of: device, to: false)
+            }
+            
+            if device.notificationsEnabled {
+                logger.debug("Turning Off Notifications from \(device.name).")
+                _ = try await scanner.setNotify(false, toCharacteristicWithUUID: CBUUID.MDSDataExportCharacteristic.uuidString, inServiceWithUUID: CBUUID.MDS.uuidString, from: device)
+                await updateStreamingStatus(of: device, to: false)
+            }
+            
             await updateDeviceConnectionState(of: device, to: .disconnecting)
             do {
                 try await scanner.disconnect(from: device)
@@ -169,9 +184,24 @@ private extension AppData {
     func updateDeviceConnectionState(of device: Device, to newState: ConnectedState) async {
         Task { @MainActor in
             guard let i = scannedDevices.firstIndex(where: { $0.uuidString == device.uuidString }) else { return }
-            var connectionCopy = scannedDevices[i]
-            connectionCopy.state = newState
-            scannedDevices[i] = connectionCopy
+            scannedDevices[i].connectionStateChanged(to: newState)
+            objectWillChange.send()
+        }
+    }
+    
+    func updateNotifyingStatus(of device: Device, to isNotifying: Bool) async {
+        Task { @MainActor in
+            guard let i = scannedDevices.firstIndex(where: { $0.uuidString == device.uuidString }) else { return }
+            scannedDevices[i].updateNotifyingStatus(to: isNotifying)
+            objectWillChange.send()
+        }
+    }
+    
+    func updateStreamingStatus(of device: Device, to isStreaming: Bool) async {
+        Task { @MainActor in
+            guard let i = scannedDevices.firstIndex(where: { $0.uuidString == device.uuidString }) else { return }
+            scannedDevices[i].updateStreamingStatus(to: isStreaming)
+            objectWillChange.send()
         }
     }
 }

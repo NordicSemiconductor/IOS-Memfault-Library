@@ -22,12 +22,18 @@ struct Device: Identifiable, ScannerDevice {
         return state != .notConnectable
     }
     
+    var isConnected: Bool {
+        return state == .connected
+    }
+    
     private(set) var name: String
     let uuidString: String
     let rssi: RSSI
     let advertisementData: AdvertisementData
-    var state: ConnectedState
+    private(set) var state: ConnectedState
     var services: [CBService]
+    private(set) var notificationsEnabled: Bool
+    private(set) var streamingEnabled: Bool
     
     // MARK: Init
     
@@ -39,6 +45,8 @@ struct Device: Identifiable, ScannerDevice {
         self.advertisementData = advertisementData
         self.state = state ?? ((advertisementData.isConnectable ?? false) ? .disconnected : .notConnectable)
         self.services = []
+        self.notificationsEnabled = false
+        self.streamingEnabled = false
     }
     
     init(peripheral: CBPeripheral, state: ConnectedState, advertisementData: [String: Any], rssi: NSNumber) {
@@ -49,12 +57,26 @@ struct Device: Identifiable, ScannerDevice {
         self.advertisementData = advertisementData
         self.state = (advertisementData.isConnectable ?? false) ? state : .notConnectable
         self.services = []
+        self.notificationsEnabled = false
+        self.streamingEnabled = false
     }
     
     // MARK: API
     
     mutating func update(from advertisingData: [String: Any]) {
         self.name = advertisementData.localName ?? name
+    }
+    
+    mutating func connectionStateChanged(to newState: ConnectedState) {
+        self.state = newState
+    }
+    
+    mutating func updateNotifyingStatus(to isNotifying: Bool) {
+        self.notificationsEnabled = isNotifying
+    }
+    
+    mutating func updateStreamingStatus(to isStreaming: Bool) {
+        self.streamingEnabled = isStreaming
     }
 }
 

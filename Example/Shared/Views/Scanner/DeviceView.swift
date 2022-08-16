@@ -65,6 +65,12 @@ struct DeviceView: View {
                         .foregroundColor(.nordicMiddleGrey)
                 }
             }
+            
+            if device.isConnected {
+                Label(device.notificationsEnabled ? "Notifications Enabled" : "Notifications Disabled", systemImage: "")
+                
+                Label(device.streamingEnabled ? "Data Streaming Enabled" : "Data Streaming Disabled", systemImage: "")
+            }
         }
         .padding(4)
     }
