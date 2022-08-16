@@ -25,6 +25,7 @@ extension Scanner: CBCentralManagerDelegate {
     }
     
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
+        logger.debug("[Callback] centralManagerDidUpdateState(central: \(central))")
         managerState = central.state
         logger.info("Bluetooth changed state: \(central.state)")
         
@@ -34,17 +35,20 @@ extension Scanner: CBCentralManagerDelegate {
     }
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
+        logger.debug("[Callback] centralManager(central: \(central), didConnect: \(peripheral))")
         connectedStreams[peripheral.identifier.uuidString] = [AsyncThrowingStream<AsyncStreamValue, Error>.Continuation]()
         guard case .connection(let continuation)? = continuations[peripheral.identifier.uuidString] else { return }
         continuation.resume(returning: peripheral)
     }
     
     func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
+        logger.debug("[Callback] centralManager(central: \(central), didFailToConnect: \(peripheral), error: \(error.debugDescription))")
         guard case .connection(let continuation)? = continuations[peripheral.identifier.uuidString] else { return }
         continuation.resume(returning: peripheral)
     }
     
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
+        logger.debug("[Callback] centralManager(central: \(central), didDisconnectPeripheral: \(peripheral), error: \(error.debugDescription))")
         guard case .connection(let continuation)? = continuations[peripheral.identifier.uuidString] else { return }
         if let error = error {
             let rethrow = BluetoothError.coreBluetoothError(description: error.localizedDescription)
