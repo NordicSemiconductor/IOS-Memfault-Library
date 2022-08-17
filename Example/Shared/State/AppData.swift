@@ -165,6 +165,9 @@ extension AppData {
                 try await scanner.disconnect(from: device)
                 logger.info("Disconnected from \(device.name)")
                 await updateDeviceConnectionState(of: device, to: .disconnected)
+            } catch BluetoothError.cantRetrievePeripheral {
+                logger.error("\(BluetoothError.cantRetrievePeripheral.localizedDescription)")
+                await updateDeviceConnectionState(of: device, to: .disconnected)
             } catch {
                 logger.error("\(error.localizedDescription)")
             }
