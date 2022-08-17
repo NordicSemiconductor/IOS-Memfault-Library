@@ -194,16 +194,27 @@ extension Scanner {
     func data<T: ScannerDevice>(fromCharacteristic characteristic: CBCharacteristic,
                                 inService service: CBService,
                                 device: T) -> AsyncCharacteristicData {
-        return data(fromCharacteristicWithUUID: characteristic.uuid.uuidString, inServiceWithUUID: service.uuid.uuidString, device: device)
+        return data(fromCharacteristicWithUUIDString: characteristic.uuid.uuidString,
+                    inServiceWithUUIDString: service.uuid.uuidString,
+                    device: device)
     }
     
-    func data<T: ScannerDevice>(fromCharacteristicWithUUID characteristicUUID: String,
-                                inServiceWithUUID serviceUUID: String,
+    func data<T: ScannerDevice>(fromCharacteristicWithUUID characteristicUUID: CBUUID,
+                                inServiceWithUUID serviceUUID: CBUUID,
+                                device: T) -> AsyncCharacteristicData {
+        return data(fromCharacteristicWithUUIDString: characteristicUUID.uuidString,
+                    inServiceWithUUIDString: serviceUUID.uuidString,
+                    device: device)
+    }
+    
+    func data<T: ScannerDevice>(fromCharacteristicWithUUIDString characteristicUUIDString: String,
+                                inServiceWithUUIDString serviceUUIDString: String,
                                 device: T) -> AsyncCharacteristicData {
         let stream = AsyncThrowingStream<AsyncStreamValue, Error> { continuation in
             connectedStreams[device.uuidString]?.append(continuation)
         }
-        return AsyncCharacteristicData(serviceUUID: serviceUUID, characteristicUUID: characteristicUUID,
+        return AsyncCharacteristicData(serviceUUID: serviceUUIDString,
+                                       characteristicUUID: characteristicUUIDString,
                                        stream: stream)
     }
     
