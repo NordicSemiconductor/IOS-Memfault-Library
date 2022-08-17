@@ -87,9 +87,17 @@ extension AppData {
                 logger.info("Connecting to \(device.name)")
                 await updateDeviceConnectionState(of: device, to: .connected)
                 logger.info("Connected to \(device.name)")
+                
+                Task {
+                    logger.info("START listening to MDS Data Export.")
+                    for try await data in scanner.data(fromCharacteristicWithUUID: .MDSDataExportCharacteristic, inServiceWithUUID: .MDS, device: device) {
+                        logger.info("Received \(data?.debugDescription ?? "nil")")
+                    }
+                    logger.info("STOP listening to MDS Data Export.")
+                }
+                
                 logger.info("Discovering \(device.name)'s Services...")
                 let cbServices = try await scanner.discoverServices(of: device)
-                
                 guard let mdsService = cbServices.first(where: { $0.uuid == .MDS }) else {
                     throw AppError.mdsNotFound
                 }
@@ -121,7 +129,6 @@ extension AppData {
                 
                 let isNotifying = try await scanner.setNotify(true, toCharacteristicWithUUID: .MDSDataExportCharacteristic, inServiceWithUUID: .MDS, from: device)
                 await updateNotifyingStatus(of: device, to: isNotifying)
-                
                 logger.debug("setNotify: \(isNotifying)")
                 
                 let writeResult = try await scanner.writeCharacteristic(Data(repeating: 1, count: 1), writeType: .withResponse, toCharacteristicWithUUID: .MDSDataExportCharacteristic, inServiceWithUUID: .MDS, from: device)
