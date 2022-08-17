@@ -8,6 +8,7 @@
 import Foundation
 import OSLog
 import CoreBluetooth
+import iOS_Common_Libraries
 
 final class AppData: ObservableObject {
     
@@ -16,6 +17,7 @@ final class AppData: ObservableObject {
     @Published var isScanning: Bool
     @Published var scannedDevices: [Device]
     @Published var openDevice: Device?
+    @Published var error: ErrorEvent?
     
     // MARK: Private
     
@@ -89,10 +91,7 @@ extension AppData {
                 let cbServices = try await scanner.discoverServices(of: device)
                 
                 guard let mdsService = cbServices.first(where: { $0.uuid == .MDS }) else {
-                    logger.error("MDS Service not found.")
-                    logger.info("Disconnecting...")
-                    disconnect(from: device)
-                    return
+                    throw AppError.mdsNotFound
                 }
                 
                 logger.info("Discovering MDS' Characteristics...")
@@ -101,8 +100,7 @@ extension AppData {
                 logger.info("Reading Device Identifier...")
                 guard let uriData = try await scanner.readCharacteristic(withUUID: .MDSDeviceIdentifierCharacteristic, inServiceWithUUID: .MDS, from: device),
                       let deviceIdentifierString = String(data: uriData, encoding: .utf8) else {
-//                    throw LocalizedError
-                    return
+                    throw AppError.unableToReadDeviceIdentifier
                 }
                 logger.debug("Device Identifier: \(deviceIdentifierString)")
                 
@@ -110,16 +108,14 @@ extension AppData {
                 guard let uriData = try await scanner.readCharacteristic(withUUID: .MDSDataURICharacteristic, inServiceWithUUID: .MDS, from: device),
                       let uriString = String(data: uriData, encoding: .utf8),
                       let uriURL = URL(string: uriString) else {
-//                    throw LocalizedError
-                    return
+                    throw AppError.unableToReadDeviceURI
                 }
                 logger.debug("Data URI: \(uriURL.absoluteString)")
                 
                 logger.info("Reading Auth Data...")
                 guard let authData = try await scanner.readCharacteristic(withUUID: .MDSAuthCharacteristic, inServiceWithUUID: .MDS, from: device),
                       let authString = String(data: authData, encoding: .utf8) else {
-                    // throw Error
-                    return
+                    throw AppError.unableToReadAuthData
                 }
                 logger.debug("Auth Data: \(authString)")
                 
@@ -134,8 +130,7 @@ extension AppData {
                 
                 openDevice = device
             } catch {
-                logger.error("\(error.localizedDescription)")
-                logger.info("Disconnecting...")
+                await encounteredError(error)
                 disconnect(from: device)
             }
         }
@@ -165,11 +160,9 @@ extension AppData {
                 try await scanner.disconnect(from: device)
                 logger.info("Disconnected from \(device.name)")
                 await updateDeviceConnectionState(of: device, to: .disconnected)
-            } catch BluetoothError.cantRetrievePeripheral {
-                logger.error("\(BluetoothError.cantRetrievePeripheral.localizedDescription)")
-                await updateDeviceConnectionState(of: device, to: .disconnected)
             } catch {
                 logger.error("\(error.localizedDescription)")
+                await updateDeviceConnectionState(of: device, to: .disconnected)
             }
         }
     }
@@ -207,6 +200,14 @@ private extension AppData {
         Task { @MainActor in
             guard let i = scannedDevices.firstIndex(where: { $0.uuidString == device.uuidString }) else { return }
             scannedDevices[i].updateStreamingStatus(to: isStreaming)
+        }
+    }
+    
+    func encounteredError(_ error: Error) async {
+        let errorEvent = ErrorEvent(error)
+        logger.error("\(errorEvent.localizedDescription)")
+        Task { @MainActor in
+            self.error = errorEvent
         }
     }
 }

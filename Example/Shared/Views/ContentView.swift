@@ -57,6 +57,7 @@ struct ContentView: View {
             .keyboardShortcut(KeyEquivalent(Character(" ")), modifiers: [])
         }
         .onAppear() {
+            guard !appData.isScanning else { return }
             appData.toggleScanner()
         }
         .frame(minWidth: 150, idealWidth: 150,

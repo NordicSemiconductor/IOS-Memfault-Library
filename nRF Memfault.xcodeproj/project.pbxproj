@@ -21,6 +21,8 @@
 		AAEED87128A26528002284A2 /* Scanner+CBPeripheralDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAEED86F28A26528002284A2 /* Scanner+CBPeripheralDelegate.swift */; };
 		AAEED87328A265D8002284A2 /* ScannerDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAEED87228A265D8002284A2 /* ScannerDevice.swift */; };
 		AAEED87428A265D8002284A2 /* ScannerDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAEED87228A265D8002284A2 /* ScannerDevice.swift */; };
+		AAFA533F28AD30FA005638D3 /* AppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFA533E28AD30FA005638D3 /* AppError.swift */; };
+		AAFA534028AD30FA005638D3 /* AppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFA533E28AD30FA005638D3 /* AppError.swift */; };
 		AAFB2FE4289A89CD008207FE /* Scanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFB2FE3289A89CD008207FE /* Scanner.swift */; };
 		AAFB2FE5289A89CD008207FE /* Scanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFB2FE3289A89CD008207FE /* Scanner.swift */; };
 		AAFB2FE7289A8C48008207FE /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFB2FE6289A8C48008207FE /* Device.swift */; };
@@ -58,6 +60,7 @@
 		AAEED86C28A26440002284A2 /* Scanner+CBCentralManagerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Scanner+CBCentralManagerDelegate.swift"; sourceTree = "<group>"; };
 		AAEED86F28A26528002284A2 /* Scanner+CBPeripheralDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Scanner+CBPeripheralDelegate.swift"; sourceTree = "<group>"; };
 		AAEED87228A265D8002284A2 /* ScannerDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerDevice.swift; sourceTree = "<group>"; };
+		AAFA533E28AD30FA005638D3 /* AppError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppError.swift; sourceTree = "<group>"; };
 		AAFB2FE3289A89CD008207FE /* Scanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scanner.swift; sourceTree = "<group>"; };
 		AAFB2FE6289A8C48008207FE /* Device.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
 		AAFB2FE9289A8C95008207FE /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
@@ -217,6 +220,7 @@
 			isa = PBXGroup;
 			children = (
 				AAFB2FE6289A8C48008207FE /* Device.swift */,
+				AAFA533E28AD30FA005638D3 /* AppError.swift */,
 				AAFBF84928996AA100A6655C /* AppData.swift */,
 			);
 			path = State;
@@ -363,6 +367,7 @@
 				AAEED87328A265D8002284A2 /* ScannerDevice.swift in Sources */,
 				AAFB2FF3289A9E27008207FE /* RSSI.swift in Sources */,
 				AAFB2FED289A8DB7008207FE /* CBExtensions.swift in Sources */,
+				AAFA533F28AD30FA005638D3 /* AppError.swift in Sources */,
 				AAEED86D28A26440002284A2 /* Scanner+CBCentralManagerDelegate.swift in Sources */,
 				AAFBF84A28996AA100A6655C /* AppData.swift in Sources */,
 				AA38741428A67619009F274E /* AsyncCharacteristicData.swift in Sources */,
@@ -389,6 +394,7 @@
 				AAEED87428A265D8002284A2 /* ScannerDevice.swift in Sources */,
 				AAFB2FF4289A9E27008207FE /* RSSI.swift in Sources */,
 				AAFB2FEE289A8DB7008207FE /* CBExtensions.swift in Sources */,
+				AAFA534028AD30FA005638D3 /* AppError.swift in Sources */,
 				AAEED86E28A26440002284A2 /* Scanner+CBCentralManagerDelegate.swift in Sources */,
 				AAFBF84B28996AA100A6655C /* AppData.swift in Sources */,
 				AA38741528A67619009F274E /* AsyncCharacteristicData.swift in Sources */,
