@@ -34,7 +34,11 @@ struct ContentView: View {
                 }
             }
             .wrapInNavigationViewForiOS(with: .nordicBlue)
+            .alert(item: $appData.error) { error in
+                Alert(errorEvent: error)
+            }
             .onAppear() {
+                guard !appData.isScanning else { return }
                 appData.toggleScanner()
             }
         #else
@@ -55,6 +59,9 @@ struct ContentView: View {
                 Image(systemName: appData.isScanning ? "stop.fill" : "play.fill")
             })
             .keyboardShortcut(KeyEquivalent(Character(" ")), modifiers: [])
+        }
+        .alert(item: $appData.error) { error in
+            Alert(errorEvent: error)
         }
         .onAppear() {
             guard !appData.isScanning else { return }

@@ -143,26 +143,26 @@ extension AppData {
             logger.info("Disconnecting from \(device.name)")
             await updateDeviceConnectionState(of: device, to: .disconnecting)
             
-            if device.streamingEnabled {
-                logger.debug("Disabling Streaming from \(device.name).")
-                _ = try await scanner.writeCharacteristic(
-                    Data(repeating: 0, count: 0), writeType: .withResponse, toCharacteristicWithUUID: .MDSDataExportCharacteristic, inServiceWithUUID: .MDS, from: device)
-                await updateNotifyingStatus(of: device, to: false)
-            }
-            
-            if device.notificationsEnabled {
-                logger.debug("Turning Off Notifications from \(device.name).")
-                _ = try await scanner.setNotify(false, toCharacteristicWithUUID: .MDSDataExportCharacteristic, inServiceWithUUID: .MDS, from: device)
-                await updateStreamingStatus(of: device, to: false)
-            }
-            
             do {
+                if device.streamingEnabled {
+                    logger.debug("Disabling Streaming from \(device.name).")
+                    _ = try await scanner.writeCharacteristic(
+                        Data(repeating: 0, count: 0), writeType: .withResponse, toCharacteristicWithUUID: .MDSDataExportCharacteristic, inServiceWithUUID: .MDS, from: device)
+                    await updateNotifyingStatus(of: device, to: false)
+                }
+                
+                if device.notificationsEnabled {
+                    logger.debug("Turning Off Notifications from \(device.name).")
+                    _ = try await scanner.setNotify(false, toCharacteristicWithUUID: .MDSDataExportCharacteristic, inServiceWithUUID: .MDS, from: device)
+                    await updateStreamingStatus(of: device, to: false)
+                }
+                
                 try await scanner.disconnect(from: device)
                 logger.info("Disconnected from \(device.name)")
                 await updateDeviceConnectionState(of: device, to: .disconnected)
             } catch {
-                logger.error("\(error.localizedDescription)")
                 await updateDeviceConnectionState(of: device, to: .disconnected)
+                await encounteredError(error)
             }
         }
     }
