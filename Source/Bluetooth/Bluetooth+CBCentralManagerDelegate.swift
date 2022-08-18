@@ -1,5 +1,5 @@
 //
-//  Scanner+CBCentralManagerDelegate.swift
+//  Bluetooth+CBCentralManagerDelegate.swift
 //  nRF Memfault
 //
 //  Created by Dinesh Harjani on 9/8/22.
@@ -10,7 +10,7 @@ import CoreBluetooth
 
 // MARK: - CBCentralManagerDelegate
 
-extension Scanner: CBCentralManagerDelegate {
+extension Bluetooth: CBCentralManagerDelegate {
     
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral,
                         advertisementData: [String : Any], rssi RSSI: NSNumber) {

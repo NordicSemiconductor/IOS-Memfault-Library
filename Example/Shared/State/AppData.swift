@@ -21,13 +21,13 @@ final class AppData: ObservableObject {
     
     // MARK: Private
     
-    private let scanner: Scanner
+    private let scanner: Bluetooth
     private let logger: Logger
     
     // MARK: Init
     
     init() {
-        self.scanner = Scanner()
+        self.scanner = Bluetooth()
         self.isScanning = scanner.isScanning
         self.scannedDevices = []
         self.openDevice = nil

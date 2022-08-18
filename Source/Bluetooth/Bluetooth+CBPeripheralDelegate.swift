@@ -1,5 +1,5 @@
 //
-//  Scanner+CBPeripheralDelegate.swift
+//  Bluetooth+CBPeripheralDelegate.swift
 //  nRF Memfault
 //
 //  Created by Dinesh Harjani on 9/8/22.
@@ -10,7 +10,7 @@ import CoreBluetooth
 
 // MARK: - CBPeripheralDelegate
 
-extension Scanner: CBPeripheralDelegate {
+extension Bluetooth: CBPeripheralDelegate {
     
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
         logger.debug("[Callback] peripheral(peripheral: \(peripheral), didDiscoverServices error: \(error.debugDescription))")

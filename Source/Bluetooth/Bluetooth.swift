@@ -1,5 +1,5 @@
 //
-//  Scanner.swift
+//  Bluetooth.swift
 //  nRF Memfault
 //
 //  Created by Nick Kibysh on 15/04/2021.
@@ -13,7 +13,7 @@ import CoreBluetooth
 
 // MARK: - Scanner
 
-final class Scanner: NSObject {
+final class Bluetooth: NSObject {
     
     enum AwaitContinuation {
         case connection(_ continuation: CheckedContinuation<CBPeripheral, Error>)
@@ -63,7 +63,7 @@ final class Scanner: NSObject {
 
 // MARK: - API
 
-extension Scanner {
+extension Bluetooth {
     
     // MARK: Scan
     
