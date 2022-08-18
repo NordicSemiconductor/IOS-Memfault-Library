@@ -26,6 +26,9 @@ struct DeviceUploadView: View {
     var body: some View {
         List {
             Text("Hello, World!")
+            ForEach(device.chunks) { chunk in
+                Text("\(chunk.data.count) bytes.")
+            }
         }
         .navigationTitle(device.name)
     }

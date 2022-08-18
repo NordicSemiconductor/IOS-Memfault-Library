@@ -28,6 +28,7 @@ struct Device: Identifiable, ScannerDevice {
     let advertisementData: AdvertisementData
     private(set) var state: ConnectedState
     var services: [CBService]
+    private(set) var chunks: [Chunk]
     private(set) var notificationsEnabled: Bool
     private(set) var streamingEnabled: Bool
     
@@ -41,6 +42,7 @@ struct Device: Identifiable, ScannerDevice {
         self.advertisementData = advertisementData
         self.state = state ?? ((advertisementData.isConnectable ?? false) ? .disconnected : .notConnectable)
         self.services = []
+        self.chunks = []
         self.notificationsEnabled = false
         self.streamingEnabled = false
     }
@@ -53,6 +55,7 @@ struct Device: Identifiable, ScannerDevice {
         self.advertisementData = advertisementData
         self.state = (advertisementData.isConnectable ?? false) ? state : .notConnectable
         self.services = []
+        self.chunks = []
         self.notificationsEnabled = false
         self.streamingEnabled = false
     }
@@ -64,15 +67,19 @@ struct Device: Identifiable, ScannerDevice {
     }
     
     mutating func connectionStateChanged(to newState: ConnectedState) {
-        self.state = newState
+        state = newState
+    }
+    
+    mutating func add(_ chunk: Chunk) {
+        chunks.append(chunk)
     }
     
     mutating func updateNotifyingStatus(to isNotifying: Bool) {
-        self.notificationsEnabled = isNotifying
+        notificationsEnabled = isNotifying
     }
     
     mutating func updateStreamingStatus(to isStreaming: Bool) {
-        self.streamingEnabled = isStreaming
+        streamingEnabled = isStreaming
     }
 }
 

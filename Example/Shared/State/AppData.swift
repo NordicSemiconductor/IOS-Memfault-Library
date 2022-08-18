@@ -88,13 +88,7 @@ extension AppData {
                 await updateDeviceConnectionState(of: device, to: .connected)
                 logger.info("Connected to \(device.name)")
                 
-                Task {
-                    logger.info("START listening to MDS Data Export.")
-                    for try await data in scanner.data(fromCharacteristicWithUUID: .MDSDataExportCharacteristic, inServiceWithUUID: .MDS, device: device) {
-                        logger.info("Received \(data?.debugDescription ?? "nil")")
-                    }
-                    logger.info("STOP listening to MDS Data Export.")
-                }
+                listenForNewChunks(from: device)
                 
                 logger.info("Discovering \(device.name)'s Services...")
                 let cbServices = try await scanner.discoverServices(of: device)
@@ -140,6 +134,16 @@ extension AppData {
                 await encounteredError(error)
                 disconnect(from: device)
             }
+        }
+    }
+    
+    private func listenForNewChunks(from device: Device) {
+        Task {
+            logger.info("START listening to MDS Data Export.")
+            for try await data in scanner.data(fromCharacteristicWithUUID: .MDSDataExportCharacteristic, inServiceWithUUID: .MDS, device: device) {
+                await received(data, from: device)
+            }
+            logger.info("STOP listening to MDS Data Export.")
         }
     }
     
@@ -193,6 +197,15 @@ private extension AppData {
         Task { @MainActor in
             guard let i = scannedDevices.firstIndex(where: { $0.uuidString == device.uuidString }) else { return }
             scannedDevices[i].connectionStateChanged(to: newState)
+        }
+    }
+    
+    func received(_ data: Data?, from device: Device) {
+        guard let data = data else { return }
+
+        Task { @MainActor in
+            guard let i = scannedDevices.firstIndex(where: { $0.uuidString == device.uuidString }) else { return }
+            scannedDevices[i].add(Chunk(data))
         }
     }
     
