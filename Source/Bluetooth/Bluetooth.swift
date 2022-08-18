@@ -22,9 +22,9 @@ final class Bluetooth: NSObject {
         case notificationChange(_ continuation: CheckedContinuation<Bool, Error>)
     }
     
-    // MARK: - Condition
+    // MARK: - ScanCondition
     
-    enum Condition: Equatable {
+    enum ScanCondition: Equatable {
         case matchingAll
         case matchingServiceUUID(_ uuid: CBUUID)
         case connectable
@@ -49,7 +49,7 @@ final class Bluetooth: NSObject {
     
     @Published internal var managerState: CBManagerState = .unknown
     
-    @Published internal var scanConditions: [Condition] = [.matchingAll]
+    @Published internal var conditions: [ScanCondition] = [.matchingAll]
     @Published internal var shouldScan = false
     @Published private(set) var isScanning = false
     
@@ -82,12 +82,12 @@ extension Bluetooth {
         shouldScan.toggle()
     }
     
-    func scan(with conditions: [Condition] = [.matchingAll]) -> AnyPublisher<ScanData, Never> {
-        scanConditions = conditions
+    func scan(with conditions: [ScanCondition] = [.matchingAll]) -> AnyPublisher<ScanData, Never> {
+        self.conditions = conditions
         
         return turnOnBluetoothRadio()
             .filter { $0 == .poweredOn }
-            .combineLatest($shouldScan, $scanConditions)
+            .combineLatest($shouldScan, $conditions)
             .flatMap { (_, isScanning, scanConditions) -> PassthroughSubject<ScanData, Never> in
                 if isScanning {
                     let scanServices = scanConditions.flatMap { $0.scanServices() }

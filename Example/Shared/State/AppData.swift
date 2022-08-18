@@ -21,21 +21,21 @@ final class AppData: ObservableObject {
     
     // MARK: Private
     
-    private let scanner: Bluetooth
+    private let bluetooth: Bluetooth
     private let logger: Logger
     
     // MARK: Init
     
     init() {
-        self.scanner = Bluetooth()
-        self.isScanning = scanner.isScanning
+        self.bluetooth = Bluetooth()
+        self.isScanning = bluetooth.isScanning
         self.scannedDevices = []
         self.openDevice = nil
         self.logger = Logger(Self.self)
         
-        _ = scanner.turnOnBluetoothRadio()
+        _ = bluetooth.turnOnBluetoothRadio()
         Task { @MainActor in
-            for await newValue in scanner.$isScanning.values {
+            for await newValue in bluetooth.$isScanning.values {
                 isScanning = newValue
             }
         }
@@ -50,20 +50,20 @@ extension AppData {
     
     func refresh() {
         scannedDevices.removeAll()
-        guard !scanner.isScanning else { return }
+        guard !bluetooth.isScanning else { return }
         toggleScanner()
     }
     
     // MARK: Scan
     
     func toggleScanner() {
-        guard !scanner.isScanning else {
-            scanner.toggle()
+        guard !bluetooth.isScanning else {
+            bluetooth.toggle()
             return
         }
 
         Task { @MainActor in
-            for await scanData in scanner.scan().values {
+            for await scanData in bluetooth.scan().values {
                 let state = ConnectedState.from(scanData.peripheral.state)
                 let device = Device(peripheral: scanData.peripheral, state: state, advertisementData: scanData.advertisementData, rssi: scanData.RSSI)
                 
@@ -83,7 +83,7 @@ extension AppData {
             await updateDeviceConnectionState(of: device, to: .connecting)
             
             do {
-                try await scanner.connect(to: device)
+                try await bluetooth.connect(to: device)
                 logger.info("Connecting to \(device.name)")
                 await updateDeviceConnectionState(of: device, to: .connected)
                 logger.info("Connected to \(device.name)")
@@ -91,23 +91,23 @@ extension AppData {
                 listenForNewChunks(from: device)
                 
                 logger.info("Discovering \(device.name)'s Services...")
-                let cbServices = try await scanner.discoverServices(of: device)
+                let cbServices = try await bluetooth.discoverServices(of: device)
                 guard let mdsService = cbServices.first(where: { $0.uuid == .MDS }) else {
                     throw AppError.mdsNotFound
                 }
                 
                 logger.info("Discovering MDS' Characteristics...")
-                let characteristics = try await scanner.discoverCharacteristics(ofService: mdsService.uuid.uuidString, ofDeviceWithUUID: device.uuidString)
+                let characteristics = try await bluetooth.discoverCharacteristics(ofService: mdsService.uuid.uuidString, ofDeviceWithUUID: device.uuidString)
                 
                 logger.info("Reading Device Identifier...")
-                guard let uriData = try await scanner.readCharacteristic(withUUID: .MDSDeviceIdentifierCharacteristic, inServiceWithUUID: .MDS, from: device),
+                guard let uriData = try await bluetooth.readCharacteristic(withUUID: .MDSDeviceIdentifierCharacteristic, inServiceWithUUID: .MDS, from: device),
                       let deviceIdentifierString = String(data: uriData, encoding: .utf8) else {
                     throw AppError.unableToReadDeviceIdentifier
                 }
                 logger.debug("Device Identifier: \(deviceIdentifierString)")
                 
                 logger.info("Reading Data URI...")
-                guard let uriData = try await scanner.readCharacteristic(withUUID: .MDSDataURICharacteristic, inServiceWithUUID: .MDS, from: device),
+                guard let uriData = try await bluetooth.readCharacteristic(withUUID: .MDSDataURICharacteristic, inServiceWithUUID: .MDS, from: device),
                       let uriString = String(data: uriData, encoding: .utf8),
                       let uriURL = URL(string: uriString) else {
                     throw AppError.unableToReadDeviceURI
@@ -115,17 +115,17 @@ extension AppData {
                 logger.debug("Data URI: \(uriURL.absoluteString)")
                 
                 logger.info("Reading Auth Data...")
-                guard let authData = try await scanner.readCharacteristic(withUUID: .MDSAuthCharacteristic, inServiceWithUUID: .MDS, from: device),
+                guard let authData = try await bluetooth.readCharacteristic(withUUID: .MDSAuthCharacteristic, inServiceWithUUID: .MDS, from: device),
                       let authString = String(data: authData, encoding: .utf8) else {
                     throw AppError.unableToReadAuthData
                 }
                 logger.debug("Auth Data: \(authString)")
                 
-                let isNotifying = try await scanner.setNotify(true, toCharacteristicWithUUID: .MDSDataExportCharacteristic, inServiceWithUUID: .MDS, from: device)
+                let isNotifying = try await bluetooth.setNotify(true, toCharacteristicWithUUID: .MDSDataExportCharacteristic, inServiceWithUUID: .MDS, from: device)
                 await updateNotifyingStatus(of: device, to: isNotifying)
                 logger.debug("setNotify: \(isNotifying)")
                 
-                let writeResult = try await scanner.writeCharacteristic(Data(repeating: 1, count: 1), writeType: .withResponse, toCharacteristicWithUUID: .MDSDataExportCharacteristic, inServiceWithUUID: .MDS, from: device)
+                let writeResult = try await bluetooth.writeCharacteristic(Data(repeating: 1, count: 1), writeType: .withResponse, toCharacteristicWithUUID: .MDSDataExportCharacteristic, inServiceWithUUID: .MDS, from: device)
                 logger.debug("Write Enable Result: \(writeResult ?? Data())")
                 await updateStreamingStatus(of: device, to: true)
                 
@@ -140,7 +140,7 @@ extension AppData {
     private func listenForNewChunks(from device: Device) {
         Task {
             logger.info("START listening to MDS Data Export.")
-            for try await data in scanner.data(fromCharacteristicWithUUID: .MDSDataExportCharacteristic, inServiceWithUUID: .MDS, device: device) {
+            for try await data in bluetooth.data(fromCharacteristicWithUUID: .MDSDataExportCharacteristic, inServiceWithUUID: .MDS, device: device) {
                 await received(data, from: device)
             }
             logger.info("STOP listening to MDS Data Export.")
@@ -157,18 +157,18 @@ extension AppData {
             do {
                 if device.streamingEnabled {
                     logger.debug("Disabling Streaming from \(device.name).")
-                    _ = try await scanner.writeCharacteristic(
+                    _ = try await bluetooth.writeCharacteristic(
                         Data(repeating: 0, count: 0), writeType: .withResponse, toCharacteristicWithUUID: .MDSDataExportCharacteristic, inServiceWithUUID: .MDS, from: device)
                     await updateNotifyingStatus(of: device, to: false)
                 }
                 
                 if device.notificationsEnabled {
                     logger.debug("Turning Off Notifications from \(device.name).")
-                    _ = try await scanner.setNotify(false, toCharacteristicWithUUID: .MDSDataExportCharacteristic, inServiceWithUUID: .MDS, from: device)
+                    _ = try await bluetooth.setNotify(false, toCharacteristicWithUUID: .MDSDataExportCharacteristic, inServiceWithUUID: .MDS, from: device)
                     await updateStreamingStatus(of: device, to: false)
                 }
                 
-                try await scanner.disconnect(from: device)
+                try await bluetooth.disconnect(from: device)
                 logger.info("Disconnected from \(device.name)")
                 await updateDeviceConnectionState(of: device, to: .disconnected)
             } catch {
