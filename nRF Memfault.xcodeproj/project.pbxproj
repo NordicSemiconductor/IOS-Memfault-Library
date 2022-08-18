@@ -43,8 +43,6 @@
 		AAFBF8342899482B00A6655C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFBF8222899482900A6655C /* ContentView.swift */; };
 		AAFBF8352899482B00A6655C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AAFBF8232899482A00A6655C /* Assets.xcassets */; };
 		AAFBF8362899482B00A6655C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AAFBF8232899482A00A6655C /* Assets.xcassets */; };
-		AAFBF84328994C8B00A6655C /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFBF84228994C8B00A6655C /* Constant.swift */; };
-		AAFBF84428994C8B00A6655C /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFBF84228994C8B00A6655C /* Constant.swift */; };
 		AAFBF84A28996AA100A6655C /* AppData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFBF84928996AA100A6655C /* AppData.swift */; };
 		AAFBF84B28996AA100A6655C /* AppData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFBF84928996AA100A6655C /* AppData.swift */; };
 		AAFBF84D2899742E00A6655C /* DeviceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFBF84C2899742E00A6655C /* DeviceManager.swift */; };
@@ -76,7 +74,6 @@
 		AAFBF8282899482B00A6655C /* nRF Memfault.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "nRF Memfault.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AAFBF82E2899482B00A6655C /* nRF Memfault.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "nRF Memfault.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AAFBF8302899482B00A6655C /* macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = macOS.entitlements; sourceTree = "<group>"; };
-		AAFBF84228994C8B00A6655C /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
 		AAFBF84928996AA100A6655C /* AppData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppData.swift; sourceTree = "<group>"; };
 		AAFBF84C2899742E00A6655C /* DeviceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceManager.swift; sourceTree = "<group>"; };
 		AAFBF8522899747600A6655C /* BluetoothError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothError.swift; sourceTree = "<group>"; };
@@ -178,7 +175,6 @@
 		AAFBF84128994C3800A6655C /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
-				AAFBF84228994C8B00A6655C /* Constant.swift */,
 				AAFB2FE9289A8C95008207FE /* Logger.swift */,
 				AA38741328A67619009F274E /* AsyncCharacteristicData.swift */,
 			);
@@ -362,7 +358,6 @@
 				AAFBF8332899482B00A6655C /* ContentView.swift in Sources */,
 				AAFBF8312899482B00A6655C /* nRF_MemfaultApp.swift in Sources */,
 				AAFB2FE7289A8C48008207FE /* Device.swift in Sources */,
-				AAFBF84328994C8B00A6655C /* Constant.swift in Sources */,
 				AAFB2FF6289AB7EB008207FE /* ScannerView.swift in Sources */,
 				AAFB2FF0289A9D2E008207FE /* AdvertisementData.swift in Sources */,
 				AAEED87028A26528002284A2 /* Scanner+CBPeripheralDelegate.swift in Sources */,
@@ -390,7 +385,6 @@
 				AAFBF8342899482B00A6655C /* ContentView.swift in Sources */,
 				AAFBF8322899482B00A6655C /* nRF_MemfaultApp.swift in Sources */,
 				AAFB2FE8289A8C48008207FE /* Device.swift in Sources */,
-				AAFBF84428994C8B00A6655C /* Constant.swift in Sources */,
 				AAFB2FF7289AB7EB008207FE /* ScannerView.swift in Sources */,
 				AAFB2FF1289A9D2E008207FE /* AdvertisementData.swift in Sources */,
 				AAEED87128A26528002284A2 /* Scanner+CBPeripheralDelegate.swift in Sources */,
