@@ -10,7 +10,7 @@ import CoreBluetooth
 
 // MARK: - Device
 
-struct Device: Identifiable, BluetoothDevice {
+final class Device: Identifiable, BluetoothDevice, ObservableObject {
     
     // MARK: Properties
     
@@ -22,15 +22,17 @@ struct Device: Identifiable, BluetoothDevice {
         return state != .notConnectable
     }
     
-    private(set) var name: String
+    @Published private(set) var name: String
+    
     let uuidString: String
     let rssi: RSSI
     let advertisementData: AdvertisementData
-    private(set) var state: ConnectedState
-    var services: [CBService]
-    private(set) var chunks: [Chunk]
-    private(set) var notificationsEnabled: Bool
-    private(set) var streamingEnabled: Bool
+    
+    @Published var state: ConnectedState
+    @Published var services: [CBService]
+    @Published var chunks: [Chunk]
+    @Published var notificationsEnabled: Bool
+    @Published var streamingEnabled: Bool
     
     // MARK: Init
     
@@ -62,24 +64,8 @@ struct Device: Identifiable, BluetoothDevice {
     
     // MARK: API
     
-    mutating func update(from advertisingData: [String: Any]) {
+    func update(from advertisingData: [String: Any]) {
         self.name = advertisementData.localName ?? name
-    }
-    
-    mutating func connectionStateChanged(to newState: ConnectedState) {
-        state = newState
-    }
-    
-    mutating func add(_ chunk: Chunk) {
-        chunks.append(chunk)
-    }
-    
-    mutating func updateNotifyingStatus(to isNotifying: Bool) {
-        notificationsEnabled = isNotifying
-    }
-    
-    mutating func updateStreamingStatus(to isStreaming: Bool) {
-        streamingEnabled = isStreaming
     }
 }
 

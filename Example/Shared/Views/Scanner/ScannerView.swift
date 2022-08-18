@@ -20,9 +20,12 @@ struct ScannerView: View {
             }
             
             if let openDevice = appData.openDevice {
-                NavigationLink(destination: DeviceUploadView(openDevice), tag: openDevice, selection: $appData.openDevice, label: {
-                    DeviceView(openDevice)
+                let openDeviceView = DeviceUploadView()
+                    .environmentObject(openDevice)
+                NavigationLink(destination: openDeviceView, tag: openDevice, selection: $appData.openDevice, label: {
+                    EmptyView()
                 })
+                .hidden()
             }
         }
         #if os(iOS)

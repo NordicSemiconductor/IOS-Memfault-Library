@@ -179,24 +179,14 @@ extension AppData {
     }
 }
 
-// MARK: - Private
-
-private extension CBUUID {
-    
-    static let MDS = CBUUID(string: "54220000-F6A5-4007-A371-722F4EBD8436")
-    static let MDSDeviceIdentifierCharacteristic = CBUUID(string: "54220002-f6a5-4007-a371-722f4ebd8436")
-    static let MDSDataURICharacteristic = CBUUID(string: "54220003-f6a5-4007-a371-722f4ebd8436")
-    static let MDSAuthCharacteristic = CBUUID(string: "54220004-f6a5-4007-a371-722f4ebd8436")
-    static let MDSDataExportCharacteristic = CBUUID(string: "54220005-f6a5-4007-a371-722f4ebd8436")
-}
-
 @MainActor
 private extension AppData {
     
     func updateDeviceConnectionState(of device: Device, to newState: ConnectedState) async {
         Task { @MainActor in
             guard let i = scannedDevices.firstIndex(where: { $0.uuidString == device.uuidString }) else { return }
-            scannedDevices[i].connectionStateChanged(to: newState)
+            scannedDevices[i].state = newState
+            objectWillChange.send()
         }
     }
     
@@ -205,21 +195,23 @@ private extension AppData {
 
         Task { @MainActor in
             guard let i = scannedDevices.firstIndex(where: { $0.uuidString == device.uuidString }) else { return }
-            scannedDevices[i].add(Chunk(data))
+            scannedDevices[i].chunks.append(Chunk(data))
         }
     }
     
     func updateNotifyingStatus(of device: Device, to isNotifying: Bool) async {
         Task { @MainActor in
             guard let i = scannedDevices.firstIndex(where: { $0.uuidString == device.uuidString }) else { return }
-            scannedDevices[i].updateNotifyingStatus(to: isNotifying)
+            scannedDevices[i].notificationsEnabled = isNotifying
+            objectWillChange.send()
         }
     }
     
     func updateStreamingStatus(of device: Device, to isStreaming: Bool) async {
         Task { @MainActor in
             guard let i = scannedDevices.firstIndex(where: { $0.uuidString == device.uuidString }) else { return }
-            scannedDevices[i].updateStreamingStatus(to: isStreaming)
+            scannedDevices[i].streamingEnabled = isStreaming
+            objectWillChange.send()
         }
     }
     
@@ -230,4 +222,15 @@ private extension AppData {
             self.error = errorEvent
         }
     }
+}
+
+// MARK: - Private
+
+private extension CBUUID {
+    
+    static let MDS = CBUUID(string: "54220000-F6A5-4007-A371-722F4EBD8436")
+    static let MDSDeviceIdentifierCharacteristic = CBUUID(string: "54220002-f6a5-4007-a371-722f4ebd8436")
+    static let MDSDataURICharacteristic = CBUUID(string: "54220003-f6a5-4007-a371-722f4ebd8436")
+    static let MDSAuthCharacteristic = CBUUID(string: "54220004-f6a5-4007-a371-722f4ebd8436")
+    static let MDSDataExportCharacteristic = CBUUID(string: "54220005-f6a5-4007-a371-722f4ebd8436")
 }
