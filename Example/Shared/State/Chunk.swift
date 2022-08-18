@@ -16,7 +16,9 @@ struct Chunk: Identifiable, Hashable {
     }
     
     init(_ data: Data) {
-        self.data = data
+        // Requirement to drop first byte, since it's an index / sequence number
+        // and not part of the Data itself.
+        self.data = data.dropFirst()
     }
     
     func hash(into hasher: inout Hasher) {
