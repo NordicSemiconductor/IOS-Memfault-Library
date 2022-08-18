@@ -10,7 +10,7 @@ import CoreBluetooth
 
 // MARK: - Device
 
-struct Device: Identifiable, ScannerDevice {
+struct Device: Identifiable, BluetoothDevice {
     
     // MARK: Properties
     

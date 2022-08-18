@@ -1,5 +1,5 @@
 //
-//  ScannerDevice.swift
+//  BluetoothDevice.swift
 //  nRF Memfault
 //
 //  Created by Dinesh Harjani on 9/8/22.
@@ -8,16 +8,16 @@
 import Foundation
 import CoreBluetooth
 
-// MARK: - ScannerDevice
+// MARK: - BluetoothDevice
 
-protocol ScannerDevice {
+protocol BluetoothDevice {
     
     var uuidString: String { get }
 }
 
 // MARK: - Implementations
 
-extension CBPeripheral: ScannerDevice {
+extension CBPeripheral: BluetoothDevice {
     
     var uuidString: String {
         identifier.uuidString

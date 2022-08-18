@@ -19,8 +19,8 @@
 		AAEED86E28A26440002284A2 /* Scanner+CBCentralManagerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAEED86C28A26440002284A2 /* Scanner+CBCentralManagerDelegate.swift */; };
 		AAEED87028A26528002284A2 /* Scanner+CBPeripheralDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAEED86F28A26528002284A2 /* Scanner+CBPeripheralDelegate.swift */; };
 		AAEED87128A26528002284A2 /* Scanner+CBPeripheralDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAEED86F28A26528002284A2 /* Scanner+CBPeripheralDelegate.swift */; };
-		AAEED87328A265D8002284A2 /* ScannerDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAEED87228A265D8002284A2 /* ScannerDevice.swift */; };
-		AAEED87428A265D8002284A2 /* ScannerDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAEED87228A265D8002284A2 /* ScannerDevice.swift */; };
+		AAEED87328A265D8002284A2 /* BluetoothDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAEED87228A265D8002284A2 /* BluetoothDevice.swift */; };
+		AAEED87428A265D8002284A2 /* BluetoothDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAEED87228A265D8002284A2 /* BluetoothDevice.swift */; };
 		AAFA533F28AD30FA005638D3 /* AppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFA533E28AD30FA005638D3 /* AppError.swift */; };
 		AAFA534028AD30FA005638D3 /* AppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFA533E28AD30FA005638D3 /* AppError.swift */; };
 		AAFB2FE4289A89CD008207FE /* Scanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFB2FE3289A89CD008207FE /* Scanner.swift */; };
@@ -61,7 +61,7 @@
 		AA38741328A67619009F274E /* AsyncCharacteristicData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncCharacteristicData.swift; sourceTree = "<group>"; };
 		AAEED86C28A26440002284A2 /* Scanner+CBCentralManagerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Scanner+CBCentralManagerDelegate.swift"; sourceTree = "<group>"; };
 		AAEED86F28A26528002284A2 /* Scanner+CBPeripheralDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Scanner+CBPeripheralDelegate.swift"; sourceTree = "<group>"; };
-		AAEED87228A265D8002284A2 /* ScannerDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerDevice.swift; sourceTree = "<group>"; };
+		AAEED87228A265D8002284A2 /* BluetoothDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothDevice.swift; sourceTree = "<group>"; };
 		AAFA533E28AD30FA005638D3 /* AppError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppError.swift; sourceTree = "<group>"; };
 		AAFB2FE3289A89CD008207FE /* Scanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scanner.swift; sourceTree = "<group>"; };
 		AAFB2FE6289A8C48008207FE /* Device.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
@@ -209,7 +209,7 @@
 				AAFBF8522899747600A6655C /* BluetoothError.swift */,
 				AAFBF84C2899742E00A6655C /* DeviceManager.swift */,
 				AAFB2FEF289A9D2E008207FE /* AdvertisementData.swift */,
-				AAEED87228A265D8002284A2 /* ScannerDevice.swift */,
+				AAEED87228A265D8002284A2 /* BluetoothDevice.swift */,
 				AAFB2FE3289A89CD008207FE /* Scanner.swift */,
 				AAEED86C28A26440002284A2 /* Scanner+CBCentralManagerDelegate.swift */,
 				AAEED86F28A26528002284A2 /* Scanner+CBPeripheralDelegate.swift */,
@@ -368,7 +368,7 @@
 				AAEED87028A26528002284A2 /* Scanner+CBPeripheralDelegate.swift in Sources */,
 				AAFB2FEA289A8C95008207FE /* Logger.swift in Sources */,
 				AA2ADBA228ABE32B00BF03D3 /* DeviceUploadView.swift in Sources */,
-				AAEED87328A265D8002284A2 /* ScannerDevice.swift in Sources */,
+				AAEED87328A265D8002284A2 /* BluetoothDevice.swift in Sources */,
 				AAFB2FF3289A9E27008207FE /* RSSI.swift in Sources */,
 				AAFB2FED289A8DB7008207FE /* CBExtensions.swift in Sources */,
 				AAFA533F28AD30FA005638D3 /* AppError.swift in Sources */,
@@ -396,7 +396,7 @@
 				AAEED87128A26528002284A2 /* Scanner+CBPeripheralDelegate.swift in Sources */,
 				AAFB2FEB289A8C95008207FE /* Logger.swift in Sources */,
 				AA2ADBA328ABE32B00BF03D3 /* DeviceUploadView.swift in Sources */,
-				AAEED87428A265D8002284A2 /* ScannerDevice.swift in Sources */,
+				AAEED87428A265D8002284A2 /* BluetoothDevice.swift in Sources */,
 				AAFB2FF4289A9E27008207FE /* RSSI.swift in Sources */,
 				AAFB2FEE289A8DB7008207FE /* CBExtensions.swift in Sources */,
 				AAFA534028AD30FA005638D3 /* AppError.swift in Sources */,

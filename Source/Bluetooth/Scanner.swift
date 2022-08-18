@@ -106,7 +106,7 @@ extension Scanner {
     
     // MARK: Connect
     
-    func connect<T: ScannerDevice>(to device: T) async throws {
+    func connect<T: BluetoothDevice>(to device: T) async throws {
         try await connect(toDeviceWithUUID: device.uuidString)
     }
     
@@ -134,7 +134,7 @@ extension Scanner {
     
     // MARK: Discover Services
     
-    func discoverServices<T: ScannerDevice>(_ serviceUUIDs: [String] = [], of device: T) async throws -> [CBService] {
+    func discoverServices<T: BluetoothDevice>(_ serviceUUIDs: [String] = [], of device: T) async throws -> [CBService] {
         try await discoverServices(serviceUUIDs, ofDeviceWithUUID: device.uuidString)
     }
     
@@ -191,7 +191,7 @@ extension Scanner {
     
     // MARK: Read
     
-    func data<T: ScannerDevice>(fromCharacteristic characteristic: CBCharacteristic,
+    func data<T: BluetoothDevice>(fromCharacteristic characteristic: CBCharacteristic,
                                 inService service: CBService,
                                 device: T) -> AsyncCharacteristicData {
         return data(fromCharacteristicWithUUIDString: characteristic.uuid.uuidString,
@@ -199,7 +199,7 @@ extension Scanner {
                     device: device)
     }
     
-    func data<T: ScannerDevice>(fromCharacteristicWithUUID characteristicUUID: CBUUID,
+    func data<T: BluetoothDevice>(fromCharacteristicWithUUID characteristicUUID: CBUUID,
                                 inServiceWithUUID serviceUUID: CBUUID,
                                 device: T) -> AsyncCharacteristicData {
         return data(fromCharacteristicWithUUIDString: characteristicUUID.uuidString,
@@ -207,7 +207,7 @@ extension Scanner {
                     device: device)
     }
     
-    func data<T: ScannerDevice>(fromCharacteristicWithUUIDString characteristicUUIDString: String,
+    func data<T: BluetoothDevice>(fromCharacteristicWithUUIDString characteristicUUIDString: String,
                                 inServiceWithUUIDString serviceUUIDString: String,
                                 device: T) -> AsyncCharacteristicData {
         let stream = AsyncThrowingStream<AsyncStreamValue, Error> { continuation in
@@ -218,13 +218,13 @@ extension Scanner {
                                        stream: stream)
     }
     
-    func readCharacteristic<T: ScannerDevice>(withUUID characteristicUUID: CBUUID,
+    func readCharacteristic<T: BluetoothDevice>(withUUID characteristicUUID: CBUUID,
                                               inServiceWithUUID serviceUUID: CBUUID,
                                               from device: T) async throws -> Data? {
         return try await readCharacteristic(withUUIDString: characteristicUUID.uuidString, inServiceWithUUIDString: serviceUUID.uuidString, from: device)
     }
     
-    func readCharacteristic<T: ScannerDevice>(withUUIDString characteristicUUIDString: String,
+    func readCharacteristic<T: BluetoothDevice>(withUUIDString characteristicUUIDString: String,
                                               inServiceWithUUIDString serviceUUIDString: String,
                                               from device: T) async throws -> Data? {
         guard let peripheral = connectedPeripherals[device.uuidString] else {
@@ -254,7 +254,7 @@ extension Scanner {
     
     // MARK: Write
     
-    func writeCharacteristic<T: ScannerDevice>(_ data: Data,
+    func writeCharacteristic<T: BluetoothDevice>(_ data: Data,
                                                writeType: CBCharacteristicWriteType = .withoutResponse,
                                                toCharacteristicWithUUID characteristicUUID: CBUUID,
                                                inServiceWithUUID serviceUUID: CBUUID,
@@ -262,7 +262,7 @@ extension Scanner {
         return try await writeCharacteristic(data, writeType: writeType, toCharacteristicWithUUIDString: characteristicUUID.uuidString, inServiceWithUUIDString: serviceUUID.uuidString, from: device)
     }
     
-    func writeCharacteristic<T: ScannerDevice>(_ data: Data,
+    func writeCharacteristic<T: BluetoothDevice>(_ data: Data,
                                                writeType: CBCharacteristicWriteType = .withoutResponse,
                                                toCharacteristicWithUUIDString characteristicUUIDString: String,
                                                inServiceWithUUIDString serviceUUIDString: String,
@@ -296,14 +296,14 @@ extension Scanner {
     
     // MARK: Notify
     
-    func setNotify<T: ScannerDevice>(_ notify: Bool,
+    func setNotify<T: BluetoothDevice>(_ notify: Bool,
                                      toCharacteristicWithUUID characteristicUUID: CBUUID,
                                      inServiceWithUUID serviceUUID: CBUUID,
                                      from device: T) async throws -> Bool {
         return try await setNotify(notify, toCharacteristicWithUUIDString: characteristicUUID.uuidString, inServiceWithUUIDString: serviceUUID.uuidString, from: device)
     }
     
-    func setNotify<T: ScannerDevice>(_ notify: Bool,
+    func setNotify<T: BluetoothDevice>(_ notify: Bool,
                                      toCharacteristicWithUUIDString characteristicUUIDString: String,
                                      inServiceWithUUIDString serviceUUIDString: String,
                                      from device: T) async throws -> Bool {
@@ -336,7 +336,7 @@ extension Scanner {
     
     // MARK: Disconnect
     
-    func disconnect<T: ScannerDevice>(from device: T) async throws {
+    func disconnect<T: BluetoothDevice>(from device: T) async throws {
         try await disconnect(fromWithUUID: device.uuidString)
     }
     
