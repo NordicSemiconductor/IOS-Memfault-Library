@@ -51,6 +51,8 @@
 		AAFBF8542899747600A6655C /* BluetoothError.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFBF8522899747600A6655C /* BluetoothError.swift */; };
 		AAFD760D28AE46B30078F6F8 /* Chunk.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFD760C28AE46B30078F6F8 /* Chunk.swift */; };
 		AAFD760E28AE46B30078F6F8 /* Chunk.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFD760C28AE46B30078F6F8 /* Chunk.swift */; };
+		AAFD761028AE6B8F0078F6F8 /* ChunkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFD760F28AE6B8F0078F6F8 /* ChunkView.swift */; };
+		AAFD761128AE6B8F0078F6F8 /* ChunkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFD760F28AE6B8F0078F6F8 /* ChunkView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -78,6 +80,7 @@
 		AAFBF84C2899742E00A6655C /* DeviceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceManager.swift; sourceTree = "<group>"; };
 		AAFBF8522899747600A6655C /* BluetoothError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothError.swift; sourceTree = "<group>"; };
 		AAFD760C28AE46B30078F6F8 /* Chunk.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chunk.swift; sourceTree = "<group>"; };
+		AAFD760F28AE6B8F0078F6F8 /* ChunkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChunkView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,6 +122,7 @@
 		AA2ADBA028ABE26900BF03D3 /* Upload */ = {
 			isa = PBXGroup;
 			children = (
+				AAFD760F28AE6B8F0078F6F8 /* ChunkView.swift */,
 				AA2ADBA128ABE32B00BF03D3 /* DeviceUploadView.swift */,
 			);
 			path = Upload;
@@ -363,6 +367,7 @@
 				AAEED87028A26528002284A2 /* Bluetooth+CBPeripheralDelegate.swift in Sources */,
 				AAFB2FEA289A8C95008207FE /* Logger.swift in Sources */,
 				AA2ADBA228ABE32B00BF03D3 /* DeviceUploadView.swift in Sources */,
+				AAFD761028AE6B8F0078F6F8 /* ChunkView.swift in Sources */,
 				AAEED87328A265D8002284A2 /* BluetoothDevice.swift in Sources */,
 				AAFB2FF3289A9E27008207FE /* RSSI.swift in Sources */,
 				AAFB2FED289A8DB7008207FE /* CBExtensions.swift in Sources */,
@@ -390,6 +395,7 @@
 				AAEED87128A26528002284A2 /* Bluetooth+CBPeripheralDelegate.swift in Sources */,
 				AAFB2FEB289A8C95008207FE /* Logger.swift in Sources */,
 				AA2ADBA328ABE32B00BF03D3 /* DeviceUploadView.swift in Sources */,
+				AAFD761128AE6B8F0078F6F8 /* ChunkView.swift in Sources */,
 				AAEED87428A265D8002284A2 /* BluetoothDevice.swift in Sources */,
 				AAFB2FF4289A9E27008207FE /* RSSI.swift in Sources */,
 				AAFB2FEE289A8DB7008207FE /* CBExtensions.swift in Sources */,

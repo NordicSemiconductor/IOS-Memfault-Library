@@ -17,13 +17,7 @@ struct DeviceUploadView: View {
         List {
             Section("Chunks") {
                 ForEach(device.chunks) { chunk in
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(chunk.data.hexEncodedString(options: [.upperCase]))
-                        
-                        Text("\(chunk.data.count) bytes.")
-                            .font(.caption)
-                            .foregroundColor(.nordicMiddleGrey)
-                    }
+                    ChunkView(chunk)
                 }
             }
         }
