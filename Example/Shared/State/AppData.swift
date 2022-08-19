@@ -9,6 +9,7 @@ import Foundation
 import OSLog
 import CoreBluetooth
 import iOS_Common_Libraries
+//import memfault
 
 final class AppData: ObservableObject {
     
@@ -196,6 +197,7 @@ private extension AppData {
         Task { @MainActor in
             guard let i = scannedDevices.firstIndex(where: { $0.uuidString == device.uuidString }) else { return }
             scannedDevices[i].chunks.append(Chunk(data))
+            
         }
     }
     
