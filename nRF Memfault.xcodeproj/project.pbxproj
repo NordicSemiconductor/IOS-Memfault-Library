@@ -62,6 +62,8 @@
 		AA2ADBA128ABE32B00BF03D3 /* DeviceUploadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceUploadView.swift; sourceTree = "<group>"; };
 		AA38741328A67619009F274E /* AsyncCharacteristicData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncCharacteristicData.swift; sourceTree = "<group>"; };
 		AA38DEBC28AFB4EF0020CAF1 /* PostChunkRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostChunkRequest.swift; sourceTree = "<group>"; };
+		AA3C2E9D28B3CB550075CB55 /* nRF-Memfault--iOS--Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "nRF-Memfault--iOS--Info.plist"; sourceTree = "<group>"; };
+		AA3C2E9E28B3CB5F0075CB55 /* nRF-Memfault--macOS--Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "nRF-Memfault--macOS--Info.plist"; sourceTree = "<group>"; };
 		AAEED86C28A26440002284A2 /* Bluetooth+CBCentralManagerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bluetooth+CBCentralManagerDelegate.swift"; sourceTree = "<group>"; };
 		AAEED86F28A26528002284A2 /* Bluetooth+CBPeripheralDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bluetooth+CBPeripheralDelegate.swift"; sourceTree = "<group>"; };
 		AAEED87228A265D8002284A2 /* BluetoothDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothDevice.swift; sourceTree = "<group>"; };
@@ -142,6 +144,8 @@
 		AAFBF81B2899482900A6655C = {
 			isa = PBXGroup;
 			children = (
+				AA3C2E9E28B3CB5F0075CB55 /* nRF-Memfault--macOS--Info.plist */,
+				AA3C2E9D28B3CB550075CB55 /* nRF-Memfault--iOS--Info.plist */,
 				AAFBF8452899554600A6655C /* Example */,
 				AAFBF8462899556300A6655C /* Source */,
 				AAFBF8292899482B00A6655C /* Products */,
@@ -547,6 +551,7 @@
 				DEVELOPMENT_TEAM = P3R8YQEV4L;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "nRF-Memfault--iOS--Info.plist";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "To connect to your Device, we need Bluetooth access.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -578,6 +583,7 @@
 				DEVELOPMENT_TEAM = P3R8YQEV4L;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "nRF-Memfault--iOS--Info.plist";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "To connect to your Device, we need Bluetooth access.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -613,6 +619,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "nRF-Memfault--macOS--Info.plist";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "To connect to your Device, we need Bluetooth access.";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
@@ -643,6 +650,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "nRF-Memfault--macOS--Info.plist";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "To connect to your Device, we need Bluetooth access.";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
