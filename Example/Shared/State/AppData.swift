@@ -101,7 +101,7 @@ extension AppData {
                 }
                 
                 logger.info("Discovering MDS' Characteristics...")
-                let characteristics = try await bluetooth.discoverCharacteristics(ofService: mdsService.uuid.uuidString, ofDeviceWithUUID: device.uuidString)
+                try await bluetooth.discoverCharacteristics(ofService: mdsService.uuid.uuidString, ofDeviceWithUUID: device.uuidString)
                 
                 logger.info("Reading Device Identifier...")
                 guard let uriData = try await bluetooth.readCharacteristic(withUUID: .MDSDeviceIdentifierCharacteristic, inServiceWithUUID: .MDS, from: device),
@@ -134,7 +134,7 @@ extension AppData {
                 logger.debug("Write Enable Result: \(writeResult ?? Data())")
                 await updateStreamingStatus(of: device, to: true)
                 
-                openDevice = device
+                await open(device)
             } catch {
                 await encounteredError(error)
                 disconnect(from: device)
@@ -146,16 +146,9 @@ extension AppData {
         Task {
             logger.info("START listening to MDS Data Export.")
             for try await data in bluetooth.data(fromCharacteristicWithUUID: .MDSDataExportCharacteristic, inServiceWithUUID: .MDS, device: device) {
-                guard let chunk = await received(data, from: device),
-                      let postChunkRequest = HTTPRequest.postChunk(chunk, for: device) else { continue }
+                guard let chunk = await received(data, from: device) else { continue }
                 logger.info("Received Chunk \(chunk.sequenceNumber). Now sending to Memfault.")
-                network.perform(postChunkRequest)
-                    .sink(receiveCompletion: { [logger] error in
-                        logger.error("Error uploading Chunk \(chunk.sequenceNumber).")
-                    }, receiveValue: { [logger] data in
-                        logger.debug("\(String(describing: data))")
-                    })
-                    .store(in: &cancellables)
+                upload(chunk, from: device)
             }
             logger.info("STOP listening to MDS Data Export.")
         }
@@ -193,7 +186,6 @@ extension AppData {
     }
 }
 
-@MainActor
 private extension AppData {
     
     func updateDeviceConnectionState(of device: Device, to newState: ConnectedState) async {
@@ -205,6 +197,11 @@ private extension AppData {
     }
     
     @MainActor
+    func open(_ device: Device) async {
+        openDevice = device
+    }
+    
+    @MainActor
     func received(_ data: Data?, from device: Device) -> Chunk? {
         guard let data = data,
               let i = scannedDevices.firstIndex(where: { $0.uuidString == device.uuidString }) else { return nil }
@@ -212,6 +209,25 @@ private extension AppData {
         let chunk = Chunk(data)
         scannedDevices[i].chunks.append(chunk)
         return chunk
+    }
+    
+    func upload(_ chunk: Chunk, from device: Device) {
+        Task { @MainActor in
+            guard let postChunkRequest = HTTPRequest.post(chunk, for: device),
+                  let i = scannedDevices.firstIndex(where: { $0.uuidString == device.uuidString }),
+                  let j = scannedDevices[i].chunks.firstIndex(where: { $0 == chunk }) else { return }
+            scannedDevices[i].chunks[j].status = .uploading
+            
+            network.perform(postChunkRequest)
+                .sink(receiveCompletion: { [weak self, logger] error in
+                    logger.error("Error Uploading Chunk \(chunk.sequenceNumber).")
+                    self?.scannedDevices[i].chunks[j].status = .errorUploading
+                }, receiveValue: { [weak self, logger] data in
+                    logger.debug("Successfully Sent Chunk \(chunk.sequenceNumber).")
+                    self?.scannedDevices[i].chunks[j].status = .success
+                })
+                .store(in: &cancellables)
+        }
     }
     
     func updateNotifyingStatus(of device: Device, to isNotifying: Bool) async {

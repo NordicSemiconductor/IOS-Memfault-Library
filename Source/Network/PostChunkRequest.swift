@@ -10,7 +10,7 @@ import iOS_Common_Libraries
 
 extension HTTPRequest {
     
-    static func postChunk(_ chunk: Chunk, for device: Device) -> HTTPRequest? {
+    static func post(_ chunk: Chunk, for device: Device) -> HTTPRequest? {
         guard let url = device.chunksURL,
               let authPair = device.chunksURLAuthKey else { return nil }
         

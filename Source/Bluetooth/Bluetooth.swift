@@ -161,6 +161,7 @@ extension Bluetooth {
         }
     }
     
+    @discardableResult
     func discoverCharacteristics(_ characteristicUUIDs: [String] = [], ofService serviceUUID: String, ofDeviceWithUUID deviceUUID: String) async throws -> [CBCharacteristic]? {
         guard let peripheral = connectedPeripherals[deviceUUID] else {
             throw BluetoothError.cantRetrievePeripheral
