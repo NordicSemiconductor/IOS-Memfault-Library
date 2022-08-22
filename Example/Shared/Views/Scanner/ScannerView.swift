@@ -28,6 +28,9 @@ struct ScannerView: View {
                 .hidden()
             }
         }
+        .onAppear() {
+            appData.openDevice = nil
+        }
         #if os(iOS)
         .refreshable {
             appData.refresh()
