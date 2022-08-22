@@ -22,12 +22,16 @@ final class Device: Identifiable, BluetoothDevice, ObservableObject {
         return state != .notConnectable
     }
     
-    @Published private(set) var name: String
-    
     let uuidString: String
     let rssi: RSSI
     let advertisementData: AdvertisementData
     
+    var chunksURL: URL?
+    
+    typealias ChunksURLAuthKey = (key: String, auth: String)
+    var chunksURLAuthKey: ChunksURLAuthKey?
+    
+    @Published private(set) var name: String
     @Published var state: ConnectedState
     @Published var services: [CBService]
     @Published var chunks: [Chunk]

@@ -15,6 +15,8 @@
 		AA2ADBA328ABE32B00BF03D3 /* DeviceUploadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2ADBA128ABE32B00BF03D3 /* DeviceUploadView.swift */; };
 		AA38741428A67619009F274E /* AsyncCharacteristicData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA38741328A67619009F274E /* AsyncCharacteristicData.swift */; };
 		AA38741528A67619009F274E /* AsyncCharacteristicData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA38741328A67619009F274E /* AsyncCharacteristicData.swift */; };
+		AA38DEBD28AFB4EF0020CAF1 /* PostChunkRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA38DEBC28AFB4EF0020CAF1 /* PostChunkRequest.swift */; };
+		AA38DEBE28AFB4EF0020CAF1 /* PostChunkRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA38DEBC28AFB4EF0020CAF1 /* PostChunkRequest.swift */; };
 		AAEED86D28A26440002284A2 /* Bluetooth+CBCentralManagerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAEED86C28A26440002284A2 /* Bluetooth+CBCentralManagerDelegate.swift */; };
 		AAEED86E28A26440002284A2 /* Bluetooth+CBCentralManagerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAEED86C28A26440002284A2 /* Bluetooth+CBCentralManagerDelegate.swift */; };
 		AAEED87028A26528002284A2 /* Bluetooth+CBPeripheralDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAEED86F28A26528002284A2 /* Bluetooth+CBPeripheralDelegate.swift */; };
@@ -59,6 +61,7 @@
 		AA22DDC9289B4162003366FA /* DeviceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceView.swift; sourceTree = "<group>"; };
 		AA2ADBA128ABE32B00BF03D3 /* DeviceUploadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceUploadView.swift; sourceTree = "<group>"; };
 		AA38741328A67619009F274E /* AsyncCharacteristicData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncCharacteristicData.swift; sourceTree = "<group>"; };
+		AA38DEBC28AFB4EF0020CAF1 /* PostChunkRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostChunkRequest.swift; sourceTree = "<group>"; };
 		AAEED86C28A26440002284A2 /* Bluetooth+CBCentralManagerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bluetooth+CBCentralManagerDelegate.swift"; sourceTree = "<group>"; };
 		AAEED86F28A26528002284A2 /* Bluetooth+CBPeripheralDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bluetooth+CBPeripheralDelegate.swift"; sourceTree = "<group>"; };
 		AAEED87228A265D8002284A2 /* BluetoothDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothDevice.swift; sourceTree = "<group>"; };
@@ -126,6 +129,14 @@
 				AA2ADBA128ABE32B00BF03D3 /* DeviceUploadView.swift */,
 			);
 			path = Upload;
+			sourceTree = "<group>";
+		};
+		AA38DEBB28AFB2F20020CAF1 /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				AA38DEBC28AFB4EF0020CAF1 /* PostChunkRequest.swift */,
+			);
+			path = Network;
 			sourceTree = "<group>";
 		};
 		AAFBF81B2899482900A6655C = {
@@ -197,6 +208,7 @@
 		AAFBF8462899556300A6655C /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				AA38DEBB28AFB2F20020CAF1 /* Network */,
 				AAFBF84728996A7500A6655C /* Bluetooth */,
 				AAFBF84128994C3800A6655C /* Utilities */,
 			);
@@ -378,6 +390,7 @@
 				AA38741428A67619009F274E /* AsyncCharacteristicData.swift in Sources */,
 				AA22DDCA289B4162003366FA /* DeviceView.swift in Sources */,
 				AAFBF84D2899742E00A6655C /* DeviceManager.swift in Sources */,
+				AA38DEBD28AFB4EF0020CAF1 /* PostChunkRequest.swift in Sources */,
 				AAFB2FE4289A89CD008207FE /* Bluetooth.swift in Sources */,
 				AAFBF8532899747600A6655C /* BluetoothError.swift in Sources */,
 			);
@@ -406,6 +419,7 @@
 				AA38741528A67619009F274E /* AsyncCharacteristicData.swift in Sources */,
 				AA22DDCB289B4162003366FA /* DeviceView.swift in Sources */,
 				AAFBF84E2899742E00A6655C /* DeviceManager.swift in Sources */,
+				AA38DEBE28AFB4EF0020CAF1 /* PostChunkRequest.swift in Sources */,
 				AAFB2FE5289A89CD008207FE /* Bluetooth.swift in Sources */,
 				AAFBF8542899747600A6655C /* BluetoothError.swift in Sources */,
 			);

@@ -8,8 +8,8 @@
 import Foundation
 import OSLog
 import CoreBluetooth
+import Combine
 import iOS_Common_Libraries
-//import memfault
 
 final class AppData: ObservableObject {
     
@@ -23,12 +23,15 @@ final class AppData: ObservableObject {
     // MARK: Private
     
     private let bluetooth: Bluetooth
+    private let network: Network
     private let logger: Logger
+    private lazy var cancellables = Set<AnyCancellable>()
     
     // MARK: Init
     
     init() {
         self.bluetooth = Bluetooth()
+        self.network = Network("chunks.memfault.com")
         self.isScanning = bluetooth.isScanning
         self.scannedDevices = []
         self.openDevice = nil
@@ -113,14 +116,15 @@ extension AppData {
                       let uriURL = URL(string: uriString) else {
                     throw AppError.unableToReadDeviceURI
                 }
-                logger.debug("Data URI: \(uriURL.absoluteString)")
                 
                 logger.info("Reading Auth Data...")
                 guard let authData = try await bluetooth.readCharacteristic(withUUID: .MDSAuthCharacteristic, inServiceWithUUID: .MDS, from: device),
-                      let authString = String(data: authData, encoding: .utf8) else {
+                      let authString = String(data: authData, encoding: .utf8)?.split(separator: ":") else {
                     throw AppError.unableToReadAuthData
                 }
-                logger.debug("Auth Data: \(authString)")
+                await update(chunksURL: uriURL,
+                             authKey: (key: String(authString[0]), auth: String(authString[1])),
+                             of: device)
                 
                 let isNotifying = try await bluetooth.setNotify(true, toCharacteristicWithUUID: .MDSDataExportCharacteristic, inServiceWithUUID: .MDS, from: device)
                 await updateNotifyingStatus(of: device, to: isNotifying)
@@ -142,7 +146,16 @@ extension AppData {
         Task {
             logger.info("START listening to MDS Data Export.")
             for try await data in bluetooth.data(fromCharacteristicWithUUID: .MDSDataExportCharacteristic, inServiceWithUUID: .MDS, device: device) {
-                await received(data, from: device)
+                guard let chunk = await received(data, from: device),
+                      let postChunkRequest = HTTPRequest.postChunk(chunk, for: device) else { continue }
+                logger.info("Received Chunk \(chunk.sequenceNumber). Now sending to Memfault.")
+                network.perform(postChunkRequest)
+                    .sink(receiveCompletion: { [logger] error in
+                        logger.error("Error uploading Chunk \(chunk.sequenceNumber).")
+                    }, receiveValue: { [logger] data in
+                        logger.debug("\(String(describing: data))")
+                    })
+                    .store(in: &cancellables)
             }
             logger.info("STOP listening to MDS Data Export.")
         }
@@ -191,14 +204,14 @@ private extension AppData {
         }
     }
     
-    func received(_ data: Data?, from device: Device) {
-        guard let data = data else { return }
-
-        Task { @MainActor in
-            guard let i = scannedDevices.firstIndex(where: { $0.uuidString == device.uuidString }) else { return }
-            scannedDevices[i].chunks.append(Chunk(data))
-            
-        }
+    @MainActor
+    func received(_ data: Data?, from device: Device) -> Chunk? {
+        guard let data = data,
+              let i = scannedDevices.firstIndex(where: { $0.uuidString == device.uuidString }) else { return nil }
+        
+        let chunk = Chunk(data)
+        scannedDevices[i].chunks.append(chunk)
+        return chunk
     }
     
     func updateNotifyingStatus(of device: Device, to isNotifying: Bool) async {
@@ -214,6 +227,14 @@ private extension AppData {
             guard let i = scannedDevices.firstIndex(where: { $0.uuidString == device.uuidString }) else { return }
             scannedDevices[i].streamingEnabled = isStreaming
             objectWillChange.send()
+        }
+    }
+    
+    func update(chunksURL: URL, authKey: Device.ChunksURLAuthKey, of device: Device) async {
+        Task { @MainActor in
+            guard let i = scannedDevices.firstIndex(where: { $0.uuidString == device.uuidString }) else { return }
+            scannedDevices[i].chunksURL = chunksURL
+            scannedDevices[i].chunksURLAuthKey = authKey
         }
     }
     
