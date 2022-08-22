@@ -16,8 +16,21 @@ struct DeviceUploadView: View {
     var body: some View {
         List {
             Section("Chunks") {
-                ForEach(device.chunks) { chunk in
-                    ChunkView(chunk)
+                if device.chunks.isEmpty {
+                    VStack(alignment: .center) {
+                        Image(systemName: "eyedropper")
+                            .resizable()
+                            .frame(width: 40, height: 40)
+                            .foregroundColor(.nordicMiddleGrey)
+                        
+                        Text("No Chunks have been received at this time.")
+                            .font(.subheadline)
+                            .foregroundColor(.nordicMiddleGrey)
+                    }
+                } else {
+                    ForEach(device.chunks) { chunk in
+                        ChunkView(chunk)
+                    }
                 }
             }
         }

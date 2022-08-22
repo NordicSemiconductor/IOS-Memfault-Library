@@ -22,6 +22,7 @@ struct Chunk: Identifiable, Hashable {
     
     let sequenceNumber: UInt8
     let data: Data
+    let timestamp: Date
     var status: Status
     
     var id: Int {
@@ -35,6 +36,7 @@ struct Chunk: Identifiable, Hashable {
         // and not part of the Data itself.
         self.sequenceNumber = data.first ?? .max
         self.data = data.dropFirst()
+        self.timestamp = Date()
         self.status = .ready
     }
     
@@ -44,5 +46,6 @@ struct Chunk: Identifiable, Hashable {
         hasher.combine(sequenceNumber)
         hasher.combine(data)
         hasher.combine(status)
+        hasher.combine(timestamp)
     }
 }

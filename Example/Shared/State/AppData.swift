@@ -92,6 +92,7 @@ extension AppData {
                 await updateDeviceConnectionState(of: device, to: .connected)
                 logger.info("Connected to \(device.name)")
                 
+                open(device)
                 listenForNewChunks(from: device)
                 
                 logger.info("Discovering \(device.name)'s Services...")
@@ -133,8 +134,6 @@ extension AppData {
                 let writeResult = try await bluetooth.writeCharacteristic(Data(repeating: 1, count: 1), writeType: .withResponse, toCharacteristicWithUUID: .MDSDataExportCharacteristic, inServiceWithUUID: .MDS, from: device)
                 logger.debug("Write Enable Result: \(writeResult ?? Data())")
                 await updateStreamingStatus(of: device, to: true)
-                
-                await open(device)
             } catch {
                 await encounteredError(error)
                 disconnect(from: device)
@@ -196,9 +195,10 @@ private extension AppData {
         }
     }
     
-    @MainActor
-    func open(_ device: Device) async {
-        openDevice = device
+    func open(_ device: Device) {
+        Task { @MainActor in
+            openDevice = device
+        }
     }
     
     @MainActor

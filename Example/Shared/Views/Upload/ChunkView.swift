@@ -9,19 +9,75 @@ import SwiftUI
 
 struct ChunkView: View {
     
+    static let timestampFormatter: RelativeDateTimeFormatter = {
+        let relativeFormatter = RelativeDateTimeFormatter()
+        relativeFormatter.dateTimeStyle = .named
+        return relativeFormatter
+    }()
+    
     private let chunk: Chunk
+    
+    @State private var showFullData = false
     
     init(_ chunk: Chunk) {
         self.chunk = chunk
     }
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text(chunk.data.hexEncodedString(options: [.upperCase]))
+        VStack(spacing: 8) {
+            HStack {
+                Text("#\(chunk.sequenceNumber)")
+                
+                
+                Text("\(chunk.data.count) bytes")
+                    .foregroundColor(.nordicLightGrey)
+                
+                Spacer()
+                
+                switch chunk.status {
+                case .ready:
+                    Button(action: {
+                        // To-Do
+                    }) {
+                        Image(systemName: "arrow.up")
+                            .foregroundColor(.nordicBlue)
+                    }
+                    EmptyView()
+                case .uploading:
+                    ProgressView()
+                        .frame(width: 8, height: 8)
+                case .errorUploading:
+                    Text("Error")
+                        .font(.caption)
+                        .foregroundColor(.nordicRed)
+                case .success:
+                    Image(systemName: "checkmark.circle")
+                        .foregroundColor(.nordicGrass)
+                }
+                
+                Button(action: {
+                    showFullData.toggle()
+                }) {
+                    Image(systemName: showFullData ? "chevron.up" : "chevron.down")
+                }
+                .padding(.leading, 8)
+            }
             
-            Text("\(chunk.data.count) bytes.")
-                .font(.caption)
-                .foregroundColor(.nordicMiddleGrey)
+            if showFullData {
+                Text(chunk.data.hexEncodedString(options: [.upperCase]))
+                    .font(.caption)
+                    .foregroundColor(.nordicMiddleGrey)
+            }
+            
+            HStack {
+                Text("Received")
+                
+                Text(ChunkView.timestampFormatter.string(for: chunk.timestamp) ?? "Unable to parse Timestamp.")
+                    .foregroundColor(.nordicMiddleGrey)
+                
+                Spacer()
+            }
+            .font(.caption)
         }
         .contextMenu {
                 Button(action: {
