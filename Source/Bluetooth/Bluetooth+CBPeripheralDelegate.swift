@@ -7,6 +7,7 @@
 
 import Foundation
 import CoreBluetooth
+import iOS_BLE_Library
 
 // MARK: - CBPeripheralDelegate
 

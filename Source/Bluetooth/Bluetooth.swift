@@ -10,6 +10,7 @@ import Foundation
 import Combine
 import os
 import CoreBluetooth
+import iOS_BLE_Library
 
 // MARK: - Scanner
 
