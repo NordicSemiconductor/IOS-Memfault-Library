@@ -62,8 +62,8 @@
 		AA2ADBA128ABE32B00BF03D3 /* DeviceUploadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceUploadView.swift; sourceTree = "<group>"; };
 		AA38741328A67619009F274E /* AsyncCharacteristicData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncCharacteristicData.swift; sourceTree = "<group>"; };
 		AA38DEBC28AFB4EF0020CAF1 /* PostChunkRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostChunkRequest.swift; sourceTree = "<group>"; };
-		AA3C2E9D28B3CB550075CB55 /* nRF-Memfault--iOS--Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "nRF-Memfault--iOS--Info.plist"; sourceTree = "<group>"; };
-		AA3C2E9E28B3CB5F0075CB55 /* nRF-Memfault--macOS--Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "nRF-Memfault--macOS--Info.plist"; sourceTree = "<group>"; };
+		AA3C2E9D28B3CB550075CB55 /* nRF-Memfault--iOS--Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "nRF-Memfault--iOS--Info.plist"; sourceTree = "<group>"; };
+		AA3C2E9E28B3CB5F0075CB55 /* nRF-Memfault--macOS--Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "nRF-Memfault--macOS--Info.plist"; sourceTree = "<group>"; };
 		AAEED86C28A26440002284A2 /* Bluetooth+CBCentralManagerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bluetooth+CBCentralManagerDelegate.swift"; sourceTree = "<group>"; };
 		AAEED86F28A26528002284A2 /* Bluetooth+CBPeripheralDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bluetooth+CBPeripheralDelegate.swift"; sourceTree = "<group>"; };
 		AAEED87228A265D8002284A2 /* BluetoothDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothDevice.swift; sourceTree = "<group>"; };

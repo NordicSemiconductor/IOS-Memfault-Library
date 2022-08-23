@@ -72,8 +72,10 @@ struct ChunkView: View {
             HStack {
                 Text("Received")
                 
-                Text(ChunkView.timestampFormatter.string(for: chunk.timestamp) ?? "Unable to parse Timestamp.")
-                    .foregroundColor(.nordicMiddleGrey)
+                TimelineView(.periodic(from: .now, by: 15.0)) { context in
+                    Text(ChunkView.timestampFormatter.string(for: chunk.timestamp) ?? "Unable to parse Timestamp.")
+                        .foregroundColor(.nordicMiddleGrey)
+                }
                 
                 Spacer()
             }
