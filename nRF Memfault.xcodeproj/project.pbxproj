@@ -37,8 +37,6 @@
 		AAFB2FEE289A8DB7008207FE /* CBExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFB2FEC289A8DB7008207FE /* CBExtensions.swift */; };
 		AAFB2FF0289A9D2E008207FE /* AdvertisementData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFB2FEF289A9D2E008207FE /* AdvertisementData.swift */; };
 		AAFB2FF1289A9D2E008207FE /* AdvertisementData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFB2FEF289A9D2E008207FE /* AdvertisementData.swift */; };
-		AAFB2FF3289A9E27008207FE /* RSSI.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFB2FF2289A9E27008207FE /* RSSI.swift */; };
-		AAFB2FF4289A9E27008207FE /* RSSI.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFB2FF2289A9E27008207FE /* RSSI.swift */; };
 		AAFB2FF6289AB7EB008207FE /* ScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFB2FF5289AB7EB008207FE /* ScannerView.swift */; };
 		AAFB2FF7289AB7EB008207FE /* ScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFB2FF5289AB7EB008207FE /* ScannerView.swift */; };
 		AAFBF8312899482B00A6655C /* nRF_MemfaultApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFBF8212899482900A6655C /* nRF_MemfaultApp.swift */; };
@@ -73,7 +71,6 @@
 		AAFB2FE9289A8C95008207FE /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		AAFB2FEC289A8DB7008207FE /* CBExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CBExtensions.swift; sourceTree = "<group>"; };
 		AAFB2FEF289A9D2E008207FE /* AdvertisementData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvertisementData.swift; sourceTree = "<group>"; };
-		AAFB2FF2289A9E27008207FE /* RSSI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSSI.swift; sourceTree = "<group>"; };
 		AAFB2FF5289AB7EB008207FE /* ScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerView.swift; sourceTree = "<group>"; };
 		AAFBF8212899482900A6655C /* nRF_MemfaultApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = nRF_MemfaultApp.swift; sourceTree = "<group>"; };
 		AAFBF8222899482900A6655C /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -230,7 +227,6 @@
 				AAEED86C28A26440002284A2 /* Bluetooth+CBCentralManagerDelegate.swift */,
 				AAEED86F28A26528002284A2 /* Bluetooth+CBPeripheralDelegate.swift */,
 				AAFB2FEC289A8DB7008207FE /* CBExtensions.swift */,
-				AAFB2FF2289A9E27008207FE /* RSSI.swift */,
 			);
 			path = Bluetooth;
 			sourceTree = "<group>";
@@ -388,7 +384,6 @@
 				AA2ADBA228ABE32B00BF03D3 /* DeviceUploadView.swift in Sources */,
 				AAFD761028AE6B8F0078F6F8 /* ChunkView.swift in Sources */,
 				AAEED87328A265D8002284A2 /* BluetoothDevice.swift in Sources */,
-				AAFB2FF3289A9E27008207FE /* RSSI.swift in Sources */,
 				AAFB2FED289A8DB7008207FE /* CBExtensions.swift in Sources */,
 				AAFA533F28AD30FA005638D3 /* AppError.swift in Sources */,
 				AAEED86D28A26440002284A2 /* Bluetooth+CBCentralManagerDelegate.swift in Sources */,
@@ -416,7 +411,6 @@
 				AA2ADBA328ABE32B00BF03D3 /* DeviceUploadView.swift in Sources */,
 				AAFD761128AE6B8F0078F6F8 /* ChunkView.swift in Sources */,
 				AAEED87428A265D8002284A2 /* BluetoothDevice.swift in Sources */,
-				AAFB2FF4289A9E27008207FE /* RSSI.swift in Sources */,
 				AAFB2FEE289A8DB7008207FE /* CBExtensions.swift in Sources */,
 				AAFA534028AD30FA005638D3 /* AppError.swift in Sources */,
 				AAEED86E28A26440002284A2 /* Bluetooth+CBCentralManagerDelegate.swift in Sources */,
