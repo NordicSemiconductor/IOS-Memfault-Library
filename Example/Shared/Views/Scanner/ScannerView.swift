@@ -28,6 +28,15 @@ struct ScannerView: View {
                 .hidden()
             }
         }
+        .toolbar {
+            ToolbarItem(placement: .navigation) {
+                Menu(content: {
+                    Toggle("Show All Devices", isOn: $appData.scanAllDevices)
+                }, label: {
+                    Image(systemName: "slider.horizontal.3")
+                })
+              }
+        }
         .onAppear() {
             appData.openDevice = nil
         }
