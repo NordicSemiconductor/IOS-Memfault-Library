@@ -17,6 +17,8 @@
 		AA38741528A67619009F274E /* AsyncCharacteristicData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA38741328A67619009F274E /* AsyncCharacteristicData.swift */; };
 		AA38DEBD28AFB4EF0020CAF1 /* PostChunkRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA38DEBC28AFB4EF0020CAF1 /* PostChunkRequest.swift */; };
 		AA38DEBE28AFB4EF0020CAF1 /* PostChunkRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA38DEBC28AFB4EF0020CAF1 /* PostChunkRequest.swift */; };
+		AAEB284528B4DC38005BCA2E /* iOS-BLE-Library in Frameworks */ = {isa = PBXBuildFile; productRef = AAEB284428B4DC38005BCA2E /* iOS-BLE-Library */; };
+		AAEB284728B4DC5B005BCA2E /* iOS-BLE-Library in Frameworks */ = {isa = PBXBuildFile; productRef = AAEB284628B4DC5B005BCA2E /* iOS-BLE-Library */; };
 		AAEED86D28A26440002284A2 /* Bluetooth+CBCentralManagerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAEED86C28A26440002284A2 /* Bluetooth+CBCentralManagerDelegate.swift */; };
 		AAEED86E28A26440002284A2 /* Bluetooth+CBCentralManagerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAEED86C28A26440002284A2 /* Bluetooth+CBCentralManagerDelegate.swift */; };
 		AAEED87028A26528002284A2 /* Bluetooth+CBPeripheralDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAEED86F28A26528002284A2 /* Bluetooth+CBPeripheralDelegate.swift */; };
@@ -93,6 +95,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AAEB284528B4DC38005BCA2E /* iOS-BLE-Library in Frameworks */,
 				AA281D0928A506B100D49C9C /* iOSCommonLibraries in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -101,6 +104,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AAEB284728B4DC5B005BCA2E /* iOS-BLE-Library in Frameworks */,
 				AA281D0C28A506C100D49C9C /* iOSCommonLibraries in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -265,6 +269,7 @@
 			name = "nRF Memfault (iOS)";
 			packageProductDependencies = (
 				AA281D0828A506B100D49C9C /* iOSCommonLibraries */,
+				AAEB284428B4DC38005BCA2E /* iOS-BLE-Library */,
 			);
 			productName = "nRF Memfault (iOS)";
 			productReference = AAFBF8282899482B00A6655C /* nRF Memfault.app */;
@@ -285,6 +290,7 @@
 			name = "nRF Memfault (macOS)";
 			packageProductDependencies = (
 				AA281D0B28A506C100D49C9C /* iOSCommonLibraries */,
+				AAEB284628B4DC5B005BCA2E /* iOS-BLE-Library */,
 			);
 			productName = "nRF Memfault (macOS)";
 			productReference = AAFBF82E2899482B00A6655C /* nRF Memfault.app */;
@@ -319,6 +325,7 @@
 			mainGroup = AAFBF81B2899482900A6655C;
 			packageReferences = (
 				AA281D0728A506B100D49C9C /* XCRemoteSwiftPackageReference "IOS-Common-Libraries" */,
+				AAEB284328B4DC38005BCA2E /* XCRemoteSwiftPackageReference "IOS-BLE-Library" */,
 			);
 			productRefGroup = AAFBF8292899482B00A6655C /* Products */;
 			projectDirPath = "";
@@ -709,6 +716,14 @@
 				kind = branch;
 			};
 		};
+		AAEB284328B4DC38005BCA2E /* XCRemoteSwiftPackageReference "IOS-BLE-Library" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/NordicPlayground/IOS-BLE-Library";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -721,6 +736,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = AA281D0728A506B100D49C9C /* XCRemoteSwiftPackageReference "IOS-Common-Libraries" */;
 			productName = iOSCommonLibraries;
+		};
+		AAEB284428B4DC38005BCA2E /* iOS-BLE-Library */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AAEB284328B4DC38005BCA2E /* XCRemoteSwiftPackageReference "IOS-BLE-Library" */;
+			productName = "iOS-BLE-Library";
+		};
+		AAEB284628B4DC5B005BCA2E /* iOS-BLE-Library */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AAEB284328B4DC38005BCA2E /* XCRemoteSwiftPackageReference "IOS-BLE-Library" */;
+			productName = "iOS-BLE-Library";
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
