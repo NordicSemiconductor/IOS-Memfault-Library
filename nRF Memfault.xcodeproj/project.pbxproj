@@ -33,8 +33,6 @@
 		AAFB2FE8289A8C48008207FE /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFB2FE6289A8C48008207FE /* Device.swift */; };
 		AAFB2FEA289A8C95008207FE /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFB2FE9289A8C95008207FE /* Logger.swift */; };
 		AAFB2FEB289A8C95008207FE /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFB2FE9289A8C95008207FE /* Logger.swift */; };
-		AAFB2FF0289A9D2E008207FE /* AdvertisementData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFB2FEF289A9D2E008207FE /* AdvertisementData.swift */; };
-		AAFB2FF1289A9D2E008207FE /* AdvertisementData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFB2FEF289A9D2E008207FE /* AdvertisementData.swift */; };
 		AAFB2FF6289AB7EB008207FE /* ScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFB2FF5289AB7EB008207FE /* ScannerView.swift */; };
 		AAFB2FF7289AB7EB008207FE /* ScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFB2FF5289AB7EB008207FE /* ScannerView.swift */; };
 		AAFBF8312899482B00A6655C /* nRF_MemfaultApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFBF8212899482900A6655C /* nRF_MemfaultApp.swift */; };
@@ -65,7 +63,6 @@
 		AAFB2FE3289A89CD008207FE /* Bluetooth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bluetooth.swift; sourceTree = "<group>"; };
 		AAFB2FE6289A8C48008207FE /* Device.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
 		AAFB2FE9289A8C95008207FE /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
-		AAFB2FEF289A9D2E008207FE /* AdvertisementData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvertisementData.swift; sourceTree = "<group>"; };
 		AAFB2FF5289AB7EB008207FE /* ScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerView.swift; sourceTree = "<group>"; };
 		AAFBF8212899482900A6655C /* nRF_MemfaultApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = nRF_MemfaultApp.swift; sourceTree = "<group>"; };
 		AAFBF8222899482900A6655C /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -214,7 +211,6 @@
 		AAFBF84728996A7500A6655C /* Bluetooth */ = {
 			isa = PBXGroup;
 			children = (
-				AAFB2FEF289A9D2E008207FE /* AdvertisementData.swift */,
 				AAEED87228A265D8002284A2 /* BluetoothDevice.swift */,
 				AAFB2FE3289A89CD008207FE /* Bluetooth.swift */,
 				AAEED86C28A26440002284A2 /* Bluetooth+CBCentralManagerDelegate.swift */,
@@ -370,7 +366,6 @@
 				AAFBF8312899482B00A6655C /* nRF_MemfaultApp.swift in Sources */,
 				AAFB2FE7289A8C48008207FE /* Device.swift in Sources */,
 				AAFB2FF6289AB7EB008207FE /* ScannerView.swift in Sources */,
-				AAFB2FF0289A9D2E008207FE /* AdvertisementData.swift in Sources */,
 				AAEED87028A26528002284A2 /* Bluetooth+CBPeripheralDelegate.swift in Sources */,
 				AAFB2FEA289A8C95008207FE /* Logger.swift in Sources */,
 				AA2ADBA228ABE32B00BF03D3 /* DeviceUploadView.swift in Sources */,
@@ -395,7 +390,6 @@
 				AAFBF8322899482B00A6655C /* nRF_MemfaultApp.swift in Sources */,
 				AAFB2FE8289A8C48008207FE /* Device.swift in Sources */,
 				AAFB2FF7289AB7EB008207FE /* ScannerView.swift in Sources */,
-				AAFB2FF1289A9D2E008207FE /* AdvertisementData.swift in Sources */,
 				AAEED87128A26528002284A2 /* Bluetooth+CBPeripheralDelegate.swift in Sources */,
 				AAFB2FEB289A8C95008207FE /* Logger.swift in Sources */,
 				AA2ADBA328ABE32B00BF03D3 /* DeviceUploadView.swift in Sources */,

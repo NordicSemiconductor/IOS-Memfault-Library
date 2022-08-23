@@ -12,7 +12,7 @@ import os
 import CoreBluetooth
 import iOS_BLE_Library
 
-// MARK: - Scanner
+// MARK: - Bluetooth
 
 final class Bluetooth: NSObject {
     
