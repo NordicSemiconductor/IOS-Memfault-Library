@@ -49,14 +49,18 @@ struct ChunkView: View {
                 switch chunk.status {
                 case .ready:
                     Button(action: {
-                        appData.upload(chunk, from: device)
+                        Task {
+                            try await appData.upload(chunk, from: device)
+                        }
                     }) {
                         Image(systemName: "arrow.up")
                             .foregroundColor(.nordicBlue)
                     }
                 case .errorUploading:
                     Button(action: {
-                        appData.upload(chunk, from: device)
+                        Task {
+                            try await appData.upload(chunk, from: device)
+                        }
                     }) {
                         Text("Unable to Upload")
                             .font(.caption)

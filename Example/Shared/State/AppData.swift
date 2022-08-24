@@ -118,7 +118,7 @@ extension AppData {
                 logger.info("Connected to \(device.name)")
                 
                 open(device)
-                listenForNewChunks(from: device)
+                try listenForNewChunks(from: device)
                 
                 logger.info("Discovering \(device.name)'s Services...")
                 let cbServices = try await bluetooth.discoverServices(of: device)
@@ -160,7 +160,7 @@ extension AppData {
                 logger.debug("Write Enable Result: \(writeResult ?? Data())")
                 await updateStreamingStatus(of: device, to: true)
             } catch {
-                await encounteredError(error)
+                encounteredError(error)
                 disconnect(from: device)
             }
         }
@@ -173,29 +173,41 @@ extension AppData {
             logger.info("START listening to MDS Data Export.")
             for try await data in bluetooth.data(fromCharacteristicWithUUID: .MDSDataExportCharacteristic, inServiceWithUUID: .MDS, device: device) {
                 guard let chunk = await received(data, from: device) else { continue }
-                logger.info("Received Chunk \(chunk.sequenceNumber). Now sending to Memfault.")
-                upload(chunk, from: device)
+                
+                do {
+                    logger.info("Received Chunk \(chunk.sequenceNumber). Now sending to Memfault.")
+                    try await upload(chunk, from: device)
+                } catch {
+                    logger.info("Error Uploading Chunk \(chunk.sequenceNumber). Disconnecting from device.")
+                    disconnect(from: device)
+                    
+                    encounteredError(error)
+                }
             }
             logger.info("STOP listening to MDS Data Export.")
         }
     }
     
-    func upload(_ chunk: Chunk, from device: Device) {
-        Task { @MainActor in
-            guard let postChunkRequest = HTTPRequest.post(chunk, for: device),
-                  let i = scannedDevices.firstIndex(where: { $0.uuidString == device.uuidString }),
-                  let j = scannedDevices[i].chunks.firstIndex(where: { $0 == chunk }) else { return }
-            scannedDevices[i].chunks[j].status = .uploading
+    @MainActor
+    func upload(_ chunk: Chunk, from device: Device) async throws {
+        guard let postChunkRequest = HTTPRequest.post(chunk, for: device),
+              let i = scannedDevices.firstIndex(where: { $0.uuidString == device.uuidString }),
+              let j = scannedDevices[i].chunks.firstIndex(where: { $0 == chunk }) else {
             
-            network.perform(postChunkRequest)
-                .sink(receiveCompletion: { [weak self, logger] error in
-                    logger.error("Error Uploading Chunk \(chunk.sequenceNumber).")
-                    self?.scannedDevices[i].chunks[j].status = .errorUploading
-                }, receiveValue: { [weak self, logger] data in
-                    logger.debug("Successfully Sent Chunk \(chunk.sequenceNumber).")
-                    self?.scannedDevices[i].chunks[j].status = .success
-                })
-                .store(in: &cancellables)
+            throw BluetoothError.cantRetrievePeripheral
+        }
+        
+        scannedDevices[i].chunks[j].status = .uploading
+        do {
+            for try await _ in network.perform(postChunkRequest).values {
+                scannedDevices[i].chunks[j].status = .success
+                logger.debug("Successfully Sent Chunk \(chunk.sequenceNumber).")
+                return
+            }
+        } catch {
+            scannedDevices[i].chunks[j].status = .errorUploading
+            logger.error("Error Uploading Chunk \(chunk.sequenceNumber).")
+            throw error
         }
     }
     
@@ -225,7 +237,7 @@ extension AppData {
                 await updateDeviceConnectionState(of: device, to: .disconnected)
             } catch {
                 await updateDeviceConnectionState(of: device, to: .disconnected)
-                await encounteredError(error)
+                encounteredError(error)
             }
         }
     }
@@ -283,7 +295,9 @@ private extension AppData {
         }
     }
     
-    func encounteredError(_ error: Error) async {
+    // MARK: Error
+    
+    private func encounteredError(_ error: Error) {
         let errorEvent = ErrorEvent(error)
         logger.error("\(errorEvent.localizedDescription)")
         Task { @MainActor in
