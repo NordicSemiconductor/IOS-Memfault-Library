@@ -189,14 +189,14 @@ extension AppData {
                 if device.streamingEnabled {
                     logger.debug("Disabling Streaming from \(device.name).")
                     _ = try await bluetooth.writeCharacteristic(
-                        Data(repeating: 0, count: 0), writeType: .withResponse, toCharacteristicWithUUID: .MDSDataExportCharacteristic, inServiceWithUUID: .MDS, from: device)
-                    await updateNotifyingStatus(of: device, to: false)
+                        Data(repeating: 0, count: 1), writeType: .withResponse, toCharacteristicWithUUID: .MDSDataExportCharacteristic, inServiceWithUUID: .MDS, from: device)
+                await updateStreamingStatus(of: device, to: false)
                 }
                 
                 if device.notificationsEnabled {
                     logger.debug("Turning Off Notifications from \(device.name).")
                     _ = try await bluetooth.setNotify(false, toCharacteristicWithUUID: .MDSDataExportCharacteristic, inServiceWithUUID: .MDS, from: device)
-                    await updateStreamingStatus(of: device, to: false)
+                    await updateNotifyingStatus(of: device, to: false)
                 }
                 
                 try await bluetooth.disconnect(from: device)
@@ -259,6 +259,7 @@ private extension AppData {
         Task { @MainActor in
             guard let i = scannedDevices.firstIndex(where: { $0.uuidString == device.uuidString }) else { return }
             scannedDevices[i].notificationsEnabled = isNotifying
+            scannedDevices[i].objectWillChange.send()
             objectWillChange.send()
         }
     }
@@ -267,6 +268,7 @@ private extension AppData {
         Task { @MainActor in
             guard let i = scannedDevices.firstIndex(where: { $0.uuidString == device.uuidString }) else { return }
             scannedDevices[i].streamingEnabled = isStreaming
+            scannedDevices[i].objectWillChange.send()
             objectWillChange.send()
         }
     }
