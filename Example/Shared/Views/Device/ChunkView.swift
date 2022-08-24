@@ -47,24 +47,18 @@ struct ChunkView: View {
                 Spacer()
                 
                 switch chunk.status {
-                case .ready:
+                case .ready, .errorUploading:
                     Button(action: {
-                        Task {
-                            try await appData.upload(chunk, from: device)
-                        }
+                        tryToUpload()
                     }) {
-                        Image(systemName: "arrow.up")
-                            .foregroundColor(.nordicBlue)
-                    }
-                case .errorUploading:
-                    Button(action: {
-                        Task {
-                            try await appData.upload(chunk, from: device)
+                        if chunk.status == .errorUploading {
+                            Text("Unable to Upload")
+                                .font(.caption)
+                                .foregroundColor(.nordicRed)
+                        } else {
+                            Image(systemName: "arrow.up")
+                                .foregroundColor(.nordicBlue)
                         }
-                    }) {
-                        Text("Unable to Upload")
-                            .font(.caption)
-                            .foregroundColor(.nordicRed)
                     }
                 case .uploading:
                     ProgressView()
@@ -102,12 +96,26 @@ struct ChunkView: View {
             .font(.caption)
         }
         .contextMenu {
-                Button(action: {
-                    UIPasteboard.general.string = chunk.data.hexEncodedString()
-                }) {
-                    Text("Copy to clipboard")
-                    Image(systemName: "doc.on.doc")
-                }
-             }
+            Button(action: {
+                UIPasteboard.general.string = chunk.data.hexEncodedString()
+            }) {
+                Text("Copy to clipboard")
+                Image(systemName: "doc.on.doc")
+            }
+         }
+    }
+    
+    // MARK: API
+    
+    func tryToUpload() {
+        guard chunk.status != .success else { return }
+        
+        Task {
+            do {
+                try await appData.upload(chunk, from: device)
+            } catch {
+                appData.encounteredError(error)
+            }
+        }
     }
 }

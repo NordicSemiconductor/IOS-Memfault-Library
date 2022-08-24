@@ -66,7 +66,7 @@ final class AppData: ObservableObject {
 
 extension AppData {
     
-    // MARK: Refresh
+    // MARK: UI
     
     func refresh() {
         if bluetooth.isScanning {
@@ -74,6 +74,16 @@ extension AppData {
         }
         scannedDevices.removeAll()
         toggleScanner()
+    }
+    
+    // MARK: Error
+    
+    func encounteredError(_ error: Error) {
+        let errorEvent = ErrorEvent(error)
+        logger.error("\(errorEvent.localizedDescription)")
+        Task { @MainActor in
+            self.error = errorEvent
+        }
     }
     
     // MARK: Scan
@@ -118,7 +128,7 @@ extension AppData {
                 logger.info("Connected to \(device.name)")
                 
                 open(device)
-                try listenForNewChunks(from: device)
+                listenForNewChunks(from: device)
                 
                 logger.info("Discovering \(device.name)'s Services...")
                 let cbServices = try await bluetooth.discoverServices(of: device)
@@ -292,16 +302,6 @@ private extension AppData {
             guard let i = scannedDevices.firstIndex(where: { $0.uuidString == device.uuidString }) else { return }
             scannedDevices[i].chunksURL = chunksURL
             scannedDevices[i].chunksURLAuthKey = authKey
-        }
-    }
-    
-    // MARK: Error
-    
-    private func encounteredError(_ error: Error) {
-        let errorEvent = ErrorEvent(error)
-        logger.error("\(errorEvent.localizedDescription)")
-        Task { @MainActor in
-            self.error = errorEvent
         }
     }
 }
