@@ -166,6 +166,8 @@ extension AppData {
         }
     }
     
+    // MARK: Upload
+    
     private func listenForNewChunks(from device: Device) {
         Task {
             logger.info("START listening to MDS Data Export.")
@@ -175,6 +177,25 @@ extension AppData {
                 upload(chunk, from: device)
             }
             logger.info("STOP listening to MDS Data Export.")
+        }
+    }
+    
+    func upload(_ chunk: Chunk, from device: Device) {
+        Task { @MainActor in
+            guard let postChunkRequest = HTTPRequest.post(chunk, for: device),
+                  let i = scannedDevices.firstIndex(where: { $0.uuidString == device.uuidString }),
+                  let j = scannedDevices[i].chunks.firstIndex(where: { $0 == chunk }) else { return }
+            scannedDevices[i].chunks[j].status = .uploading
+            
+            network.perform(postChunkRequest)
+                .sink(receiveCompletion: { [weak self, logger] error in
+                    logger.error("Error Uploading Chunk \(chunk.sequenceNumber).")
+                    self?.scannedDevices[i].chunks[j].status = .errorUploading
+                }, receiveValue: { [weak self, logger] data in
+                    logger.debug("Successfully Sent Chunk \(chunk.sequenceNumber).")
+                    self?.scannedDevices[i].chunks[j].status = .success
+                })
+                .store(in: &cancellables)
         }
     }
     
@@ -234,25 +255,6 @@ private extension AppData {
         let chunk = Chunk(data)
         scannedDevices[i].chunks.append(chunk)
         return chunk
-    }
-    
-    func upload(_ chunk: Chunk, from device: Device) {
-        Task { @MainActor in
-            guard let postChunkRequest = HTTPRequest.post(chunk, for: device),
-                  let i = scannedDevices.firstIndex(where: { $0.uuidString == device.uuidString }),
-                  let j = scannedDevices[i].chunks.firstIndex(where: { $0 == chunk }) else { return }
-            scannedDevices[i].chunks[j].status = .uploading
-            
-            network.perform(postChunkRequest)
-                .sink(receiveCompletion: { [weak self, logger] error in
-                    logger.error("Error Uploading Chunk \(chunk.sequenceNumber).")
-                    self?.scannedDevices[i].chunks[j].status = .errorUploading
-                }, receiveValue: { [weak self, logger] data in
-                    logger.debug("Successfully Sent Chunk \(chunk.sequenceNumber).")
-                    self?.scannedDevices[i].chunks[j].status = .success
-                })
-                .store(in: &cancellables)
-        }
     }
     
     func updateNotifyingStatus(of device: Device, to isNotifying: Bool) async {

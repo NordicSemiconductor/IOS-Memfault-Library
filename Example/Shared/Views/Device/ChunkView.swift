@@ -11,6 +11,11 @@ import SwiftUI
 
 struct ChunkView: View {
     
+    // MARK: Environment Variables
+    
+    @EnvironmentObject var appData: AppData
+    @EnvironmentObject var device: Device
+    
     // MARK: Private
     
     static let timestampFormatter: RelativeDateTimeFormatter = {
@@ -36,7 +41,6 @@ struct ChunkView: View {
             HStack {
                 Text("#\(chunk.sequenceNumber)")
                 
-                
                 Text("\(chunk.data.count) bytes")
                     .foregroundColor(.nordicLightGrey)
                 
@@ -45,19 +49,22 @@ struct ChunkView: View {
                 switch chunk.status {
                 case .ready:
                     Button(action: {
-                        // To-Do
+                        appData.upload(chunk, from: device)
                     }) {
                         Image(systemName: "arrow.up")
                             .foregroundColor(.nordicBlue)
                     }
-                    EmptyView()
+                case .errorUploading:
+                    Button(action: {
+                        appData.upload(chunk, from: device)
+                    }) {
+                        Text("Unable to Upload")
+                            .font(.caption)
+                            .foregroundColor(.nordicRed)
+                    }
                 case .uploading:
                     ProgressView()
                         .frame(width: 8, height: 8)
-                case .errorUploading:
-                    Text("Error")
-                        .font(.caption)
-                        .foregroundColor(.nordicRed)
                 case .success:
                     Image(systemName: "checkmark.circle")
                         .foregroundColor(.nordicPower)

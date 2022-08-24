@@ -110,8 +110,8 @@
 		AA2ADBA028ABE26900BF03D3 /* Device */ = {
 			isa = PBXGroup;
 			children = (
-				AAFD760F28AE6B8F0078F6F8 /* ChunkView.swift */,
 				AA2ADBA128ABE32B00BF03D3 /* DeviceUploadView.swift */,
+				AAFD760F28AE6B8F0078F6F8 /* ChunkView.swift */,
 				AA38E93B28B643D600CB082D /* ReceivingNewChunksView.swift */,
 				AA38E93E28B6444900CB082D /* DeviceStatusView.swift */,
 				AA38E93728B631C200CB082D /* DeviceConnectionButton.swift */,
