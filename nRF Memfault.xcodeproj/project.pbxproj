@@ -15,6 +15,8 @@
 		AA2ADBA328ABE32B00BF03D3 /* DeviceUploadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2ADBA128ABE32B00BF03D3 /* DeviceUploadView.swift */; };
 		AA38DEBD28AFB4EF0020CAF1 /* PostChunkRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA38DEBC28AFB4EF0020CAF1 /* PostChunkRequest.swift */; };
 		AA38DEBE28AFB4EF0020CAF1 /* PostChunkRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA38DEBC28AFB4EF0020CAF1 /* PostChunkRequest.swift */; };
+		AA38E93828B631C200CB082D /* DeviceConnectionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA38E93728B631C200CB082D /* DeviceConnectionButton.swift */; };
+		AA38E93928B631C200CB082D /* DeviceConnectionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA38E93728B631C200CB082D /* DeviceConnectionButton.swift */; };
 		AAEB284528B4DC38005BCA2E /* iOS-BLE-Library in Frameworks */ = {isa = PBXBuildFile; productRef = AAEB284428B4DC38005BCA2E /* iOS-BLE-Library */; };
 		AAEB284728B4DC5B005BCA2E /* iOS-BLE-Library in Frameworks */ = {isa = PBXBuildFile; productRef = AAEB284628B4DC5B005BCA2E /* iOS-BLE-Library */; };
 		AAFA533F28AD30FA005638D3 /* AppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFA533E28AD30FA005638D3 /* AppError.swift */; };
@@ -43,6 +45,7 @@
 		AA22DDC9289B4162003366FA /* DeviceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceView.swift; sourceTree = "<group>"; };
 		AA2ADBA128ABE32B00BF03D3 /* DeviceUploadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceUploadView.swift; sourceTree = "<group>"; };
 		AA38DEBC28AFB4EF0020CAF1 /* PostChunkRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostChunkRequest.swift; sourceTree = "<group>"; };
+		AA38E93728B631C200CB082D /* DeviceConnectionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceConnectionButton.swift; sourceTree = "<group>"; };
 		AA3C2E9D28B3CB550075CB55 /* nRF-Memfault--iOS--Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "nRF-Memfault--iOS--Info.plist"; sourceTree = "<group>"; };
 		AA3C2E9E28B3CB5F0075CB55 /* nRF-Memfault--macOS--Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "nRF-Memfault--macOS--Info.plist"; sourceTree = "<group>"; };
 		AAFA533E28AD30FA005638D3 /* AppError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppError.swift; sourceTree = "<group>"; };
@@ -98,13 +101,14 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		AA2ADBA028ABE26900BF03D3 /* Upload */ = {
+		AA2ADBA028ABE26900BF03D3 /* Device */ = {
 			isa = PBXGroup;
 			children = (
 				AAFD760F28AE6B8F0078F6F8 /* ChunkView.swift */,
 				AA2ADBA128ABE32B00BF03D3 /* DeviceUploadView.swift */,
+				AA38E93728B631C200CB082D /* DeviceConnectionButton.swift */,
 			);
-			path = Upload;
+			path = Device;
 			sourceTree = "<group>";
 		};
 		AA38DEBB28AFB2F20020CAF1 /* Network */ = {
@@ -158,7 +162,7 @@
 			isa = PBXGroup;
 			children = (
 				AA22DDC8289B414A003366FA /* Scanner */,
-				AA2ADBA028ABE26900BF03D3 /* Upload */,
+				AA2ADBA028ABE26900BF03D3 /* Device */,
 				AAFBF8222899482900A6655C /* ContentView.swift */,
 				AAFBF8212899482900A6655C /* nRF_MemfaultApp.swift */,
 			);
@@ -335,6 +339,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AAFBF8332899482B00A6655C /* ContentView.swift in Sources */,
+				AA38E93828B631C200CB082D /* DeviceConnectionButton.swift in Sources */,
 				AAFBF8312899482B00A6655C /* nRF_MemfaultApp.swift in Sources */,
 				AAFB2FE7289A8C48008207FE /* Device.swift in Sources */,
 				AAFB2FF6289AB7EB008207FE /* ScannerView.swift in Sources */,
@@ -354,6 +359,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AAFBF8342899482B00A6655C /* ContentView.swift in Sources */,
+				AA38E93928B631C200CB082D /* DeviceConnectionButton.swift in Sources */,
 				AAFBF8322899482B00A6655C /* nRF_MemfaultApp.swift in Sources */,
 				AAFB2FE8289A8C48008207FE /* Device.swift in Sources */,
 				AAFB2FF7289AB7EB008207FE /* ScannerView.swift in Sources */,

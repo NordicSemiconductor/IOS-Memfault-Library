@@ -104,10 +104,25 @@ extension Device: Hashable {
 
 // MARK: ConnectedState
 
-public enum ConnectedState: Int, CaseIterable {
+public enum ConnectedState: Int, CaseIterable, CustomStringConvertible {
     
     case notConnectable
     case connecting, connected, disconnecting, disconnected
+    
+    public var description: String {
+        switch self {
+        case .notConnectable:
+            return "Not Connectable"
+        case .connecting:
+            return "Connecting..."
+        case .connected:
+            return "Connected"
+        case .disconnecting:
+            return "Disconnecting..."
+        case .disconnected:
+            return "Disconnected"
+        }
+    }
     
     static func from(_ cbState: CBPeripheralState) -> ConnectedState {
         switch cbState {

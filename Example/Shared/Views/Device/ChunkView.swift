@@ -52,13 +52,14 @@ struct ChunkView: View {
                         .foregroundColor(.nordicRed)
                 case .success:
                     Image(systemName: "checkmark.circle")
-                        .foregroundColor(.nordicGrass)
+                        .foregroundColor(.nordicPower)
                 }
                 
                 Button(action: {
                     showFullData.toggle()
                 }) {
                     Image(systemName: showFullData ? "chevron.up" : "chevron.down")
+                        .foregroundColor(.nordicBlue)
                 }
                 .padding(.leading, 8)
             }
