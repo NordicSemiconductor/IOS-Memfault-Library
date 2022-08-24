@@ -17,7 +17,13 @@ final class AppData: ObservableObject {
     // MARK: Public
     
     @Published var isScanning: Bool
-    @Published var scanAllDevices: Bool {
+    @Published var showOnlyMDSDevices: Bool {
+        didSet {
+            guard isScanning else { return }
+            refresh()
+        }
+    }
+    @Published var showOnlyConnectableDevices: Bool {
         didSet {
             guard isScanning else { return }
             refresh()
@@ -41,7 +47,8 @@ final class AppData: ObservableObject {
         self.bluetooth = Bluetooth()
         self.network = Network("chunks.memfault.com")
         self.isScanning = bluetooth.isScanning
-        self.scanAllDevices = false
+        self.showOnlyMDSDevices = true
+        self.showOnlyConnectableDevices = true
         self.scannedDevices = []
         self.openDevice = nil
         self.logger = Logger(Self.self)
@@ -78,9 +85,14 @@ extension AppData {
         }
 
         Task { @MainActor in
-            let conditions: [Bluetooth.ScanCondition] = scanAllDevices
-                ? [] : [.matchingServiceUUID(.MDS)]
-            for await scanData in bluetooth.scan(with: conditions).values {
+            var filters = [Bluetooth.ScannerFilter]()
+            if showOnlyMDSDevices {
+                filters.append(.matchingServiceUUID(.MDS))
+            }
+            if showOnlyConnectableDevices {
+                filters.append(.connectable)
+            }
+            for await scanData in bluetooth.scan(with: filters).values {
                 let state = ConnectedState.from(scanData.peripheral.state)
                 let device = Device(peripheral: scanData.peripheral, state: state, advertisementData: scanData.advertisementData, rssi: scanData.RSSI)
                 

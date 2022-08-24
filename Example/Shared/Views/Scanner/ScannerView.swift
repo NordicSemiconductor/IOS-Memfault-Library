@@ -31,7 +31,8 @@ struct ScannerView: View {
         .toolbar {
             ToolbarItem(placement: .navigation) {
                 Menu(content: {
-                    Toggle("Show All Devices", isOn: $appData.scanAllDevices)
+                    Toggle("Show Only Memfault Devices", isOn: $appData.showOnlyMDSDevices)
+                    Toggle("Show Only Connectable Devices", isOn: $appData.showOnlyConnectableDevices)
                 }, label: {
                     Image(systemName: "slider.horizontal.3")
                 })
