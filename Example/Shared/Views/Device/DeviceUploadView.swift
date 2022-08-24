@@ -21,10 +21,10 @@ struct DeviceUploadView: View {
                     VStack(alignment: .center) {
                         Image(systemName: "eyedropper")
                             .resizable()
-                            .frame(width: 40, height: 40)
+                            .frame(width: 20, height: 20)
                             .foregroundColor(.nordicMiddleGrey)
                         
-                        Text("No Chunks have been received at this time.")
+                        Text("No Chunks have been received as of this time.")
                             .font(.subheadline)
                             .foregroundColor(.nordicMiddleGrey)
                     }
@@ -35,26 +35,13 @@ struct DeviceUploadView: View {
                 }
             }
             
+            if device.streamingEnabled && device.notificationsEnabled {
+                ReceivingNewChunksView()
+            }
+            
             Section("Status") {
-                let deviceIsConnected = device.state == .connected
-                
-                Label(device.state.description, systemImage: "personalhotspot")
-                    .foregroundColor(deviceIsConnected ? .nordicPower : .nordicMiddleGrey)
-                    .padding(.horizontal, 4)
-                
-                Label(device.notificationsEnabled ? "Notifications Enabled" : "Notifications Disabled", systemImage: "arrow.down")
-                    .foregroundColor(device.notificationsEnabled ? .nordicBlue : .nordicMiddleGrey)
-                    .tint(device.notificationsEnabled ? .nordicBlueslate : .nordicMiddleGrey)
-                    .padding(.horizontal, 4)
-                
-                Label(device.streamingEnabled ? "Data Streaming Enabled" : "Data Streaming Disabled", systemImage: "antenna.radiowaves.left.and.right")
-                    .foregroundColor(device.notificationsEnabled ? .nordicGrass : .nordicMiddleGrey)
-                    .tint(device.notificationsEnabled ? .nordicBlue : .nordicMiddleGrey)
-                    .padding(.horizontal, 4)
-                
-                DeviceConnectionButton()
+                DeviceStatusView()
                     .environmentObject(device)
-                    .centerTextInsideForm()
             }
         }
         .navigationTitle(device.name)

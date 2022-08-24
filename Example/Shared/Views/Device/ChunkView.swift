@@ -7,7 +7,11 @@
 
 import SwiftUI
 
+// MARK: - ChunkView
+
 struct ChunkView: View {
+    
+    // MARK: Private
     
     static let timestampFormatter: RelativeDateTimeFormatter = {
         let relativeFormatter = RelativeDateTimeFormatter()
@@ -19,9 +23,13 @@ struct ChunkView: View {
     
     @State private var showFullData = false
     
+    // MARK: Init
+    
     init(_ chunk: Chunk) {
         self.chunk = chunk
     }
+    
+    // MARK: View
     
     var body: some View {
         VStack(spacing: 8) {
@@ -92,11 +100,3 @@ struct ChunkView: View {
              }
     }
 }
-
-//#if DEBUG
-//struct ChunkView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        ChunkView()
-//    }
-//}
-//#endif
