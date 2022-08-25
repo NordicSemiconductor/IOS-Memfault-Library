@@ -276,6 +276,9 @@ private extension AppData {
         
         let chunk = Chunk(data)
         scannedDevices[i].chunks.append(chunk)
+        scannedDevices[i].chunks.sort(by: { a, b in
+            return a.timestamp.timeIntervalSince1970 > b.timestamp.timeIntervalSince1970
+        })
         return chunk
     }
     

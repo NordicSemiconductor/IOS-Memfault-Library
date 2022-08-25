@@ -16,6 +16,15 @@ struct DeviceUploadView: View {
     
     var body: some View {
         List {
+            Section("Status") {
+                DeviceStatusView()
+                    .environmentObject(device)
+            }
+            
+            if device.streamingEnabled && device.notificationsEnabled {
+                ReceivingNewChunksView()
+            }
+            
             Section("Chunks") {
                 if device.chunks.isEmpty {
                     VStack(alignment: .center) {
@@ -33,15 +42,6 @@ struct DeviceUploadView: View {
                         ChunkView(chunk)
                     }
                 }
-            }
-            
-            if device.streamingEnabled && device.notificationsEnabled {
-                ReceivingNewChunksView()
-            }
-            
-            Section("Status") {
-                DeviceStatusView()
-                    .environmentObject(device)
             }
         }
         .navigationTitle(device.name)
