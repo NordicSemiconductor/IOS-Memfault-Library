@@ -10,7 +10,15 @@ import iOS_Common_Libraries
 
 struct ContentView: View {
     
+    // MARK: Environment Variables
+    
     @EnvironmentObject var appData: AppData
+    
+    // MARK: AppStorage
+    
+    @AppStorage("firstLaunch") private var firstLaunch = true
+    
+    // MARK: View
     
     var body: some View {
         #if os(iOS)
@@ -38,8 +46,12 @@ struct ContentView: View {
                 Alert(errorEvent: error)
             }
             .onAppear() {
+                print("Is First Launch: \(firstLaunch)")
                 guard !appData.isScanning else { return }
                 appData.toggleScanner()
+            }
+            .sheet(isPresented: $firstLaunch) {
+                WelcomeView()
             }
         #else
         VStack {

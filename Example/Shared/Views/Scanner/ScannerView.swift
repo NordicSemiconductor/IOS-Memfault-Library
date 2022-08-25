@@ -15,13 +15,15 @@ struct ScannerView: View {
     
     var body: some View {
         List {
-            ForEach(appData.scannedDevices) { scannedDevice in
-                NavigationLink(destination: {
-                    DeviceUploadView()
-                        .environmentObject(scannedDevice)
-                }, label: {
-                    DeviceView(scannedDevice)
-                })
+            Section("Devices") {
+                ForEach(appData.scannedDevices) { scannedDevice in
+                    NavigationLink(destination: {
+                        DeviceUploadView()
+                            .environmentObject(scannedDevice)
+                    }, label: {
+                        DeviceView(scannedDevice)
+                    })
+                }
             }
         }
         .toolbar {
