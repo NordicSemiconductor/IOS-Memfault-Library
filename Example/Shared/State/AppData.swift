@@ -31,7 +31,6 @@ final class AppData: ObservableObject {
     }
     
     @Published var scannedDevices: [Device]
-    @Published var openDevice: Device?
     @Published var error: ErrorEvent?
     
     // MARK: Private
@@ -50,7 +49,6 @@ final class AppData: ObservableObject {
         self.showOnlyMDSDevices = true
         self.showOnlyConnectableDevices = true
         self.scannedDevices = []
-        self.openDevice = nil
         self.logger = Logger(Self.self)
         
         _ = bluetooth.turnOnBluetoothRadio()
@@ -127,7 +125,6 @@ extension AppData {
                 await updateDeviceConnectionState(of: device, to: .connected)
                 logger.info("Connected to \(device.name)")
                 
-                open(device)
                 listenForNewChunks(from: device)
                 
                 logger.info("Discovering \(device.name)'s Services...")
@@ -260,12 +257,6 @@ private extension AppData {
             guard let i = scannedDevices.firstIndex(where: { $0.uuidString == device.uuidString }) else { return }
             scannedDevices[i].state = newState
             objectWillChange.send()
-        }
-    }
-    
-    func open(_ device: Device) {
-        Task { @MainActor in
-            openDevice = device
         }
     }
     

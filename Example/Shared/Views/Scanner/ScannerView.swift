@@ -16,16 +16,12 @@ struct ScannerView: View {
     var body: some View {
         List {
             ForEach(appData.scannedDevices) { scannedDevice in
-                DeviceView(scannedDevice)
-            }
-            
-            if let openDevice = appData.openDevice {
-                let openDeviceView = DeviceUploadView()
-                    .environmentObject(openDevice)
-                NavigationLink(destination: openDeviceView, tag: openDevice, selection: $appData.openDevice, label: {
-                    EmptyView()
+                NavigationLink(destination: {
+                    DeviceUploadView()
+                        .environmentObject(scannedDevice)
+                }, label: {
+                    DeviceView(scannedDevice)
                 })
-                .hidden()
             }
         }
         .toolbar {
@@ -37,9 +33,6 @@ struct ScannerView: View {
                     Image(systemName: "slider.horizontal.3")
                 })
               }
-        }
-        .onAppear() {
-            appData.openDevice = nil
         }
         #if os(iOS)
         .refreshable {

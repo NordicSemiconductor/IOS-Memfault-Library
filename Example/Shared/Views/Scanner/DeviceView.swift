@@ -29,11 +29,6 @@ struct DeviceView: View {
         VStack(alignment: .leading, spacing: 4) {
             HStack {
                 Text(device.name)
-                
-                Spacer()
-                
-                DeviceConnectionButton()
-                    .environmentObject(device)
             }
         }
         .padding(4)
