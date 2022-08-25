@@ -11,7 +11,15 @@ import SwiftUI
 
 struct ScannerView: View {
     
+    // MARK: Environment Variables
+    
     @EnvironmentObject var appData: AppData
+    
+    // MARK: AppStorage
+    
+    @AppStorage("showAboutScreen") private var showAboutScreen = false
+    
+    // MARK: View
     
     var body: some View {
         List {
@@ -24,6 +32,12 @@ struct ScannerView: View {
                         DeviceView(scannedDevice)
                     })
                 }
+            }
+            
+            Section("About") {
+                Button("Show About Screen", action: {
+                    showAboutScreen = true
+                })
             }
         }
         .toolbar {

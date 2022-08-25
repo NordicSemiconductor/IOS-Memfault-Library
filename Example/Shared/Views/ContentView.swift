@@ -16,7 +16,7 @@ struct ContentView: View {
     
     // MARK: AppStorage
     
-    @AppStorage("firstLaunch") private var firstLaunch = true
+    @AppStorage("showAboutScreen") private var showAboutScreen = true
     
     // MARK: View
     
@@ -46,12 +46,11 @@ struct ContentView: View {
                 Alert(errorEvent: error)
             }
             .onAppear() {
-                print("Is First Launch: \(firstLaunch)")
                 guard !appData.isScanning else { return }
                 appData.toggleScanner()
             }
-            .sheet(isPresented: $firstLaunch) {
-                WelcomeView()
+            .sheet(isPresented: $showAboutScreen) {
+                AboutView()
             }
         #else
         VStack {
