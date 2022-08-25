@@ -28,12 +28,13 @@ struct DeviceStatusView: View {
             .foregroundColor(deviceIsConnected ? .nordicPower : .nordicMiddleGrey)
             .padding(.horizontal, 4)
         
+        let disabledColor: Color = deviceIsConnected ? .nordicSun : .nordicMiddleGrey
         Label(device.notificationsEnabled ? "Data Notifications Enabled" : "Data Notifications Disabled", systemImage: "arrow.down")
-            .foregroundColor(device.notificationsEnabled ? .nordicBlue : .nordicMiddleGrey)
+            .foregroundColor(device.notificationsEnabled ? .nordicPower : disabledColor)
             .padding(.horizontal, 4)
         
         Label(device.streamingEnabled ? "Data Streaming Enabled" : "Data Streaming Disabled", systemImage: "antenna.radiowaves.left.and.right")
-            .foregroundColor(device.streamingEnabled ? .nordicGrass : .nordicMiddleGrey)
+            .foregroundColor(device.streamingEnabled ? .nordicPower : disabledColor)
             .padding(.horizontal, 4)
         
         DeviceConnectionButton()
