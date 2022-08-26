@@ -7,10 +7,10 @@
 
 import Foundation
 import OSLog
-import CoreBluetooth
 import Combine
 import iOS_BLE_Library
 import iOS_Common_Libraries
+import iOS_nRF_Memfault_Library
 
 final class AppData: ObservableObject {
     

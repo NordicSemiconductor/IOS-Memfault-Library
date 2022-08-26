@@ -18,4 +18,3 @@ final class Memfault {
         // To-Do
     }
 }
-

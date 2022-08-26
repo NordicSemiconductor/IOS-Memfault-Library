@@ -9,10 +9,8 @@
 /* Begin PBXBuildFile section */
 		AA10062628B795860020820D /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA10062528B795860020820D /* AboutView.swift */; };
 		AA10062728B795860020820D /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA10062528B795860020820D /* AboutView.swift */; };
-		AA10062928B7CFBB0020820D /* Memfault.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA10062828B7CFBB0020820D /* Memfault.swift */; };
-		AA10062A28B7CFBB0020820D /* Memfault.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA10062828B7CFBB0020820D /* Memfault.swift */; };
-		AA14D63628B8BE150093C626 /* CBUUID.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA14D63528B8BE150093C626 /* CBUUID.swift */; };
-		AA14D63728B8BE150093C626 /* CBUUID.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA14D63528B8BE150093C626 /* CBUUID.swift */; };
+		AA16171A28B8C8F600581766 /* iOS-nRF-Memfault-Library in Frameworks */ = {isa = PBXBuildFile; productRef = AA16171928B8C8F600581766 /* iOS-nRF-Memfault-Library */; };
+		AA16171C28B8C8FB00581766 /* iOS-nRF-Memfault-Library in Frameworks */ = {isa = PBXBuildFile; productRef = AA16171B28B8C8FB00581766 /* iOS-nRF-Memfault-Library */; };
 		AA22DDCA289B4162003366FA /* DeviceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA22DDC9289B4162003366FA /* DeviceView.swift */; };
 		AA22DDCB289B4162003366FA /* DeviceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA22DDC9289B4162003366FA /* DeviceView.swift */; };
 		AA281D0928A506B100D49C9C /* iOSCommonLibraries in Frameworks */ = {isa = PBXBuildFile; productRef = AA281D0828A506B100D49C9C /* iOSCommonLibraries */; };
@@ -53,8 +51,7 @@
 
 /* Begin PBXFileReference section */
 		AA10062528B795860020820D /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
-		AA10062828B7CFBB0020820D /* Memfault.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Memfault.swift; sourceTree = "<group>"; };
-		AA14D63528B8BE150093C626 /* CBUUID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CBUUID.swift; sourceTree = "<group>"; };
+		AA14D64428B8C53D0093C626 /* iOS-nRF-Memfault-Library */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = "iOS-nRF-Memfault-Library"; sourceTree = "<group>"; };
 		AA22DDC9289B4162003366FA /* DeviceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceView.swift; sourceTree = "<group>"; };
 		AA2ADBA128ABE32B00BF03D3 /* DeviceUploadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceUploadView.swift; sourceTree = "<group>"; };
 		AA38DEBC28AFB4EF0020CAF1 /* PostChunkRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostChunkRequest.swift; sourceTree = "<group>"; };
@@ -84,6 +81,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AAEB284528B4DC38005BCA2E /* iOS-BLE-Library in Frameworks */,
+				AA16171A28B8C8F600581766 /* iOS-nRF-Memfault-Library in Frameworks */,
 				AA281D0928A506B100D49C9C /* iOSCommonLibraries in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -93,6 +91,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AAEB284728B4DC5B005BCA2E /* iOS-BLE-Library in Frameworks */,
+				AA16171C28B8C8FB00581766 /* iOS-nRF-Memfault-Library in Frameworks */,
 				AA281D0C28A506C100D49C9C /* iOSCommonLibraries in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -139,6 +138,7 @@
 		AAFBF81B2899482900A6655C = {
 			isa = PBXGroup;
 			children = (
+				AA14D64428B8C53D0093C626 /* iOS-nRF-Memfault-Library */,
 				AA3C2E9E28B3CB5F0075CB55 /* nRF-Memfault--macOS--Info.plist */,
 				AA3C2E9D28B3CB550075CB55 /* nRF-Memfault--iOS--Info.plist */,
 				AAFBF8452899554600A6655C /* Example */,
@@ -154,7 +154,6 @@
 				AAFBF84828996A9000A6655C /* State */,
 				AA38DEBB28AFB2F20020CAF1 /* Network */,
 				AAFBF84128994C3800A6655C /* Utilities */,
-				AA10062828B7CFBB0020820D /* Memfault.swift */,
 				AAFBF8232899482A00A6655C /* Assets.xcassets */,
 			);
 			path = Shared;
@@ -193,7 +192,6 @@
 			isa = PBXGroup;
 			children = (
 				AAFB2FE9289A8C95008207FE /* Logger.swift */,
-				AA14D63528B8BE150093C626 /* CBUUID.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -238,6 +236,7 @@
 			packageProductDependencies = (
 				AA281D0828A506B100D49C9C /* iOSCommonLibraries */,
 				AAEB284428B4DC38005BCA2E /* iOS-BLE-Library */,
+				AA16171928B8C8F600581766 /* iOS-nRF-Memfault-Library */,
 			);
 			productName = "nRF Memfault (iOS)";
 			productReference = AAFBF8282899482B00A6655C /* nRF Memfault.app */;
@@ -259,6 +258,7 @@
 			packageProductDependencies = (
 				AA281D0B28A506C100D49C9C /* iOSCommonLibraries */,
 				AAEB284628B4DC5B005BCA2E /* iOS-BLE-Library */,
+				AA16171B28B8C8FB00581766 /* iOS-nRF-Memfault-Library */,
 			);
 			productName = "nRF Memfault (macOS)";
 			productReference = AAFBF82E2899482B00A6655C /* nRF Memfault.app */;
@@ -353,7 +353,6 @@
 				AAFBF8332899482B00A6655C /* ContentView.swift in Sources */,
 				AA38E93828B631C200CB082D /* DeviceConnectionButton.swift in Sources */,
 				AAFBF8312899482B00A6655C /* nRF_MemfaultApp.swift in Sources */,
-				AA14D63628B8BE150093C626 /* CBUUID.swift in Sources */,
 				AA10062628B795860020820D /* AboutView.swift in Sources */,
 				AAFB2FE7289A8C48008207FE /* Device.swift in Sources */,
 				AAFB2FF6289AB7EB008207FE /* ScannerView.swift in Sources */,
@@ -362,7 +361,6 @@
 				AAFD761028AE6B8F0078F6F8 /* ChunkView.swift in Sources */,
 				AAFA533F28AD30FA005638D3 /* AppError.swift in Sources */,
 				AAFD760D28AE46B30078F6F8 /* Chunk.swift in Sources */,
-				AA10062928B7CFBB0020820D /* Memfault.swift in Sources */,
 				AAFBF84A28996AA100A6655C /* AppData.swift in Sources */,
 				AA22DDCA289B4162003366FA /* DeviceView.swift in Sources */,
 				AA38E93C28B643D600CB082D /* ReceivingNewChunksView.swift in Sources */,
@@ -378,7 +376,6 @@
 				AAFBF8342899482B00A6655C /* ContentView.swift in Sources */,
 				AA38E93928B631C200CB082D /* DeviceConnectionButton.swift in Sources */,
 				AAFBF8322899482B00A6655C /* nRF_MemfaultApp.swift in Sources */,
-				AA14D63728B8BE150093C626 /* CBUUID.swift in Sources */,
 				AA10062728B795860020820D /* AboutView.swift in Sources */,
 				AAFB2FE8289A8C48008207FE /* Device.swift in Sources */,
 				AAFB2FF7289AB7EB008207FE /* ScannerView.swift in Sources */,
@@ -387,7 +384,6 @@
 				AAFD761128AE6B8F0078F6F8 /* ChunkView.swift in Sources */,
 				AAFA534028AD30FA005638D3 /* AppError.swift in Sources */,
 				AAFD760E28AE46B30078F6F8 /* Chunk.swift in Sources */,
-				AA10062A28B7CFBB0020820D /* Memfault.swift in Sources */,
 				AAFBF84B28996AA100A6655C /* AppData.swift in Sources */,
 				AA22DDCB289B4162003366FA /* DeviceView.swift in Sources */,
 				AA38E93D28B643D600CB082D /* ReceivingNewChunksView.swift in Sources */,
@@ -687,6 +683,14 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		AA16171928B8C8F600581766 /* iOS-nRF-Memfault-Library */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = "iOS-nRF-Memfault-Library";
+		};
+		AA16171B28B8C8FB00581766 /* iOS-nRF-Memfault-Library */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = "iOS-nRF-Memfault-Library";
+		};
 		AA281D0828A506B100D49C9C /* iOSCommonLibraries */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = AA281D0728A506B100D49C9C /* XCRemoteSwiftPackageReference "IOS-Common-Libraries" */;
