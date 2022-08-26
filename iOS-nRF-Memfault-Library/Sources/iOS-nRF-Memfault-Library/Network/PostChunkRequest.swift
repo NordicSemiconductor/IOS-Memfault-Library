@@ -1,6 +1,6 @@
 //
 //  PostChunkRequest.swift
-//  nRF Memfault
+//  iOS-nRF-Memfault-Library
 //
 //  Created by Dinesh Harjani on 19/8/22.
 //
@@ -10,15 +10,13 @@ import iOS_Common_Libraries
 
 extension HTTPRequest {
     
-    static func post(_ chunk: Chunk, for device: Device) -> HTTPRequest? {
-        guard let url = device.chunksURL,
-              let authPair = device.chunksURLAuthKey else { return nil }
-        
-        var httpRequest = HTTPRequest(url: url)
+    static func post(_ chunk: MemfaultChunk, with chunkURL: URL,
+                     chunkAuthKey: String, chunkAuthValue: String) -> HTTPRequest? {
+        var httpRequest = HTTPRequest(url: chunkURL)
         httpRequest.setMethod(.POST)
         httpRequest.setHeaders([
             "Content-Type": "application/octet-stream",
-            authPair.key: authPair.auth
+            chunkAuthKey: chunkAuthValue
         ])
         httpRequest.setBody(chunk.data)
         return httpRequest

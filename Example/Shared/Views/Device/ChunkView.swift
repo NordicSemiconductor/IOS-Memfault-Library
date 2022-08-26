@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import iOS_nRF_Memfault_Library
 
 // MARK: - ChunkView
 
@@ -24,13 +25,13 @@ struct ChunkView: View {
         return relativeFormatter
     }()
     
-    private let chunk: Chunk
+    private let chunk: MemfaultChunk
     
     @State private var showFullData = false
     
     // MARK: Init
     
-    init(_ chunk: Chunk) {
+    init(_ chunk: MemfaultChunk) {
         self.chunk = chunk
     }
     

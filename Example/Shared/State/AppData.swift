@@ -37,14 +37,15 @@ final class AppData: ObservableObject {
     
     private let bluetooth: Bluetooth
     private let network: Network
+    private let memfault: Memfault
     private let logger: Logger
-    private lazy var cancellables = Set<AnyCancellable>()
     
     // MARK: Init
     
     init() {
         self.bluetooth = Bluetooth()
         self.network = Network("chunks.memfault.com")
+        self.memfault = Memfault()
         self.isScanning = bluetooth.isScanning
         self.showOnlyMDSDevices = true
         self.showOnlyConnectableDevices = true
@@ -196,21 +197,18 @@ extension AppData {
     }
     
     @MainActor
-    func upload(_ chunk: Chunk, from device: Device) async throws {
-        guard let postChunkRequest = HTTPRequest.post(chunk, for: device),
-              let i = scannedDevices.firstIndex(where: { $0.uuidString == device.uuidString }),
-              let j = scannedDevices[i].chunks.firstIndex(where: { $0 == chunk }) else {
-            
+    func upload(_ chunk: MemfaultChunk, from device: Device) async throws {
+        guard let i = scannedDevices.firstIndex(where: { $0.uuidString == device.uuidString }),
+              let j = scannedDevices[i].chunks.firstIndex(where: { $0 == chunk }),
+              let chunkURL = device.chunksURL, let chunkAuthKey = device.chunksURLAuthKey else {
             throw BluetoothError.cantRetrievePeripheral
         }
         
         scannedDevices[i].chunks[j].status = .uploading
         do {
-            for try await _ in network.perform(postChunkRequest).values {
-                scannedDevices[i].chunks[j].status = .success
-                logger.debug("Successfully Sent Chunk \(chunk.sequenceNumber).")
-                return
-            }
+            try await memfault.upload(chunk, with: chunkURL, chunkAuthKey: chunkAuthKey.key, chunkAuthValue: chunkAuthKey.auth)
+            scannedDevices[i].chunks[j].status = .success
+            logger.debug("Successfully Sent Chunk \(chunk.sequenceNumber).")
         } catch {
             scannedDevices[i].chunks[j].status = .errorUploading
             logger.error("Error Uploading Chunk \(chunk.sequenceNumber).")
@@ -261,11 +259,11 @@ private extension AppData {
     }
     
     @MainActor
-    func received(_ data: Data?, from device: Device) -> Chunk? {
+    func received(_ data: Data?, from device: Device) -> MemfaultChunk? {
         guard let data = data,
               let i = scannedDevices.firstIndex(where: { $0.uuidString == device.uuidString }) else { return nil }
         
-        let chunk = Chunk(data)
+        let chunk = MemfaultChunk(data)
         scannedDevices[i].chunks.append(chunk)
         scannedDevices[i].chunks.sort(by: { a, b in
             return a.timestamp.timeIntervalSince1970 > b.timestamp.timeIntervalSince1970

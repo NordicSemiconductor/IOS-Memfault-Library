@@ -1,6 +1,6 @@
 //
 //  CBUUID.swift
-//  nRF Memfault
+//  iOS-nRF-Memfault-Library
 //
 //  Created by Dinesh Harjani on 26/8/22.
 //

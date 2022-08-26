@@ -8,6 +8,7 @@
 import Foundation
 import CoreBluetooth
 import iOS_BLE_Library
+import iOS_nRF_Memfault_Library
 
 // MARK: - Device
 
@@ -35,7 +36,7 @@ final class Device: Identifiable, BluetoothDevice, ObservableObject {
     @Published private(set) var name: String
     @Published var state: ConnectedState
     @Published var services: [CBService]
-    @Published var chunks: [Chunk]
+    @Published var chunks: [MemfaultChunk]
     @Published var notificationsEnabled: Bool
     @Published var streamingEnabled: Bool
     
