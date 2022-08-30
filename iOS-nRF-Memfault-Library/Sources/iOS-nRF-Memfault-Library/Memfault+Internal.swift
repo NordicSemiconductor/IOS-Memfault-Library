@@ -51,9 +51,20 @@ extension Memfault {
             let writeResult = try await bluetooth.writeCharacteristic(Data(repeating: 1, count: 1), writeType: .withResponse, toCharacteristicWithUUID: .MDSDataExportCharacteristic, inServiceWithUUID: .MDS, from: device)
             devices[device.uuidString]?.isStreaming = true
             deviceStreams[device.uuidString]?.yield((device.uuidString, .streaming(true)))
+            
+            guard let leftoverChunkData = writeResult else { return }
+            
+            let leftoverChunk = MemfaultChunk(leftoverChunkData)
+            received(leftoverChunk, from: device)
+            try await upload(leftoverChunk, with: auth, from: device)
         } catch {
             deviceStreams[device.uuidString]?.yield(with: .failure(error))
         }
+    }
+    
+    func received<T: BluetoothDevice>(_ chunk: MemfaultChunk, from device: T) {
+        devices[device.uuidString]?.chunks.append(chunk)
+        deviceStreams[device.uuidString]?.yield((device.uuidString, .updatedChunk(chunk, status: .ready)))
     }
     
     // MARK: Upload
@@ -65,8 +76,7 @@ extension Memfault {
                 guard let data = data else { continue }
                 
                 let chunk = MemfaultChunk(data)
-                devices[device.uuidString]?.chunks.append(chunk)
-                deviceStreams[device.uuidString]?.yield((device.uuidString, .updatedChunk(chunk, status: .ready)))
+                received(chunk, from: device)
                 
                 if auth == nil {
                     auth = devices[device.uuidString]?.auth
