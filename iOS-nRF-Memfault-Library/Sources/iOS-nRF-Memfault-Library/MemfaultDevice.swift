@@ -26,6 +26,7 @@ struct MemfaultDevice: BluetoothDevice {
     var isNotifying: Bool
     var isStreaming: Bool
     var auth: MemfaultDeviceAuth?
+    var chunks: [MemfaultChunk]
     
     init(uuidString: String) {
         self.uuidString = uuidString
@@ -33,5 +34,6 @@ struct MemfaultDevice: BluetoothDevice {
         self.isNotifying = false
         self.isStreaming = false
         self.auth = nil
+        self.chunks = [MemfaultChunk]()
     }
 }

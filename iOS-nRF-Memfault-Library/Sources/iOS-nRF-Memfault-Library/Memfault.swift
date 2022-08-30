@@ -120,8 +120,6 @@ extension Memfault {
             devices[device.uuidString]?.auth = auth
             deviceStreams[device.uuidString]?.yield((device.uuidString, .authenticated(auth)))
             
-//            for pendingChunk
-            
             let setNotifyResult = try await bluetooth.setNotify(true, toCharacteristicWithUUID: .MDSDataExportCharacteristic, inServiceWithUUID: .MDS, from: device)
             devices[device.uuidString]?.isNotifying = setNotifyResult
             deviceStreams[device.uuidString]?.yield((device.uuidString, .notifications(setNotifyResult)))
@@ -138,34 +136,40 @@ extension Memfault {
     
     private func listenForNewChunks<T: BluetoothDevice>(from device: T) {
         Task {
-            guard let memfaultDevice = devices[device.uuidString] else {
-                throw MemfaultError.mdsNotFound
-            }
-            
+            var auth: MemfaultDeviceAuth!
             for try await data in bluetooth.data(fromCharacteristicWithUUID: .MDSDataExportCharacteristic, inServiceWithUUID: .MDS, device: device) {
-                guard let data = data else {
-//                    throw MemfaultError.mdsNotFound
-                    continue
-                }
+                guard let data = data else { continue }
                 
                 let chunk = MemfaultChunk(data)
+                devices[device.uuidString]?.chunks.append(chunk)
                 deviceStreams[device.uuidString]?.yield((device.uuidString, .updatedChunk(chunk, status: .ready)))
                 
-                guard let chunksAuth = memfaultDevice.auth else {
-                    throw MemfaultError.authDataNotFound
+                if auth == nil {
+                    auth = devices[device.uuidString]?.auth
                 }
                 
+                guard let chunksAuth = auth else {
+                    throw MemfaultError.authDataNotFound
+                }
                 try await upload(chunk, with: chunksAuth, from: device)
             }
         }
     }
     
     private func upload<T: BluetoothDevice>(_ chunk: MemfaultChunk, with auth: MemfaultDeviceAuth, from device: T) async throws {
+        
+        guard let i = devices[device.uuidString]?.chunks.firstIndex(where: {
+            $0.sequenceNumber == chunk.sequenceNumber && $0.data == chunk.data
+        }) else { return }
+        
         do {
+            devices[device.uuidString]?.chunks[i].status = .uploading
             deviceStreams[device.uuidString]?.yield((device.uuidString, .updatedChunk(chunk, status: .uploading)))
             try await upload(chunk, with: auth)
+            devices[device.uuidString]?.chunks[i].status = .success
             deviceStreams[device.uuidString]?.yield((device.uuidString, .updatedChunk(chunk, status: .success)))
         } catch {
+            devices[device.uuidString]?.chunks[i].status = .errorUploading
             deviceStreams[device.uuidString]?.yield((device.uuidString, .updatedChunk(chunk, status: .errorUploading)))
             disconnect(from: device)
         }
