@@ -1,23 +1,25 @@
 //
-//  AppError.swift
-//  nRF Memfault
+//  MemfaultError.swift
+//  iOS-nRF-Memfault-Library
 //
-//  Created by Dinesh Harjani on 17/8/22.
+//  Created by Dinesh Harjani on 26/8/22.
 //
 
 import Foundation
 
-enum AppError: LocalizedError {
+public enum MemfaultError: Error, LocalizedError {
     
-    case mdsNotFound
+    case mdsNotFound, authDataNotFound
     case unableToReadDeviceIdentifier, unableToReadDeviceURI, unableToReadAuthData
     
-    var failureReason: String? { errorDescription }
+    public var failureReason: String? { errorDescription }
     
-    var errorDescription: String? {
+    public var errorDescription: String? {
         switch self {
         case .mdsNotFound:
             return "MDS Service not found."
+        case .authDataNotFound:
+            return "Unable to find Chunk Auth Data for device."
         case .unableToReadDeviceIdentifier:
             return "Unable to Read Device Identifier."
         case .unableToReadDeviceURI:

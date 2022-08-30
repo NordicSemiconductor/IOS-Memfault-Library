@@ -25,8 +25,6 @@
 		AA38E94028B6444900CB082D /* DeviceStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA38E93E28B6444900CB082D /* DeviceStatusView.swift */; };
 		AAEB284528B4DC38005BCA2E /* iOS-BLE-Library in Frameworks */ = {isa = PBXBuildFile; productRef = AAEB284428B4DC38005BCA2E /* iOS-BLE-Library */; };
 		AAEB284728B4DC5B005BCA2E /* iOS-BLE-Library in Frameworks */ = {isa = PBXBuildFile; productRef = AAEB284628B4DC5B005BCA2E /* iOS-BLE-Library */; };
-		AAFA533F28AD30FA005638D3 /* AppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFA533E28AD30FA005638D3 /* AppError.swift */; };
-		AAFA534028AD30FA005638D3 /* AppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFA533E28AD30FA005638D3 /* AppError.swift */; };
 		AAFB2FE7289A8C48008207FE /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFB2FE6289A8C48008207FE /* Device.swift */; };
 		AAFB2FE8289A8C48008207FE /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFB2FE6289A8C48008207FE /* Device.swift */; };
 		AAFB2FEA289A8C95008207FE /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFB2FE9289A8C95008207FE /* Logger.swift */; };
@@ -55,7 +53,6 @@
 		AA38E93E28B6444900CB082D /* DeviceStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceStatusView.swift; sourceTree = "<group>"; };
 		AA3C2E9D28B3CB550075CB55 /* nRF-Memfault--iOS--Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "nRF-Memfault--iOS--Info.plist"; sourceTree = "<group>"; };
 		AA3C2E9E28B3CB5F0075CB55 /* nRF-Memfault--macOS--Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "nRF-Memfault--macOS--Info.plist"; sourceTree = "<group>"; };
-		AAFA533E28AD30FA005638D3 /* AppError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppError.swift; sourceTree = "<group>"; };
 		AAFB2FE6289A8C48008207FE /* Device.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
 		AAFB2FE9289A8C95008207FE /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		AAFB2FF5289AB7EB008207FE /* ScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerView.swift; sourceTree = "<group>"; };
@@ -194,7 +191,6 @@
 			isa = PBXGroup;
 			children = (
 				AAFB2FE6289A8C48008207FE /* Device.swift */,
-				AAFA533E28AD30FA005638D3 /* AppError.swift */,
 				AAFBF84928996AA100A6655C /* AppData.swift */,
 			);
 			path = State;
@@ -343,7 +339,6 @@
 				AAFB2FEA289A8C95008207FE /* Logger.swift in Sources */,
 				AA2ADBA228ABE32B00BF03D3 /* DeviceUploadView.swift in Sources */,
 				AAFD761028AE6B8F0078F6F8 /* ChunkView.swift in Sources */,
-				AAFA533F28AD30FA005638D3 /* AppError.swift in Sources */,
 				AAFBF84A28996AA100A6655C /* AppData.swift in Sources */,
 				AA22DDCA289B4162003366FA /* DeviceView.swift in Sources */,
 				AA38E93C28B643D600CB082D /* ReceivingNewChunksView.swift in Sources */,
@@ -364,7 +359,6 @@
 				AAFB2FEB289A8C95008207FE /* Logger.swift in Sources */,
 				AA2ADBA328ABE32B00BF03D3 /* DeviceUploadView.swift in Sources */,
 				AAFD761128AE6B8F0078F6F8 /* ChunkView.swift in Sources */,
-				AAFA534028AD30FA005638D3 /* AppError.swift in Sources */,
 				AAFBF84B28996AA100A6655C /* AppData.swift in Sources */,
 				AA22DDCB289B4162003366FA /* DeviceView.swift in Sources */,
 				AA38E93D28B643D600CB082D /* ReceivingNewChunksView.swift in Sources */,

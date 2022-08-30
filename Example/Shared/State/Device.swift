@@ -28,10 +28,7 @@ final class Device: Identifiable, BluetoothDevice, ObservableObject {
     let rssi: RSSI
     let advertisementData: AdvertisementData
     
-    var chunksURL: URL?
-    
-    typealias ChunksURLAuthKey = (key: String, auth: String)
-    var chunksURLAuthKey: ChunksURLAuthKey?
+    var auth: MemfaultDeviceAuth?
     
     @Published private(set) var name: String
     @Published var state: ConnectedState

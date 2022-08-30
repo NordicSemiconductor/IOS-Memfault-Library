@@ -105,7 +105,7 @@ extension AppData {
                 let state = ConnectedState.from(scanData.peripheral.state)
                 let device = Device(peripheral: scanData.peripheral, state: state, advertisementData: scanData.advertisementData, rssi: scanData.RSSI)
                 
-                if let i = scannedDevices.firstIndex(of: device) {
+                if let i = scannedDevices.firstIndex(where: { $0.uuidString == device.uuidString }) {
                     scannedDevices[i].update(from: scanData.advertisementData)
                 } else {
                     scannedDevices.append(device)
@@ -117,56 +117,26 @@ extension AppData {
     // MARK: Connect
     
     func connect(to device: Device) {
-        Task {
+        Task { @MainActor in
             await updateDeviceConnectionState(of: device, to: .connecting)
-            
+            let connectionStream = await memfault.connect(to: device)
             do {
-                try await bluetooth.connect(to: device)
-                logger.info("Connecting to \(device.name)")
-                await updateDeviceConnectionState(of: device, to: .connected)
-                logger.info("Connected to \(device.name)")
-                
-                listenForNewChunks(from: device)
-                
-                logger.info("Discovering \(device.name)'s Services...")
-                let cbServices = try await bluetooth.discoverServices(of: device)
-                guard let mdsService = cbServices.first(where: { $0.uuid == .MDS }) else {
-                    throw AppError.mdsNotFound
+                for try await newEvent in connectionStream {
+                    switch newEvent.event {
+                    case .connected:
+                        await updateDeviceConnectionState(of: device, to: .connected)
+                    case .disconnected:
+                        await updateDeviceConnectionState(of: device, to: .disconnected)
+                    case .notifications(let enabled):
+                        await updateNotifyingStatus(of: device, to: enabled)
+                    case .streaming(let enabled):
+                        await updateStreamingStatus(of: device, to: enabled)
+                    case .authenticated(let deviceAuth):
+                        await update(authData: deviceAuth, of: device)
+                    case .updatedChunk(let chunk, status: let status):
+                        received(chunk, from: device, with: status)
+                    }
                 }
-                
-                logger.info("Discovering MDS' Characteristics...")
-                try await bluetooth.discoverCharacteristics(ofService: mdsService.uuid.uuidString, ofDeviceWithUUID: device.uuidString)
-                
-                logger.info("Reading Device Identifier...")
-                guard let uriData = try await bluetooth.readCharacteristic(withUUID: .MDSDeviceIdentifierCharacteristic, inServiceWithUUID: .MDS, from: device),
-                      let deviceIdentifierString = String(data: uriData, encoding: .utf8) else {
-                    throw AppError.unableToReadDeviceIdentifier
-                }
-                logger.debug("Device Identifier: \(deviceIdentifierString)")
-                
-                logger.info("Reading Data URI...")
-                guard let uriData = try await bluetooth.readCharacteristic(withUUID: .MDSDataURICharacteristic, inServiceWithUUID: .MDS, from: device),
-                      let uriString = String(data: uriData, encoding: .utf8),
-                      let uriURL = URL(string: uriString) else {
-                    throw AppError.unableToReadDeviceURI
-                }
-                
-                logger.info("Reading Auth Data...")
-                guard let authData = try await bluetooth.readCharacteristic(withUUID: .MDSAuthCharacteristic, inServiceWithUUID: .MDS, from: device),
-                      let authString = String(data: authData, encoding: .utf8)?.split(separator: ":") else {
-                    throw AppError.unableToReadAuthData
-                }
-                await update(chunksURL: uriURL,
-                             authKey: (key: String(authString[0]), auth: String(authString[1])),
-                             of: device)
-                
-                let isNotifying = try await bluetooth.setNotify(true, toCharacteristicWithUUID: .MDSDataExportCharacteristic, inServiceWithUUID: .MDS, from: device)
-                await updateNotifyingStatus(of: device, to: isNotifying)
-                logger.debug("setNotify: \(isNotifying)")
-                
-                let writeResult = try await bluetooth.writeCharacteristic(Data(repeating: 1, count: 1), writeType: .withResponse, toCharacteristicWithUUID: .MDSDataExportCharacteristic, inServiceWithUUID: .MDS, from: device)
-                logger.debug("Write Enable Result: \(writeResult ?? Data())")
-                await updateStreamingStatus(of: device, to: true)
             } catch {
                 encounteredError(error)
                 disconnect(from: device)
@@ -176,37 +146,17 @@ extension AppData {
     
     // MARK: Upload
     
-    private func listenForNewChunks(from device: Device) {
-        Task {
-            logger.info("START listening to MDS Data Export.")
-            for try await data in bluetooth.data(fromCharacteristicWithUUID: .MDSDataExportCharacteristic, inServiceWithUUID: .MDS, device: device) {
-                guard let chunk = await received(data, from: device) else { continue }
-                
-                do {
-                    logger.info("Received Chunk \(chunk.sequenceNumber). Now sending to Memfault.")
-                    try await upload(chunk, from: device)
-                } catch {
-                    logger.info("Error Uploading Chunk \(chunk.sequenceNumber). Disconnecting from device.")
-                    disconnect(from: device)
-                    
-                    encounteredError(error)
-                }
-            }
-            logger.info("STOP listening to MDS Data Export.")
-        }
-    }
-    
     @MainActor
     func upload(_ chunk: MemfaultChunk, from device: Device) async throws {
         guard let i = scannedDevices.firstIndex(where: { $0.uuidString == device.uuidString }),
-              let j = scannedDevices[i].chunks.firstIndex(where: { $0 == chunk }),
-              let chunkURL = device.chunksURL, let chunkAuthKey = device.chunksURLAuthKey else {
+              let j = scannedDevices[i].chunks.firstIndex(where: { $0.sequenceNumber == chunk.sequenceNumber && $0.data == chunk.data }),
+              let chunkAuth = device.auth else {
             throw BluetoothError.cantRetrievePeripheral
         }
         
         scannedDevices[i].chunks[j].status = .uploading
         do {
-            try await memfault.upload(chunk, with: chunkURL, chunkAuthKey: chunkAuthKey.key, chunkAuthValue: chunkAuthKey.auth)
+            try await memfault.upload(chunk, with: chunkAuth)
             scannedDevices[i].chunks[j].status = .success
             logger.debug("Successfully Sent Chunk \(chunk.sequenceNumber).")
         } catch {
@@ -219,31 +169,14 @@ extension AppData {
     // MARK: Disconnect
     
     func disconnect(from device: Device) {
-        Task {
+        Task { @MainActor in
             logger.info("Disconnecting from \(device.name)")
             await updateDeviceConnectionState(of: device, to: .disconnecting)
             
-            do {
-                if device.streamingEnabled {
-                    logger.debug("Disabling Streaming from \(device.name).")
-                    _ = try await bluetooth.writeCharacteristic(
-                        Data(repeating: 0, count: 1), writeType: .withResponse, toCharacteristicWithUUID: .MDSDataExportCharacteristic, inServiceWithUUID: .MDS, from: device)
-                await updateStreamingStatus(of: device, to: false)
-                }
-                
-                if device.notificationsEnabled {
-                    logger.debug("Turning Off Notifications from \(device.name).")
-                    _ = try await bluetooth.setNotify(false, toCharacteristicWithUUID: .MDSDataExportCharacteristic, inServiceWithUUID: .MDS, from: device)
-                    await updateNotifyingStatus(of: device, to: false)
-                }
-                
-                try await bluetooth.disconnect(from: device)
-                logger.info("Disconnected from \(device.name)")
-                await updateDeviceConnectionState(of: device, to: .disconnected)
-            } catch {
-                await updateDeviceConnectionState(of: device, to: .disconnected)
-                encounteredError(error)
-            }
+            await memfault.disconnect(from: device)
+            
+            logger.info("Disconnected from \(device.name)")
+            await updateDeviceConnectionState(of: device, to: .disconnected)
         }
     }
 }
@@ -254,29 +187,31 @@ private extension AppData {
         Task { @MainActor in
             guard let i = scannedDevices.firstIndex(where: { $0.uuidString == device.uuidString }) else { return }
             scannedDevices[i].state = newState
-            objectWillChange.send()
         }
     }
     
     @MainActor
-    func received(_ data: Data?, from device: Device) -> MemfaultChunk? {
-        guard let data = data,
-              let i = scannedDevices.firstIndex(where: { $0.uuidString == device.uuidString }) else { return nil }
+    func received(_ chunk: MemfaultChunk, from device: Device, with status: MemfaultChunk.Status) {
+        guard let i = scannedDevices.firstIndex(where: { $0.uuidString == device.uuidString }) else {
+            return
+        }
+        guard status != .ready else {
+            scannedDevices[i].chunks.insert(chunk, at: 0)
+            return
+        }
         
-        let chunk = MemfaultChunk(data)
-        scannedDevices[i].chunks.append(chunk)
-        scannedDevices[i].chunks.sort(by: { a, b in
-            return a.timestamp.timeIntervalSince1970 > b.timestamp.timeIntervalSince1970
-        })
-        return chunk
+        guard let j = scannedDevices[i].chunks.firstIndex(where: {
+            $0.sequenceNumber == chunk.sequenceNumber && $0.data == chunk.data
+        }) else {
+            return
+        }
+        scannedDevices[i].chunks[j].status = status
     }
     
     func updateNotifyingStatus(of device: Device, to isNotifying: Bool) async {
         Task { @MainActor in
             guard let i = scannedDevices.firstIndex(where: { $0.uuidString == device.uuidString }) else { return }
             scannedDevices[i].notificationsEnabled = isNotifying
-            scannedDevices[i].objectWillChange.send()
-            objectWillChange.send()
         }
     }
     
@@ -284,16 +219,13 @@ private extension AppData {
         Task { @MainActor in
             guard let i = scannedDevices.firstIndex(where: { $0.uuidString == device.uuidString }) else { return }
             scannedDevices[i].streamingEnabled = isStreaming
-            scannedDevices[i].objectWillChange.send()
-            objectWillChange.send()
         }
     }
     
-    func update(chunksURL: URL, authKey: Device.ChunksURLAuthKey, of device: Device) async {
+    func update(authData: MemfaultDeviceAuth, of device: Device) async {
         Task { @MainActor in
             guard let i = scannedDevices.firstIndex(where: { $0.uuidString == device.uuidString }) else { return }
-            scannedDevices[i].chunksURL = chunksURL
-            scannedDevices[i].chunksURLAuthKey = authKey
+            scannedDevices[i].auth = authData
         }
     }
 }
