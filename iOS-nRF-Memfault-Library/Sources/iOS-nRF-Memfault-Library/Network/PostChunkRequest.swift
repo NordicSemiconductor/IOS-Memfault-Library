@@ -10,13 +10,12 @@ import iOS_Common_Libraries
 
 extension HTTPRequest {
     
-    static func post(_ chunk: MemfaultChunk, with chunkURL: URL,
-                     chunkAuthKey: String, chunkAuthValue: String) -> HTTPRequest? {
-        var httpRequest = HTTPRequest(url: chunkURL)
+    static func post(_ chunk: MemfaultChunk, with chunkAuth: MemfaultDeviceAuth) -> HTTPRequest {
+        var httpRequest = HTTPRequest(url: chunkAuth.url)
         httpRequest.setMethod(.POST)
         httpRequest.setHeaders([
             "Content-Type": "application/octet-stream",
-            chunkAuthKey: chunkAuthValue
+            chunkAuth.authKey: chunkAuth.authValue
         ])
         httpRequest.setBody(chunk.data)
         return httpRequest

@@ -81,12 +81,8 @@ public final actor Memfault {
     // MARK: Network
     
     public func upload(_ chunk: MemfaultChunk, with chunkAuth: MemfaultDeviceAuth) async throws {
-        guard let postChunkRequest = HTTPRequest.post(chunk, with: chunkAuth.url, chunkAuthKey: chunkAuth.authKey, chunkAuthValue: chunkAuth.authValue) else {
-            throw BluetoothError.cantRetrievePeripheral
-        }
-        
         // If there's an error it'll be thrown and caught by the caller.
-        for try await _ in network.perform(postChunkRequest).values {
+        for try await _ in network.perform(HTTPRequest.post(chunk, with: chunkAuth)).values {
             return
         }
     }
