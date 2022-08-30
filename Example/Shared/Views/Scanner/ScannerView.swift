@@ -38,6 +38,7 @@ struct ScannerView: View {
                 Button("Show About Screen", action: {
                     showAboutScreen = true
                 })
+                .foregroundColor(.primary)
             }
         }
         .toolbar {
