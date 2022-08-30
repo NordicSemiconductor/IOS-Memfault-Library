@@ -8,15 +8,6 @@
 import Foundation
 import iOS_BLE_Library
 
-// MARK: - MemfaultDeviceAuth
-
-public struct MemfaultDeviceAuth {
-    
-    let url: URL
-    let authKey: String
-    let authValue: String
-}
-
 // MARK: - MemfaultDevice
 
 struct MemfaultDevice: BluetoothDevice {
