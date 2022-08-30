@@ -25,14 +25,6 @@ struct ContentView: View {
         ScannerView()
             .setTitle("nRF Memfault")
             .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button(action: {
-                        appData.refresh()
-                    }, label: {
-                        Image(systemName: "arrow.clockwise")
-                    })
-                }
-                
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
                         appData.toggleScanner()
@@ -41,7 +33,7 @@ struct ContentView: View {
                     })
                 }
             }
-            .wrapInNavigationViewForiOS(with: .nordicBlue)
+            .wrapInNavigationViewForiOS(with: .navigationBarBackground)
             .alert(item: $appData.error) { error in
                 Alert(errorEvent: error)
             }

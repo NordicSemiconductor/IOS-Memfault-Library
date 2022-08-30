@@ -118,6 +118,10 @@ extension AppData {
     
     func connect(to device: Device) {
         Task { @MainActor in
+            if isScanning {
+                bluetooth.toggleScanner()
+            }
+            
             await updateDeviceConnectionState(of: device, to: .connecting)
             let connectionStream = await memfault.connect(to: device)
             do {
