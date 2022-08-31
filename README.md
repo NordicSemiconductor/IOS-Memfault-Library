@@ -11,7 +11,7 @@ The device is expected to support the Memfault Diagnostic Service, [as defined h
 * iOS: 15.0
 * macOS: 12.0
 
-In all cases, the Library requires an active Internet connection. If an Error is encountered when uploading a Chunk of Data, the BLE connection to the device will be dropped immediately to ensure the least amount of Chunks of Data are lost.
+In all cases, **the Library requires an active Internet connection**. If an Error is encountered when uploading a Chunk of Data, **the BLE connection to the device will be dropped immediately** to ensure the least amount of Chunks of Data are lost.
 
 ## Basic Usage
 
@@ -39,7 +39,7 @@ let connectionStream = await memfault.connect(to: device)
 do {
     for try await newEvent in connectionStream {
         switch newEvent.event {
-        // Logic for each Event.
+            // Logic for each Event.
         }
     }
 } catch {
@@ -60,4 +60,4 @@ This requires passing-in the `MemfaultChunkAuth` struct, which is received throu
 
 # Example App
 
-The aforementioned Advanced Usage is what enables a UI-based app to inform the user of what the underlying Memfault Library is doing, as well as providing manual control of connection / disconnection and forcing a Memfault `Chunk` of Data to be uploaded in case an error occurs.
+The aforementioned Advanced Usage is what enables a UI-based app to inform the user of what the underlying Memfault Library is doing, as well as providing manual control of connection / disconnection and forcing a Memfault Chunk of Data to be uploaded in case an error occurs.
