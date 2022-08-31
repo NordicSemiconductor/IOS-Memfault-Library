@@ -38,6 +38,7 @@ public final actor Memfault {
     
     // MARK: Bluetooth
     
+    @discardableResult
     public func connect<T: BluetoothDevice>(to device: T) -> AsyncMemfaultStream {
         if devices[device.uuidString] == nil {
             devices[device.uuidString] = MemfaultDevice(uuidString: device.uuidString)
