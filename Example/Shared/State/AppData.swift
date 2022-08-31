@@ -36,7 +36,6 @@ final class AppData: ObservableObject {
     // MARK: Private
     
     private let bluetooth: Bluetooth
-    private let network: Network
     private let memfault: Memfault
     private let logger: Logger
     
@@ -44,7 +43,6 @@ final class AppData: ObservableObject {
     
     init() {
         self.bluetooth = Bluetooth()
-        self.network = Network("chunks.memfault.com")
         self.memfault = Memfault()
         self.isScanning = bluetooth.isScanning
         self.showOnlyMDSDevices = true
