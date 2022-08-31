@@ -31,6 +31,7 @@
 		AA10062528B795860020820D /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		AA14D64428B8C53D0093C626 /* iOS-nRF-Memfault-Library */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = "iOS-nRF-Memfault-Library"; sourceTree = "<group>"; };
 		AA22791328BF638D0009319A /* DeviceStatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceStatsView.swift; sourceTree = "<group>"; };
+		AA22791928BF83D40009319A /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		AA22DDC9289B4162003366FA /* DeviceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceView.swift; sourceTree = "<group>"; };
 		AA2ADBA128ABE32B00BF03D3 /* DeviceUploadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceUploadView.swift; sourceTree = "<group>"; };
 		AA38E93728B631C200CB082D /* DeviceConnectionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceConnectionButton.swift; sourceTree = "<group>"; };
@@ -94,6 +95,7 @@
 		AAFBF81B2899482900A6655C = {
 			isa = PBXGroup;
 			children = (
+				AA22791928BF83D40009319A /* README.md */,
 				AA14D64428B8C53D0093C626 /* iOS-nRF-Memfault-Library */,
 				AA3C2E9D28B3CB550075CB55 /* nRF-Memfault--iOS--Info.plist */,
 				AAFBF8452899554600A6655C /* Example */,
