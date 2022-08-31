@@ -29,6 +29,7 @@ final class Device: Identifiable, BluetoothDevice, ObservableObject {
     let advertisementData: AdvertisementData
     
     var auth: MemfaultDeviceAuth?
+    var uptimeStartTimestamp: Date?
     
     @Published private(set) var name: String
     @Published var state: ConnectedState

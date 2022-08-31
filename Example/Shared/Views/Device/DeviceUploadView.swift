@@ -16,6 +16,11 @@ struct DeviceUploadView: View {
     
     var body: some View {
         List {
+            Section("Stats") {
+                DeviceStatsView()
+                    .environmentObject(device)
+            }
+            
             Section("Status") {
                 DeviceStatusView()
                     .environmentObject(device)

@@ -25,6 +25,12 @@ struct ChunkView: View {
         return relativeFormatter
     }()
     
+    static let byteCountFormatter: ByteCountFormatter = {
+        let byteCountFormatter = ByteCountFormatter()
+        byteCountFormatter.countStyle = .file
+        return byteCountFormatter
+    }()
+    
     private let chunk: MemfaultChunk
     
     @State private var showFullData = false
@@ -42,8 +48,8 @@ struct ChunkView: View {
             HStack {
                 Text("#\(chunk.sequenceNumber)")
                 
-                Text("\(chunk.data.count) bytes")
-                    .foregroundColor(.nordicLightGrey)
+                Text(Self.byteCountFormatter.string(fromByteCount: Int64(chunk.data.count)))
+                    .foregroundColor(.nordicMiddleGrey)
                 
                 Spacer()
                 
