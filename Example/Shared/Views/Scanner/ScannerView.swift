@@ -51,11 +51,9 @@ struct ScannerView: View {
                 })
               }
         }
-        #if os(iOS)
         .refreshable {
             appData.refresh()
         }
-        #endif
     }
 }
 

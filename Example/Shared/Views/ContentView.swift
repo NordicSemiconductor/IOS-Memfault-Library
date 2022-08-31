@@ -21,7 +21,6 @@ struct ContentView: View {
     // MARK: View
     
     var body: some View {
-        #if os(iOS)
         ScannerView()
             .setTitle("nRF Memfault")
             .toolbar {
@@ -44,35 +43,6 @@ struct ContentView: View {
             .sheet(isPresented: $showAboutScreen) {
                 AboutView()
             }
-        #else
-        VStack {
-            ScannerView()
-        }
-        .toolbar {
-            Button(action: {
-                appData.refresh()
-            }, label: {
-                Image(systemName: "arrow.clockwise")
-            })
-            .keyboardShortcut(KeyEquivalent(Character("r")), modifiers: [.command])
-
-            Button(action: {
-                appData.toggleScanner()
-            }, label: {
-                Image(systemName: appData.isScanning ? "stop.fill" : "play.fill")
-            })
-            .keyboardShortcut(KeyEquivalent(Character(" ")), modifiers: [])
-        }
-        .alert(item: $appData.error) { error in
-            Alert(errorEvent: error)
-        }
-        .onAppear() {
-            guard !appData.isScanning else { return }
-            appData.toggleScanner()
-        }
-        .frame(minWidth: 150, idealWidth: 150,
-               minHeight: 500, idealHeight: 500)
-        #endif
     }
 }
 
