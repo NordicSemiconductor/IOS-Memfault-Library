@@ -104,7 +104,11 @@ struct ChunkView: View {
         }
         .contextMenu {
             Button(action: {
+                #if os(macOS)
+                NSPasteboard.general.setString(chunk.data.hexEncodedString(), forType: .string)
+                #else
                 UIPasteboard.general.string = chunk.data.hexEncodedString()
+                #endif
             }) {
                 Text("Copy to clipboard")
                 Image(systemName: "doc.on.doc")
