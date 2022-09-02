@@ -24,13 +24,27 @@ struct ScannerView: View {
     var body: some View {
         List {
             Section("Devices") {
-                ForEach(appData.scannedDevices) { scannedDevice in
-                    NavigationLink(destination: {
-                        DeviceUploadView()
-                            .environmentObject(scannedDevice)
-                    }, label: {
-                        DeviceView(scannedDevice)
-                    })
+                if appData.scannedDevices.isEmpty {
+                    VStack(alignment: .center) {
+                        Image(systemName: "tray.fill")
+                            .resizable()
+                            .frame(width: 20, height: 20)
+                            .foregroundColor(.nordicMiddleGrey)
+                        
+                        Text("No Devices with current Filter Settings found.")
+                            .font(.subheadline)
+                            .foregroundColor(.nordicMiddleGrey)
+                    }
+                    .centerTextInsideForm()
+                } else {
+                    ForEach(appData.scannedDevices) { scannedDevice in
+                        NavigationLink(destination: {
+                            DeviceUploadView()
+                                .environmentObject(scannedDevice)
+                        }, label: {
+                            DeviceView(scannedDevice)
+                        })
+                    }
                 }
             }
             
