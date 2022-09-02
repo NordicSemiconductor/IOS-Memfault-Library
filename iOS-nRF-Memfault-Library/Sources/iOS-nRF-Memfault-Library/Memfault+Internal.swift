@@ -72,20 +72,35 @@ extension Memfault {
     func listenForNewChunks<T: BluetoothDevice>(from device: T) {
         Task {
             var auth: MemfaultDeviceAuth!
-            for try await data in bluetooth.data(fromCharacteristicWithUUID: .MDSDataExportCharacteristic, inServiceWithUUID: .MDS, device: device) {
-                guard let data = data else { continue }
-                
-                let chunk = MemfaultChunk(data)
-                received(chunk, from: device)
-                
-                if auth == nil {
-                    auth = devices[device.uuidString]?.auth
+            do {
+                for try await data in bluetooth.data(fromCharacteristicWithUUID: .MDSDataExportCharacteristic, inServiceWithUUID: .MDS, device: device) {
+                    guard let data = data else { continue }
+                    
+                    let chunk = MemfaultChunk(data)
+                    received(chunk, from: device)
+                    
+                    if auth == nil {
+                        auth = devices[device.uuidString]?.auth
+                    }
+                    
+                    guard let chunksAuth = auth else {
+                        throw MemfaultError.authDataNotFound
+                    }
+                    try await upload(chunk, with: chunksAuth, from: device)
                 }
-                
-                guard let chunksAuth = auth else {
-                    throw MemfaultError.authDataNotFound
+            } catch let bluetoothError as BluetoothError {
+                switch bluetoothError {
+                case .unexpectedDeviceDisconnection(description: _):
+                    deviceStreams[device.uuidString]?.yield((device.uuidString, .notifications(false)))
+                    deviceStreams[device.uuidString]?.yield((device.uuidString, .streaming(false)))
+                    fallthrough
+                default:
+                    deviceStreams[device.uuidString]?.yield(with: .failure(bluetoothError))
+                    disconnect(from: device)
                 }
-                try await upload(chunk, with: chunksAuth, from: device)
+            } catch {
+                deviceStreams[device.uuidString]?.yield(with: .failure(error))
+                disconnect(from: device)
             }
         }
     }

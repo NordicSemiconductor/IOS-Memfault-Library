@@ -140,6 +140,10 @@ extension AppData {
                     }
                 }
             } catch {
+                if let bluetoothError = error as? BluetoothError, bluetoothError == .pairingRequired {
+                    encounteredError(bluetoothError)
+                    return
+                }
                 encounteredError(error)
                 disconnect(from: device)
             }
