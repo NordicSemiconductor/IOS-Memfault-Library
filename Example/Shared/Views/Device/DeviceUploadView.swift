@@ -42,6 +42,7 @@ struct DeviceUploadView: View {
                             .font(.subheadline)
                             .foregroundColor(.nordicMiddleGrey)
                     }
+                    .centerTextInsideForm()
                 } else {
                     ForEach(device.chunks) { chunk in
                         ChunkView(chunk)

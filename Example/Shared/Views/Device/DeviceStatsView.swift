@@ -31,6 +31,10 @@ struct DeviceStatsView: View {
         return byteCountFormatter
     }()
     
+    private var isRunningOniPad: Bool {
+        UIDevice.current.userInterfaceIdiom == .pad
+    }
+    
     private var deviceIsConnected: Bool {
         device.state == .connected
     }
@@ -39,6 +43,10 @@ struct DeviceStatsView: View {
     
     var body: some View {
         HStack {
+            if isRunningOniPad {
+                Spacer()
+            }
+            
             VStack(spacing: 8) {
                 Image(systemName: "shippingbox")
                 
@@ -79,6 +87,10 @@ struct DeviceStatsView: View {
                 
                 Text("Uptime")
                     .bold()
+            }
+            
+            if isRunningOniPad {
+                Spacer()
             }
         }
         .onReceive(device.$state, perform: { connectionState in
