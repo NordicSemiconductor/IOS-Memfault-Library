@@ -74,8 +74,15 @@ struct Device: Identifiable, BluetoothDevice {
     
     mutating func connectionStateChanged(to newState: ConnectedState) {
         state = newState
-        guard newState == .connected else { return }
-        uptimeStartTimestamp = Date()
+        
+        switch newState {
+        case .connected:
+            uptimeStartTimestamp = Date()
+        case .disconnected:
+            auth = nil
+        case .notConnectable, .connecting, .disconnecting:
+            break
+        }
     }
     
     mutating func update(_ chunk: MemfaultChunk, to status: MemfaultChunk.Status) {

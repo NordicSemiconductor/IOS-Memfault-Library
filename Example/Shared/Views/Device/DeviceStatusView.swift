@@ -35,6 +35,11 @@ struct DeviceStatusView: View {
             .padding(.horizontal, 4)
         
         let disabledColor: Color = deviceIsConnected ? .nordicSun : .nordicMiddleGrey
+        Label(device.auth != nil ? "Obtained Authentication Key" : "Missing Authentication Key",
+              systemImage: device.auth != nil ? "key.fill" : "lock.open.fill")
+            .foregroundColor(device.auth != nil ? .nordicPower : disabledColor)
+            .padding(.horizontal, 4)
+        
         Label(device.notificationsEnabled ? "Data Notifications Enabled" : "Data Notifications Disabled", systemImage: "arrow.down")
             .foregroundColor(device.notificationsEnabled ? .nordicPower : disabledColor)
             .padding(.horizontal, 4)
