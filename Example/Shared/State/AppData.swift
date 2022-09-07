@@ -66,10 +66,11 @@ extension AppData {
     // MARK: UI
     
     func refresh() {
+        let connectedDevices = scannedDevices.filter({ $0.state == .connected })
         if bluetooth.isScanning {
             toggleScanner()
         }
-        scannedDevices.removeAll()
+        scannedDevices = connectedDevices
         toggleScanner()
     }
     
