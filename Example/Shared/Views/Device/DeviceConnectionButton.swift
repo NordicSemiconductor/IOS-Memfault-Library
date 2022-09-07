@@ -14,7 +14,16 @@ struct DeviceConnectionButton: View {
     // MARK: Environment Variables
     
     @EnvironmentObject var appData: AppData
-    @EnvironmentObject var device: Device
+    
+    // MARK: Private
+    
+    private let device: Device
+    
+    // MARK: Init
+    
+    init(_ device: Device) {
+        self.device = device
+    }
     
     // MARK: View
     

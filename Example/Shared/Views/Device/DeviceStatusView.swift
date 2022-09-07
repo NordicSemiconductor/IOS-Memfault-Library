@@ -11,9 +11,15 @@ import SwiftUI
 
 struct DeviceStatusView: View {
     
-    // MARK: Environment Variables
+    // MARK: Private
     
-    @EnvironmentObject var device: Device
+    private let device: Device
+    
+    // MARK: Init
+    
+    init(_ device: Device) {
+        self.device = device
+    }
     
     // MARK: Private
     
@@ -37,8 +43,7 @@ struct DeviceStatusView: View {
             .foregroundColor(device.streamingEnabled ? .nordicPower : disabledColor)
             .padding(.horizontal, 4)
         
-        DeviceConnectionButton()
-            .environmentObject(device)
+        DeviceConnectionButton(device)
             .centerTextInsideForm()
     }
 }

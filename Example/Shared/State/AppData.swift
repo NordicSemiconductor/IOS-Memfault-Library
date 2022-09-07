@@ -70,6 +70,7 @@ extension AppData {
         if bluetooth.isScanning {
             toggleScanner()
         }
+        assert(!bluetooth.isScanning)
         scannedDevices = connectedDevices
         toggleScanner()
     }
@@ -197,7 +198,7 @@ private extension AppData {
     func updateDeviceConnectionState(of device: Device, to newState: ConnectedState) async {
         Task { @MainActor in
             guard let i = scannedDevices.firstIndex(where: { $0.uuidString == device.uuidString }) else { return }
-            scannedDevices[i].state = newState
+            scannedDevices[i].connectionStateChanged(to: newState)
         }
     }
     
@@ -206,17 +207,7 @@ private extension AppData {
         guard let i = scannedDevices.firstIndex(where: { $0.uuidString == device.uuidString }) else {
             return
         }
-        guard status != .ready else {
-            scannedDevices[i].chunks.insert(chunk, at: 0)
-            return
-        }
-        
-        guard let j = scannedDevices[i].chunks.firstIndex(where: {
-            $0.sequenceNumber == chunk.sequenceNumber && $0.data == chunk.data
-        }) else {
-            return
-        }
-        scannedDevices[i].chunks[j].status = status
+        scannedDevices[i].update(chunk, to: status)
     }
     
     func updateNotifyingStatus(of device: Device, to isNotifying: Bool) async {

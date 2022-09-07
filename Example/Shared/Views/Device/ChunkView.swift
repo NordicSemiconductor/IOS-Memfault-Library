@@ -12,12 +12,7 @@ import iOS_nRF_Memfault_Library
 
 struct ChunkView: View {
     
-    // MARK: Environment Variables
-    
-    @EnvironmentObject var appData: AppData
-    @EnvironmentObject var device: Device
-    
-    // MARK: Private
+    // MARK: Static
     
     static let timestampFormatter: RelativeDateTimeFormatter = {
         let relativeFormatter = RelativeDateTimeFormatter()
@@ -31,13 +26,21 @@ struct ChunkView: View {
         return byteCountFormatter
     }()
     
+    // MARK: Environment Variables
+    
+    @EnvironmentObject var appData: AppData
+    
+    // MARK: Private
+    
+    private let device: Device
     private let chunk: MemfaultChunk
     
     @State private var showFullData = false
     
     // MARK: Init
     
-    init(_ chunk: MemfaultChunk) {
+    init(device: Device, chunk: MemfaultChunk) {
+        self.device = device
         self.chunk = chunk
     }
     

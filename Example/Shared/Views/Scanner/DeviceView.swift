@@ -27,9 +27,7 @@ struct DeviceView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
-            HStack {
-                Text(device.name)
-            }
+            Text(device.name)
         }
         .padding(4)
     }

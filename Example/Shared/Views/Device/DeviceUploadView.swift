@@ -9,21 +9,30 @@ import SwiftUI
 
 struct DeviceUploadView: View {
     
+    // MARK: Environment Variables
+    
     @EnvironmentObject var appData: AppData
-    @EnvironmentObject var device: Device
+    
+    // MARK: Private
+    
+    private let device: Device
+    
+    // MARK: Init
+    
+    init(_ device: Device) {
+        self.device = device
+    }
     
     // MARK: View
     
     var body: some View {
         List {
             Section("Stats") {
-                DeviceStatsView()
-                    .environmentObject(device)
+                DeviceStatsView(device)
             }
             
             Section("Status") {
-                DeviceStatusView()
-                    .environmentObject(device)
+                DeviceStatusView(device)
             }
             
             if device.streamingEnabled && device.notificationsEnabled {
@@ -45,7 +54,7 @@ struct DeviceUploadView: View {
                     .centerTextInsideForm()
                 } else {
                     ForEach(device.chunks) { chunk in
-                        ChunkView(chunk)
+                        ChunkView(device: device, chunk: chunk)
                     }
                 }
             }
@@ -59,8 +68,7 @@ struct DeviceUploadView_Previews: PreviewProvider {
     
     static var previews: some View {
         NavigationView {
-            DeviceUploadView()
-                .environmentObject(Device.sample(for: .connected))
+            DeviceUploadView(Device.sample(for: .connected))
         }
     }
 }

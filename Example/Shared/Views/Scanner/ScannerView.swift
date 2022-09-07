@@ -39,8 +39,7 @@ struct ScannerView: View {
                 } else {
                     ForEach(appData.scannedDevices) { scannedDevice in
                         NavigationLink(destination: {
-                            DeviceUploadView()
-                                .environmentObject(scannedDevice)
+                            DeviceUploadView(scannedDevice)
                         }, label: {
                             DeviceView(scannedDevice)
                         })

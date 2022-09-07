@@ -12,7 +12,7 @@ import iOS_nRF_Memfault_Library
 
 // MARK: - Device
 
-final class Device: Identifiable, BluetoothDevice, ObservableObject {
+struct Device: Identifiable, BluetoothDevice {
     
     // MARK: Properties
     
@@ -31,12 +31,12 @@ final class Device: Identifiable, BluetoothDevice, ObservableObject {
     var auth: MemfaultDeviceAuth?
     var uptimeStartTimestamp: Date?
     
-    @Published private(set) var name: String
-    @Published var state: ConnectedState
-    @Published var services: [CBService]
-    @Published var chunks: [MemfaultChunk]
-    @Published var notificationsEnabled: Bool
-    @Published var streamingEnabled: Bool
+    private(set) var name: String
+    var state: ConnectedState
+    var services: [CBService]
+    var chunks: [MemfaultChunk]
+    var notificationsEnabled: Bool
+    var streamingEnabled: Bool
     
     // MARK: Init
     
@@ -68,8 +68,24 @@ final class Device: Identifiable, BluetoothDevice, ObservableObject {
     
     // MARK: API
     
-    func update(from advertisingData: [String: Any]) {
+    mutating func update(from advertisingData: [String: Any]) {
         self.name = advertisementData.localName ?? name
+    }
+    
+    mutating func connectionStateChanged(to newState: ConnectedState) {
+        state = newState
+        guard newState == .connected else { return }
+        uptimeStartTimestamp = Date()
+    }
+    
+    mutating func update(_ chunk: MemfaultChunk, to status: MemfaultChunk.Status) {
+        guard let i = chunks.firstIndex(where: {
+            $0.sequenceNumber == chunk.sequenceNumber && $0.data == chunk.data
+        }) else {
+            chunks.insert(chunk, at: 0)
+            return
+        }
+        chunks[i].status = status
     }
 }
 
@@ -84,6 +100,7 @@ extension Device: Equatable {
     public static func == (lhs: Device, rhs: Device) -> Bool {
         return lhs.uuidString == rhs.uuidString
             && lhs.state == rhs.state
+            && lhs.chunks == rhs.chunks
             && lhs.notificationsEnabled == rhs.notificationsEnabled
             && lhs.streamingEnabled == rhs.streamingEnabled
     }
@@ -96,6 +113,7 @@ extension Device: Hashable {
     public func hash(into hasher: inout Hasher) {
         hasher.combine(uuidString)
         hasher.combine(state)
+        hasher.combine(chunks)
         hasher.combine(notificationsEnabled)
         hasher.combine(streamingEnabled)
     }
@@ -103,7 +121,7 @@ extension Device: Hashable {
 
 // MARK: ConnectedState
 
-public enum ConnectedState: Int, CaseIterable, CustomStringConvertible {
+public enum ConnectedState: Int, RawRepresentable, Hashable, CustomStringConvertible, CaseIterable {
     
     case notConnectable
     case connecting, connected, disconnecting, disconnected

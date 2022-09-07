@@ -11,11 +11,15 @@ import SwiftUI
 
 struct DeviceStatsView: View {
     
-    // MARK: Environment Variables
-    
-    @EnvironmentObject var device: Device
-    
     // MARK: Private
+    
+    private let device: Device
+    
+    // MARK: Init
+    
+    init(_ device: Device) {
+        self.device = device
+    }
     
     static let elapsedTimeFormatter: RelativeDateTimeFormatter = {
         let relativeFormatter = RelativeDateTimeFormatter()
@@ -93,16 +97,6 @@ struct DeviceStatsView: View {
                 Spacer()
             }
         }
-        .onReceive(device.$state, perform: { connectionState in
-            switch connectionState {
-            case .connected:
-                device.uptimeStartTimestamp = Date()
-            case .disconnected:
-                print("Disc")
-            case .notConnectable, .connecting, .disconnecting:
-                break
-            }
-        })
     }
 }
 
@@ -113,8 +107,7 @@ struct DeviceStatsView_Previews: PreviewProvider {
     
     static var previews: some View {
         NavigationView {
-            DeviceStatsView()
-                .environmentObject(Device.sample(for: .connected))
+            DeviceStatsView(Device.sample(for: .connected))
         }
     }
 }
