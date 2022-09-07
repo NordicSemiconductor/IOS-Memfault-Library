@@ -123,7 +123,9 @@ extension AppData {
             await updateDeviceConnectionState(of: device, to: .connecting)
             let connectionStream = await memfault.connect(to: device)
             do {
+                logger.debug("STARTED Listening to \(device.name) Connection Events.")
                 for try await newEvent in connectionStream {
+                    logger.debug("RECEIVED \(device.name) \(String(describing: newEvent)).")
                     switch newEvent.event {
                     case .connected:
                         await updateDeviceConnectionState(of: device, to: .connected)
@@ -139,7 +141,9 @@ extension AppData {
                         received(chunk, from: device, with: status)
                     }
                 }
+                logger.debug("STOPPED Listening to \(device.name) Connection Events.")
             } catch {
+                logger.debug("CAUGHT Error Listening to \(device.name) Connection Events.")
                 if let bluetoothError = error as? BluetoothError, bluetoothError == .pairingRequired {
                     encounteredError(bluetoothError)
                     return
