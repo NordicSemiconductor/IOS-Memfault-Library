@@ -32,7 +32,7 @@ struct AboutView: View {
             
             Text("An Internet connection is required to upload Data back to the [Memfault Console](https://docs.memfault.com/docs/android/introduction). **If uploading a Chunk fails, the BLE connection with the device will be dropped** to minimise data loss.")
             
-            Label("[Full Source Code (GitHub)](https://github.com/NordicPlayground/IOS-Memfault-Library)", systemImage: "square.and.arrow.up")
+            Label("[Full Source Code (GitHub)](https://github.com/NordicSemiconductor/IOS-Memfault-Library)", systemImage: "square.and.arrow.up")
                 .foregroundColor(.nordicBlue)
             
             Button("Start", action: {
