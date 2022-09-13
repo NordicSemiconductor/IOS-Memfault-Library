@@ -1,4 +1,4 @@
-# iOS-nRF-Memfault-Library + Example App
+# iOS nRF Memfault Library + Example App
 
 A Swift-based library for iOS/iPadOS/macOS can connects to a Bluetooth LE device supporting the Memfault Diagnostic Service, downloads data Chunks and uploads them to [the Memfault Console](https://docs.memfault.com).
 
