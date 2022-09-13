@@ -17,12 +17,12 @@ In all cases, **the Library requires an active Internet connection**. If an Erro
 
 ```swift
 
-let memfault = Memfault()
+let memfaultManager = MemfaultManager()
 // Connects to the Device and begins automagically streaming / uploading data.
-await memfault.connect(to: device)
+await memfaultManager.connect(to: device)
 
 // To stop / disconnect.
-await memfault.disconnect(from: device)
+await memfaultManager.disconnect(from: device)
 ```
 
 Memfault's APIs take a `BluetoothDevice`, which is a very simple protocol requiring only the UUID String of a Device. A `CBPeripheral` extension is provided as part of the library, so you're free to pass-in your scanned `CBPeripheral` with no issues. 
@@ -33,9 +33,9 @@ It is possible to listen to all state changes & errors as they occur from the Me
 
 ```swift
 
-let memfault = Memfault()
+let memfaultManager = MemfaultManager()
 
-let connectionStream = await memfault.connect(to: device)
+let connectionStream = await memfaultManager.connect(to: device)
 do {
     for try await newEvent in connectionStream {
         switch newEvent.event {
@@ -47,13 +47,13 @@ do {
 }
 
 // Disconnect when needed.
-await memfault.disconnect(from: device)
+await memfaultManager.disconnect(from: device)
 ```
 
 Furthermore, it's also possible to manually ask the framework to upload a specific Chunk if an error were to happen:
 
 ```swift
-try await memfault.upload(chunk, with: chunkAuth)
+try await memfaultManager.upload(chunk, with: chunkAuth)
 ```
 
 This requires passing-in the `MemfaultChunkAuth` struct, which is received through an autentication event from the connection stream (`AsyncSequence`).

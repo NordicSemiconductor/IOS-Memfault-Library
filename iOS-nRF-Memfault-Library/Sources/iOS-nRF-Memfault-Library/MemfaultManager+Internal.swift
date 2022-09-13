@@ -1,5 +1,5 @@
 //
-//  Memfault+Internal.swift
+//  MemfaultManager+Internal.swift
 //  iOS-nRF-Memfault-Library
 //
 //  Created by Dinesh Harjani on 30/8/22.
@@ -10,7 +10,7 @@ import iOS_BLE_Library
 
 // MARK: - Internal
 
-extension Memfault {
+extension MemfaultManager {
     
     // MARK: Connection
     

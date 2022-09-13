@@ -1,5 +1,5 @@
 //
-//  Memfault.swift
+//  MemfaultManager.swift
 //  iOS-nRF-Memfault-Library
 //
 //  Created by Dinesh Harjani on 25/8/22.
@@ -13,7 +13,7 @@ import Combine
 
 // MARK: - Memfault
 
-public final actor Memfault {
+public final actor MemfaultManager {
     
     // MARK: Public
     

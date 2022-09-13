@@ -36,14 +36,14 @@ final class AppData: ObservableObject {
     // MARK: Private
     
     private let bluetooth: Bluetooth
-    private let memfault: Memfault
+    private let manager: MemfaultManager
     private let logger: Logger
     
     // MARK: Init
     
     init() {
         self.bluetooth = Bluetooth()
-        self.memfault = Memfault()
+        self.manager = MemfaultManager()
         self.isScanning = bluetooth.isScanning
         self.showOnlyMDSDevices = true
         self.showOnlyConnectableDevices = true
@@ -123,7 +123,7 @@ extension AppData {
             }
             
             await updateDeviceConnectionState(of: device, to: .connecting)
-            let connectionStream = await memfault.connect(to: device)
+            let connectionStream = await manager.connect(to: device)
             do {
                 logger.debug("STARTED Listening to \(device.name) Connection Events.")
                 for try await newEvent in connectionStream {
@@ -168,7 +168,7 @@ extension AppData {
         
         scannedDevices[i].chunks[j].status = .uploading
         do {
-            try await memfault.upload(chunk, with: chunkAuth)
+            try await manager.upload(chunk, with: chunkAuth)
             scannedDevices[i].chunks[j].status = .success
             logger.debug("Successfully Sent Chunk \(chunk.sequenceNumber).")
         } catch {
@@ -185,7 +185,7 @@ extension AppData {
             logger.info("Disconnecting from \(device.name)")
             await updateDeviceConnectionState(of: device, to: .disconnecting)
             
-            await memfault.disconnect(from: device)
+            await manager.disconnect(from: device)
             
             logger.info("Disconnected from \(device.name)")
             await updateDeviceConnectionState(of: device, to: .disconnected)
