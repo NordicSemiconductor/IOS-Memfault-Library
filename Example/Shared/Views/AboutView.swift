@@ -27,10 +27,12 @@ struct AboutView: View {
             AppIconView()
 
             Text("An iOS Example App + Library that can connect to a Bluetooth LE device with the Memfault Diagnostic Service, receive Chunks of Data, and upload them to [Memfault](https://memfault.com/).")
+                .tint(.nordicBlue)
             
             Text("As noted above, this Example App / Library requires that the connected Device implement the Memfault Diagnostic Service.")
             
             Text("An Internet connection is required to upload Data back to the [Memfault Console](https://docs.memfault.com/docs/android/introduction). **If uploading a Chunk fails, the BLE connection with the device will be dropped** to minimise data loss.")
+                .tint(.nordicBlue)
             
             if let link = URL(string: "https://github.com/NordicSemiconductor/IOS-Memfault-Library") {
                 Link(destination: link, label: {
