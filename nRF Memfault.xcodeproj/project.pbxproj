@@ -488,8 +488,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/NordicPlayground/IOS-BLE-Library";
 			requirement = {
-				branch = main;
-				kind = branch;
+				kind = revision;
+				revision = 2778b4400e079d2472306bd3d3ac5460e7277272;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

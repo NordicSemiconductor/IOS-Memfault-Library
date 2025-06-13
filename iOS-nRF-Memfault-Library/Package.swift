@@ -15,7 +15,7 @@ let package = Package(
             targets: ["iOS-nRF-Memfault-Library"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/NordicPlayground/IOS-BLE-Library", branch: "main"),
+        .package(url: "https://github.com/NordicPlayground/IOS-BLE-Library", revision: "2778b4400e079d2472306bd3d3ac5460e7277272"),
     ],
     targets: [
         .target(
