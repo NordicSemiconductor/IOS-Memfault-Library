@@ -7,11 +7,13 @@
 //
 
 import Foundation
-import os
+import iOS_Common_Libraries
 
-extension Logger {
+// MARK: - NordicLog
+
+extension NordicLog {
    
-    static let nRFCommonLibrariesSubsystem = "com.nordicsemi.nRF-Common-Libraries"
+    private static let nRFMemfaultSubsystem = "com.nordicsemi.nRF-Memfault"
     
     // MARK: - Init
     
@@ -20,6 +22,6 @@ extension Logger {
     }
     
     init(category: String) {
-        self.init(subsystem: Self.nRFCommonLibrariesSubsystem, category: category)
+        self.init(category: category, subsystem: Self.nRFMemfaultSubsystem)
     }
 }

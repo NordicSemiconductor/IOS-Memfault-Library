@@ -37,7 +37,7 @@ final class AppData: ObservableObject {
     
     private let bluetooth: Bluetooth
     private let manager: MemfaultManager
-    private let logger: Logger
+    private let logger: NordicLog
     
     // MARK: Init
     
@@ -48,7 +48,7 @@ final class AppData: ObservableObject {
         self.showOnlyMDSDevices = true
         self.showOnlyConnectableDevices = true
         self.scannedDevices = []
-        self.logger = Logger(Self.self)
+        self.logger = NordicLog(Self.self)
         
         _ = bluetooth.turnOnBluetoothRadio()
         Task { @MainActor in
