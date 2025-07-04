@@ -16,11 +16,15 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/NordicPlayground/IOS-BLE-Library", revision: "2778b4400e079d2472306bd3d3ac5460e7277272"),
+        .package(url: "https://github.com/NordicPlayground/IOS-Common-Libraries", branch: "main"),
     ],
     targets: [
         .target(
             name: "iOS-nRF-Memfault-Library",
-            dependencies: [.product(name: "iOS-BLE-Library", package: "iOS-BLE-Library")]),
+            dependencies: [
+                .product(name: "iOS-BLE-Library", package: "iOS-BLE-Library"),
+                .product(name: "iOSCommonLibraries", package: "ios-common-libraries")
+            ]),
         .testTarget(
             name: "iOS-nRF-Memfault-LibraryTests",
             dependencies: ["iOS-nRF-Memfault-Library"]),
