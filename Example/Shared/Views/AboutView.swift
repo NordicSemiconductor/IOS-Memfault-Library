@@ -16,6 +16,10 @@ struct AboutView: View {
     
     @Environment(\.dismiss) var dismiss
     
+    // MARK: Properties
+    
+    private static let sourceCodeURL: URL! = URL(string: "https://github.com/NordicSemiconductor/IOS-Memfault-Library")
+    
     // MARK: view
     
     var body: some View {
@@ -50,7 +54,7 @@ struct AboutView: View {
                 Text("An iOS Example App + Library that can connect to a Bluetooth LE device with the Memfault Diagnostic Service, receive Chunks of Data, and upload them to [Memfault](https://memfault.com/).")
                     .tint(.nordicBlue)
                 
-                if let link = URL(string: "https://github.com/NordicSemiconductor/IOS-Memfault-Library") {
+                if let link = Self.sourceCodeURL {
                     Link(destination: link, label: {
                         Label("Full Source Code (GitHub)", systemImage: "square.and.arrow.up")
                             .foregroundColor(.nordicBlue)
@@ -66,6 +70,7 @@ struct AboutView: View {
                 Text("An Internet connection is required to upload Data back to the [Memfault Console](https://docs.memfault.com/docs/android/introduction). **If uploading a Chunk fails, the BLE connection with the device will be dropped** to minimise data loss.")
                     .tint(.nordicBlue)
             }
+            .listRowSeparator(.hidden)
         }
         .listStyle(.insetGrouped)
         .navigationTitle("About App")
