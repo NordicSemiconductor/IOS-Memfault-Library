@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import iOS_Common_Libraries
 
 // MARK: - ScannerView
 
@@ -33,17 +34,22 @@ struct ScannerView: View {
                 }
                 
                 if appData.scannedDevices.isEmpty {
-                    VStack(alignment: .center) {
-                        Image(systemName: "tray.fill")
-                            .resizable()
-                            .frame(width: 20, height: 20)
-                            .foregroundColor(.nordicMiddleGrey)
-                        
-                        Text("No Devices with current Filter Settings found.")
-                            .font(.subheadline)
-                            .foregroundColor(.nordicMiddleGrey)
+                    if #available(iOS 17.0, *) {
+                        NoContentView(title: "Empty Scanner", systemImage: "tray.fill",
+                                      description: "No Devices with current Filter Settings found.")
+                    } else {
+                        VStack(alignment: .center) {
+                            Image(systemName: "tray.fill")
+                                .resizable()
+                                .frame(width: 20, height: 20)
+                                .foregroundColor(.nordicMiddleGrey)
+                            
+                            Text("No Devices with current Filter Settings found.")
+                                .font(.subheadline)
+                                .foregroundColor(.nordicMiddleGrey)
+                        }
+                        .centerTextInsideForm()
                     }
-                    .centerTextInsideForm()
                 }
             }
             
