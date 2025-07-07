@@ -12,11 +12,11 @@ import iOS_Common_Libraries
 
 struct AboutView: View {
     
-    // MARK: Environment Values
+    // MARK: Environment
     
     @Environment(\.dismiss) var dismiss
     
-    // MARK: View
+    // MARK: view
     
     var body: some View {
         VStack(spacing: 16) {
@@ -58,14 +58,3 @@ struct AboutView: View {
         .padding(.horizontal, 16)
     }
 }
-
-// MARK: - Preview
-
-#if DEBUG
-struct AboutView_Previews: PreviewProvider {
-    
-    static var previews: some View {
-        AboutView()
-    }
-}
-#endif
