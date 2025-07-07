@@ -40,10 +40,13 @@ struct ScannerView: View {
             }
             
             Section("About") {
-                Button("Show About Screen", action: {
+                Button {
                     showAboutScreen = true
-                })
-                .foregroundColor(.primary)
+                } label: {
+                    Label("About nRF Memfault", systemImage: "app.gift")
+                }
+                .setAccent(.universalAccentColor)
+                .tint(.primarylabel)
             }
         }
         .toolbar {
