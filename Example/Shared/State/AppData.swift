@@ -114,9 +114,9 @@ extension AppData {
                     case .disconnected:
                         await updateDeviceConnectionState(of: device, to: .disconnected)
                     case .notifications(let enabled):
-                        await updateNotifyingStatus(of: device, to: enabled)
+                        updateNotifyingStatus(of: device, to: enabled)
                     case .streaming(let enabled):
-                        await updateStreamingStatus(of: device, to: enabled)
+                        updateStreamingStatus(of: device, to: enabled)
                     case .authenticated(let deviceAuth):
                         update(authData: deviceAuth, of: device)
                     case .updatedChunk(let chunk, status: let status):
@@ -184,24 +184,26 @@ private extension AppData {
     
     @MainActor
     func received(_ chunk: MemfaultChunk, from device: Device, with status: MemfaultChunk.Status) {
-        guard let i = scannedDevices.firstIndex(where: { $0.uuidString == device.uuidString }) else {
+        guard let i = scannedDevices.firstIndex(where: \.uuidString, equals: device.uuidString) else {
             return
         }
         scannedDevices[i].update(chunk, to: status)
     }
     
-    func updateNotifyingStatus(of device: Device, to isNotifying: Bool) async {
-        Task { @MainActor in
-            guard let i = scannedDevices.firstIndex(where: { $0.uuidString == device.uuidString }) else { return }
-            scannedDevices[i].notificationsEnabled = isNotifying
+    @MainActor
+    func updateNotifyingStatus(of device: Device, to isNotifying: Bool) {
+        guard let i = scannedDevices.firstIndex(where: \.uuidString, equals: device.uuidString) else {
+            return
         }
+        scannedDevices[i].notificationsEnabled = isNotifying
     }
     
-    func updateStreamingStatus(of device: Device, to isStreaming: Bool) async {
-        Task { @MainActor in
-            guard let i = scannedDevices.firstIndex(where: { $0.uuidString == device.uuidString }) else { return }
-            scannedDevices[i].streamingEnabled = isStreaming
+    @MainActor
+    func updateStreamingStatus(of device: Device, to isStreaming: Bool) {
+        guard let i = scannedDevices.firstIndex(where: \.uuidString, equals: device.uuidString) else {
+            return
         }
+        scannedDevices[i].streamingEnabled = isStreaming
     }
     
     @MainActor
