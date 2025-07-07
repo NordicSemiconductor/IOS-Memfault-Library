@@ -23,7 +23,7 @@ struct ContentView: View {
     // MARK: View
     
     var body: some View {
-        ScannerView()
+        SidebarView()
             .setTitle("nRF Memfault")
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -37,10 +37,6 @@ struct ContentView: View {
             .wrapInNavigationViewForiOS(with: .navigationBarBackground)
             .alert(item: $appData.error) { error in
                 Alert(errorEvent: error)
-            }
-            .onAppear() {
-                guard !appData.isScanning else { return }
-                appData.toggleScanner()
             }
             .sheet(isPresented: $showAboutScreen) {
                 AboutView()
