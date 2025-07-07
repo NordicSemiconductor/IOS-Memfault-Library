@@ -69,14 +69,3 @@ struct ScannerView: View {
         }
     }
 }
-
-// MARK: - Preview
-
-#if DEBUG
-struct ScannerView_Previews: PreviewProvider {
-    
-    static var previews: some View {
-        ScannerView()
-    }
-}
-#endif
