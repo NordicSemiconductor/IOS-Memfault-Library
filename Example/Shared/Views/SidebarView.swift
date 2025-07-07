@@ -31,6 +31,7 @@ struct SidebarView: View {
             Section("Scanner") {
                 ScannerView()
             }
+            .listRowSeparator(.hidden)
             
             Section {
                 Button {
@@ -55,16 +56,6 @@ struct SidebarView: View {
             }
             .setAccent(.universalAccentColor)
             .tint(.primarylabel)
-        }
-        .toolbar {
-            ToolbarItem(placement: .navigation) {
-                Menu(content: {
-                    Toggle("Show Only Memfault Devices", isOn: $appData.showOnlyMDSDevices)
-                    Toggle("Show Only Connectable Devices", isOn: $appData.showOnlyConnectableDevices)
-                }, label: {
-                    Image(systemName: "slider.horizontal.3")
-                })
-              }
         }
         .refreshable {
             appData.refresh()

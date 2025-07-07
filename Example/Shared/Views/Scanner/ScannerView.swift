@@ -49,7 +49,7 @@ struct ScannerView: View {
             .centered()
         }
         
-        Button(appData.isScanning ? "Stop Scanner" : "Start Scanner",
+        Button(appData.isScanning ? "Stop Scanning" : "Start Scanning",
                systemImage: appData.isScanning ? "stop.fill" : "play.fill") {
             appData.toggleScanner()
         }
