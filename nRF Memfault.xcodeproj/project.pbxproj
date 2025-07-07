@@ -11,7 +11,6 @@
 		AA16171A28B8C8F600581766 /* iOS-nRF-Memfault-Library in Frameworks */ = {isa = PBXBuildFile; productRef = AA16171928B8C8F600581766 /* iOS-nRF-Memfault-Library */; };
 		AA22791428BF638D0009319A /* DeviceStatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA22791328BF638D0009319A /* DeviceStatsView.swift */; };
 		AA22DDCA289B4162003366FA /* DeviceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA22DDC9289B4162003366FA /* DeviceView.swift */; };
-		AA281D0928A506B100D49C9C /* iOSCommonLibraries in Frameworks */ = {isa = PBXBuildFile; productRef = AA281D0828A506B100D49C9C /* iOSCommonLibraries */; };
 		AA2ADBA228ABE32B00BF03D3 /* DeviceUploadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2ADBA128ABE32B00BF03D3 /* DeviceUploadView.swift */; };
 		AA38E93828B631C200CB082D /* DeviceConnectionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA38E93728B631C200CB082D /* DeviceConnectionButton.swift */; };
 		AA38E93C28B643D600CB082D /* ReceivingNewChunksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA38E93B28B643D600CB082D /* ReceivingNewChunksView.swift */; };
@@ -56,7 +55,6 @@
 			files = (
 				AAEB284528B4DC38005BCA2E /* iOS-BLE-Library in Frameworks */,
 				AA16171A28B8C8F600581766 /* iOS-nRF-Memfault-Library in Frameworks */,
-				AA281D0928A506B100D49C9C /* iOSCommonLibraries in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -178,7 +176,6 @@
 			);
 			name = "nRF Memfault (iOS)";
 			packageProductDependencies = (
-				AA281D0828A506B100D49C9C /* iOSCommonLibraries */,
 				AAEB284428B4DC38005BCA2E /* iOS-BLE-Library */,
 				AA16171928B8C8F600581766 /* iOS-nRF-Memfault-Library */,
 			);
@@ -211,7 +208,6 @@
 			);
 			mainGroup = AAFBF81B2899482900A6655C;
 			packageReferences = (
-				AA281D0728A506B100D49C9C /* XCRemoteSwiftPackageReference "IOS-Common-Libraries" */,
 				AAEB284328B4DC38005BCA2E /* XCRemoteSwiftPackageReference "IOS-BLE-Library" */,
 			);
 			productRefGroup = AAFBF8292899482B00A6655C /* Products */;
@@ -476,14 +472,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		AA281D0728A506B100D49C9C /* XCRemoteSwiftPackageReference "IOS-Common-Libraries" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/NordicPlayground/IOS-Common-Libraries";
-			requirement = {
-				branch = main;
-				kind = branch;
-			};
-		};
 		AAEB284328B4DC38005BCA2E /* XCRemoteSwiftPackageReference "IOS-BLE-Library" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/NordicPlayground/IOS-BLE-Library";
@@ -498,11 +486,6 @@
 		AA16171928B8C8F600581766 /* iOS-nRF-Memfault-Library */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = "iOS-nRF-Memfault-Library";
-		};
-		AA281D0828A506B100D49C9C /* iOSCommonLibraries */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = AA281D0728A506B100D49C9C /* XCRemoteSwiftPackageReference "IOS-Common-Libraries" */;
-			productName = iOSCommonLibraries;
 		};
 		AAEB284428B4DC38005BCA2E /* iOS-BLE-Library */ = {
 			isa = XCSwiftPackageProductDependency;
