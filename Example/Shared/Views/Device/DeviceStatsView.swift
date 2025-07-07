@@ -97,18 +97,6 @@ struct DeviceStatsView: View {
                 Spacer()
             }
         }
+        .monospacedDigit()
     }
 }
-
-// MARK: - Preview
-
-#if DEBUG
-struct DeviceStatsView_Previews: PreviewProvider {
-    
-    static var previews: some View {
-        NavigationView {
-            DeviceStatsView(Device.sample(for: .connected))
-        }
-    }
-}
-#endif
