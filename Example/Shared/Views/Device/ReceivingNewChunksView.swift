@@ -27,16 +27,3 @@ struct ReceivingNewChunksView: View {
         .font(.caption)
     }
 }
-
-// MARK: - Debug
-
-#if DEBUG
-struct ReceivingNewChunksView_Previews: PreviewProvider {
-    static var previews: some View {
-        Group {
-            ReceivingNewChunksView()
-        }
-        .previewLayout(.sizeThatFits)
-    }
-}
-#endif
