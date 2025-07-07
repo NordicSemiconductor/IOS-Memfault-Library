@@ -26,26 +26,7 @@ struct DeviceView: View {
     // MARK: View
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text(device.name)
-        }
-        .padding(4)
+        Label(device.name, systemImage: "cpu")
+            .setAccent(.universalAccentColor)
     }
 }
-
-// MARK: - Preview
-
-#if DEBUG
-
-struct DeviceView_Previews: PreviewProvider {
-    
-    static var previews: some View {
-        Group {
-            ForEach(ConnectedState.allCases, id: \.self) { connState in
-                DeviceView(.sample(for: connState))
-            }
-        }
-        .previewLayout(.sizeThatFits)
-    }
-}
-#endif
