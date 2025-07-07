@@ -14,15 +14,13 @@ import iOS_nRF_Memfault_Library
 
 struct Device: Identifiable, BluetoothDevice {
     
+    // MARK: Computed Properties
+    
+    var id: String { uuidString }
+    
+    var isConnectable: Bool { state != .notConnectable }
+    
     // MARK: Properties
-    
-    var id: String {
-        return uuidString
-    }
-    
-    var isConnectable: Bool {
-        return state != .notConnectable
-    }
     
     let uuidString: String
     let rssi: RSSI
@@ -38,7 +36,7 @@ struct Device: Identifiable, BluetoothDevice {
     var notificationsEnabled: Bool
     var streamingEnabled: Bool
     
-    // MARK: Init
+    // MARK: init
     
     init(name: String, uuid: UUID, rssi: RSSI, advertisementData: AdvertisementData,
          state: ConnectedState? = nil) {
