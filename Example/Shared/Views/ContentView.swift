@@ -25,15 +25,6 @@ struct ContentView: View {
     var body: some View {
         SidebarView()
             .setTitle("nRF Memfault")
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: {
-                        appData.toggleScanner()
-                    }, label: {
-                        Image(systemName: appData.isScanning ? "stop.fill" : "play.fill")
-                    })
-                }
-            }
             .wrapInNavigationViewForiOS(with: .navigationBarBackground)
             .alert(item: $appData.error) { error in
                 Alert(errorEvent: error)
