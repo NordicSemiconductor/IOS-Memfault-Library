@@ -24,6 +24,14 @@ struct ScannerView: View {
     var body: some View {
         List {
             Section("Devices") {
+                ForEach(appData.scannedDevices) { scannedDevice in
+                    NavigationLink(destination: {
+                        DeviceUploadView(scannedDevice)
+                    }, label: {
+                        DeviceView(scannedDevice)
+                    })
+                }
+                
                 if appData.scannedDevices.isEmpty {
                     VStack(alignment: .center) {
                         Image(systemName: "tray.fill")
@@ -36,14 +44,6 @@ struct ScannerView: View {
                             .foregroundColor(.nordicMiddleGrey)
                     }
                     .centerTextInsideForm()
-                } else {
-                    ForEach(appData.scannedDevices) { scannedDevice in
-                        NavigationLink(destination: {
-                            DeviceUploadView(scannedDevice)
-                        }, label: {
-                            DeviceView(scannedDevice)
-                        })
-                    }
                 }
             }
             
