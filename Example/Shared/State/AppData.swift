@@ -12,6 +12,8 @@ import iOS_BLE_Library
 import iOS_Common_Libraries
 import iOS_nRF_Memfault_Library
 
+// MARK: - AppData
+
 final class AppData: ObservableObject {
     
     // MARK: Public
@@ -26,7 +28,7 @@ final class AppData: ObservableObject {
     private let manager: MemfaultManager
     private let logger: NordicLog
     
-    // MARK: Init
+    // MARK: init
     
     init() {
         self.bluetooth = Bluetooth()
@@ -102,7 +104,7 @@ extension AppData {
                 bluetooth.toggleScanner()
             }
             
-            await updateDeviceConnectionState(of: device, to: .connecting)
+            updateDeviceConnectionState(of: device, to: .connecting)
             let connectionStream = await manager.connect(to: device)
             do {
                 logger.debug("STARTED Listening to \(device.name) Connection Events.")
@@ -110,9 +112,9 @@ extension AppData {
                     logger.debug("RECEIVED \(device.name) \(String(describing: newEvent)).")
                     switch newEvent.event {
                     case .connected:
-                        await updateDeviceConnectionState(of: device, to: .connected)
+                        updateDeviceConnectionState(of: device, to: .connected)
                     case .disconnected:
-                        await updateDeviceConnectionState(of: device, to: .disconnected)
+                        updateDeviceConnectionState(of: device, to: .disconnected)
                     case .notifications(let enabled):
                         updateNotifyingStatus(of: device, to: enabled)
                     case .streaming(let enabled):
@@ -163,26 +165,25 @@ extension AppData {
     func disconnect(from device: Device) {
         Task { @MainActor in
             logger.info("Disconnecting from \(device.name)")
-            await updateDeviceConnectionState(of: device, to: .disconnecting)
+            updateDeviceConnectionState(of: device, to: .disconnecting)
             
             await manager.disconnect(from: device)
             
             logger.info("Disconnected from \(device.name)")
-            await updateDeviceConnectionState(of: device, to: .disconnected)
+            updateDeviceConnectionState(of: device, to: .disconnected)
         }
     }
 }
 
+@MainActor
 private extension AppData {
     
-    func updateDeviceConnectionState(of device: Device, to newState: ConnectedState) async {
-        Task { @MainActor in
-            guard let i = scannedDevices.firstIndex(where: { $0.uuidString == device.uuidString }) else { return }
-            scannedDevices[i].connectionStateChanged(to: newState)
+    func updateDeviceConnectionState(of device: Device, to newState: ConnectedState) {
+        guard let i = scannedDevices.firstIndex(where: \.uuidString, equals: device.uuidString) else { return
         }
+        scannedDevices[i].connectionStateChanged(to: newState)
     }
     
-    @MainActor
     func received(_ chunk: MemfaultChunk, from device: Device, with status: MemfaultChunk.Status) {
         guard let i = scannedDevices.firstIndex(where: \.uuidString, equals: device.uuidString) else {
             return
@@ -190,7 +191,6 @@ private extension AppData {
         scannedDevices[i].update(chunk, to: status)
     }
     
-    @MainActor
     func updateNotifyingStatus(of device: Device, to isNotifying: Bool) {
         guard let i = scannedDevices.firstIndex(where: \.uuidString, equals: device.uuidString) else {
             return
@@ -198,7 +198,6 @@ private extension AppData {
         scannedDevices[i].notificationsEnabled = isNotifying
     }
     
-    @MainActor
     func updateStreamingStatus(of device: Device, to isStreaming: Bool) {
         guard let i = scannedDevices.firstIndex(where: \.uuidString, equals: device.uuidString) else {
             return
@@ -206,7 +205,6 @@ private extension AppData {
         scannedDevices[i].streamingEnabled = isStreaming
     }
     
-    @MainActor
     func update(authData: MemfaultDeviceAuth, of device: Device) {
         guard let i = scannedDevices.firstIndex(where: \.uuidString, equals: device.uuidString) else {
             return
