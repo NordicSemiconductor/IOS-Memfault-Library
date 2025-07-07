@@ -18,7 +18,7 @@
 		AA38E93F28B6444900CB082D /* DeviceStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA38E93E28B6444900CB082D /* DeviceStatusView.swift */; };
 		AAEB284528B4DC38005BCA2E /* iOS-BLE-Library in Frameworks */ = {isa = PBXBuildFile; productRef = AAEB284428B4DC38005BCA2E /* iOS-BLE-Library */; };
 		AAFB2FE7289A8C48008207FE /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFB2FE6289A8C48008207FE /* Device.swift */; };
-		AAFB2FEA289A8C95008207FE /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFB2FE9289A8C95008207FE /* Logger.swift */; };
+		AAFB2FEA289A8C95008207FE /* NordicLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFB2FE9289A8C95008207FE /* NordicLog.swift */; };
 		AAFB2FF6289AB7EB008207FE /* ScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFB2FF5289AB7EB008207FE /* ScannerView.swift */; };
 		AAFBF8312899482B00A6655C /* nRF_MemfaultApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFBF8212899482900A6655C /* nRF_MemfaultApp.swift */; };
 		AAFBF8332899482B00A6655C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFBF8222899482900A6655C /* ContentView.swift */; };
@@ -39,7 +39,7 @@
 		AA38E93E28B6444900CB082D /* DeviceStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceStatusView.swift; sourceTree = "<group>"; };
 		AA3C2E9D28B3CB550075CB55 /* nRF-Memfault--iOS--Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "nRF-Memfault--iOS--Info.plist"; sourceTree = "<group>"; };
 		AAFB2FE6289A8C48008207FE /* Device.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
-		AAFB2FE9289A8C95008207FE /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
+		AAFB2FE9289A8C95008207FE /* NordicLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NordicLog.swift; sourceTree = "<group>"; };
 		AAFB2FF5289AB7EB008207FE /* ScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerView.swift; sourceTree = "<group>"; };
 		AAFBF8212899482900A6655C /* nRF_MemfaultApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = nRF_MemfaultApp.swift; sourceTree = "<group>"; };
 		AAFBF8222899482900A6655C /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -138,7 +138,7 @@
 		AAFBF84128994C3800A6655C /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
-				AAFB2FE9289A8C95008207FE /* Logger.swift */,
+				AAFB2FE9289A8C95008207FE /* NordicLog.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -266,7 +266,7 @@
 				AA10062628B795860020820D /* AboutView.swift in Sources */,
 				AAFB2FE7289A8C48008207FE /* Device.swift in Sources */,
 				AAFB2FF6289AB7EB008207FE /* ScannerView.swift in Sources */,
-				AAFB2FEA289A8C95008207FE /* Logger.swift in Sources */,
+				AAFB2FEA289A8C95008207FE /* NordicLog.swift in Sources */,
 				AA2ADBA228ABE32B00BF03D3 /* DeviceUploadView.swift in Sources */,
 				AA22791428BF638D0009319A /* DeviceStatsView.swift in Sources */,
 				AAFD761028AE6B8F0078F6F8 /* ChunkView.swift in Sources */,

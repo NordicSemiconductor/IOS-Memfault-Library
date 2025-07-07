@@ -1,5 +1,5 @@
 //
-//  Logger.swift
+//  NordicLog.swift
 //  nRF Memfault
 //
 //  Created by Nick Kibysh on 12/04/2021.
