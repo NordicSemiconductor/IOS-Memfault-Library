@@ -31,5 +31,29 @@ struct ScannerView: View {
             NoContentView(title: "Empty Scanner", systemImage: "tray.fill",
                           description: "No Devices with current Filter Settings found.")
         }
+        
+        if appData.isScanning {
+            VStack {
+                HStack {
+                    ProgressView()
+                        .fixedCircularProgressView()
+                    
+                    Text("Scanning...")
+                        .padding(.horizontal)
+                }
+                .padding(.top, 12)
+                
+                IndeterminateProgressView()
+                    .accentColor(.universalAccentColor)
+            }
+            .centered()
+        }
+        
+        Button(appData.isScanning ? "Stop Scanner" : "Start Scanner",
+               systemImage: appData.isScanning ? "stop.fill" : "play.fill") {
+            appData.toggleScanner()
+        }
+        .setAccent(.universalAccentColor)
+        .centered()
     }
 }
