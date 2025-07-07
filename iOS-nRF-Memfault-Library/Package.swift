@@ -6,8 +6,8 @@ import PackageDescription
 let package = Package(
     name: "iOS-nRF-Memfault-Library",
     platforms: [
-        .iOS(.v15),
-        .macOS(.v12)
+        .iOS("17.0"),
+        .macOS("14.0")
     ],
     products: [
         .library(
