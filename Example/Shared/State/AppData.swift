@@ -118,7 +118,7 @@ extension AppData {
                     case .streaming(let enabled):
                         await updateStreamingStatus(of: device, to: enabled)
                     case .authenticated(let deviceAuth):
-                        await update(authData: deviceAuth, of: device)
+                        update(authData: deviceAuth, of: device)
                     case .updatedChunk(let chunk, status: let status):
                         received(chunk, from: device, with: status)
                     }
@@ -204,10 +204,11 @@ private extension AppData {
         }
     }
     
-    func update(authData: MemfaultDeviceAuth, of device: Device) async {
-        Task { @MainActor in
-            guard let i = scannedDevices.firstIndex(where: { $0.uuidString == device.uuidString }) else { return }
-            scannedDevices[i].auth = authData
+    @MainActor
+    func update(authData: MemfaultDeviceAuth, of device: Device) {
+        guard let i = scannedDevices.firstIndex(where: \.uuidString, equals: device.uuidString) else {
+            return
         }
+        scannedDevices[i].auth = authData
     }
 }
