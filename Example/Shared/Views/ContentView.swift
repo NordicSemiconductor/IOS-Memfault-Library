@@ -44,6 +44,7 @@ struct ContentView: View {
             }
             .sheet(isPresented: $showAboutScreen) {
                 AboutView()
+                    .wrapInNavigationViewForiOS(with: .navigationBarBackground)
             }
     }
 }
