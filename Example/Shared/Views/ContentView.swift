@@ -8,6 +8,8 @@
 import SwiftUI
 import iOS_Common_Libraries
 
+// MARK: - ContentView
+
 struct ContentView: View {
     
     // MARK: Environment Variables
@@ -45,14 +47,3 @@ struct ContentView: View {
             }
     }
 }
-
-// MARK: - Preview
-
-#if DEBUG
-struct ContentView_Previews: PreviewProvider {
-    
-    static var previews: some View {
-        ContentView()
-    }
-}
-#endif
