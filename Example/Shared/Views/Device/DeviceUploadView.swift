@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+// MARK: - DeviceUploadView
+
 struct DeviceUploadView: View {
     
     // MARK: Environment Variables
@@ -17,7 +19,7 @@ struct DeviceUploadView: View {
     
     private let device: Device
     
-    // MARK: Init
+    // MARK: init
     
     init(_ device: Device) {
         self.device = device
@@ -62,14 +64,3 @@ struct DeviceUploadView: View {
         .navigationTitle(device.name)
     }
 }
-
-#if DEBUG
-struct DeviceUploadView_Previews: PreviewProvider {
-    
-    static var previews: some View {
-        NavigationView {
-            DeviceUploadView(Device.sample(for: .connected))
-        }
-    }
-}
-#endif
