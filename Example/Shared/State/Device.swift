@@ -66,6 +66,10 @@ struct Device: Identifiable, BluetoothDevice {
     
     // MARK: API
     
+    func advertisesMDS() -> Bool {
+        return advertisementData.serviceUUIDs?.contains(where: \.uuidString, isEqualsTo: CBUUID.MDS.uuidString) ?? false
+    }
+    
     mutating func update(from advertisingData: [String: Any]) {
         self.name = advertisementData.localName ?? name
     }

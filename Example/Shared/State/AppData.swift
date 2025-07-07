@@ -80,7 +80,6 @@ extension AppData {
 
         Task { @MainActor in
             var filters = [Bluetooth.ScannerFilter]()
-            filters.append(.matchingServiceUUID(.MDS))
             filters.append(.connectable)
             for await scanData in bluetooth.scan(with: filters).values {
                 let state = ConnectedState.from(scanData.peripheral.state)
