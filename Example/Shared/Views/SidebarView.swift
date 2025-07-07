@@ -28,7 +28,7 @@ struct SidebarView: View {
                 ScannerView()
             }
             
-            Section("About") {
+            Section {
                 Button {
                     showAboutScreen = true
                 } label: {
@@ -36,6 +36,10 @@ struct SidebarView: View {
                 }
                 .setAccent(.universalAccentColor)
                 .tint(.primarylabel)
+            } header: {
+                Text("About")
+            } footer: {
+                Text(Constant.copyright)
             }
         }
         .toolbar {
