@@ -53,14 +53,6 @@ struct AboutView: View {
             Section("Description") {
                 Text("An iOS Example App + Library that can connect to a Bluetooth LE device with the Memfault Diagnostic Service, receive Chunks of Data, and upload them to [Memfault](https://memfault.com/).")
                     .tint(.nordicBlue)
-                
-                if let link = Self.sourceCodeURL {
-                    Link(destination: link, label: {
-                        Label("Full Source Code (GitHub)", systemImage: "square.and.arrow.up")
-                            .foregroundColor(.nordicBlue)
-                            .centered()
-                    })
-                }
             }
             .listRowSeparator(.hidden)
             

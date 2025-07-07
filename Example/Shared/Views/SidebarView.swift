@@ -20,6 +20,10 @@ struct SidebarView: View {
     
     @EnvironmentObject var appData: AppData
     
+    // MARK: Properties
+    
+    private static let sourceCodeURL: URL! = URL(string: "https://github.com/NordicSemiconductor/IOS-Memfault-Library")
+    
     // MARK: view
     
     var body: some View {
@@ -34,13 +38,23 @@ struct SidebarView: View {
                 } label: {
                     Label("About nRF Memfault", systemImage: "app.gift")
                 }
-                .setAccent(.universalAccentColor)
-                .tint(.primarylabel)
+                
+                if let url = Self.sourceCodeURL {
+                    Link(destination: url) {
+                        Label("Source Code (GitHub)", systemImage: "keyboard")
+                    }
+                }
+                
+                Link(destination: URL(string: "https://devzone.nordicsemi.com/")!) {
+                    Label("Help (Nordic DevZone)", systemImage: "lifepreserver")
+                }
             } header: {
                 Text("About")
             } footer: {
                 Text(Constant.copyright)
             }
+            .setAccent(.universalAccentColor)
+            .tint(.primarylabel)
         }
         .toolbar {
             ToolbarItem(placement: .navigation) {
