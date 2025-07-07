@@ -34,24 +34,24 @@ struct DeviceConnectionButton: View {
                 .font(.caption)
                 .foregroundColor(.nordicMiddleGrey)
         case .disconnected:
-            Button("Connect", action: {
+            Button("Connect", systemImage: "cable.connector") {
                 appData.connect(to: device)
-            })
+            }
             .font(.callout)
             .foregroundColor(.nordicBlue)
         case .connected:
-            Button("Disconnect", action: {
+            Button("Disconnect", systemImage: "cable.connector.slash") {
                 appData.disconnect(from: device)
-            })
+            }
             .foregroundColor(.nordicRed)
         case .connecting:
             ProgressView()
                 .frame(width: 6, height: 6)
                 .padding(.trailing)
             
-            Button(device.state.description, action: {
+            Button(device.state.description) {
                 appData.disconnect(from: device)
-            })
+            }
             .font(.callout)
             .foregroundColor(.nordicBlue)
         case .disconnecting:
