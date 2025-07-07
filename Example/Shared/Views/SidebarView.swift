@@ -57,6 +57,13 @@ struct SidebarView: View {
             .setAccent(.universalAccentColor)
             .tint(.primarylabel)
         }
+        .toolbar {
+            ToolbarItem(placement: .automatic) {
+                Button("Refresh", systemImage: "arrow.counterclockwise") {
+                    appData.refresh()
+                }
+            }
+        }
         .refreshable {
             appData.refresh()
         }
