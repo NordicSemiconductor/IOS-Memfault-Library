@@ -64,12 +64,11 @@ extension AppData {
     
     // MARK: Error
     
+    @MainActor
     func encounteredError(_ error: Error) {
         let errorEvent = ErrorEvent(error)
         log.error("\(errorEvent.localizedDescription)")
-        Task { @MainActor in
-            self.error = errorEvent
-        }
+        self.error = errorEvent
     }
     
     // MARK: Scan
