@@ -26,7 +26,7 @@ final class AppData: ObservableObject {
     
     private let bluetooth: Bluetooth
     private lazy var manager = MemfaultManager()
-    private lazy var logger = NordicLog(Self.self)
+    private lazy var log = NordicLog(Self.self)
     
     // MARK: init
     
@@ -64,7 +64,7 @@ extension AppData {
     
     func encounteredError(_ error: Error) {
         let errorEvent = ErrorEvent(error)
-        logger.error("\(errorEvent.localizedDescription)")
+        log.error("\(errorEvent.localizedDescription)")
         Task { @MainActor in
             self.error = errorEvent
         }
@@ -105,9 +105,9 @@ extension AppData {
             updateDeviceConnectionState(of: device, to: .connecting)
             let connectionStream = await manager.connect(to: device)
             do {
-                logger.debug("STARTED Listening to \(device.name) Connection Events.")
+                log.debug("STARTED Listening to \(device.name) Connection Events.")
                 for try await newEvent in connectionStream {
-                    logger.debug("RECEIVED \(device.name) \(String(describing: newEvent)).")
+                    log.debug("RECEIVED \(device.name) \(String(describing: newEvent)).")
                     switch newEvent.event {
                     case .connected:
                         updateDeviceConnectionState(of: device, to: .connected)
@@ -123,9 +123,9 @@ extension AppData {
                         received(chunk, from: device, with: status)
                     }
                 }
-                logger.debug("STOPPED Listening to \(device.name) Connection Events.")
+                log.debug("STOPPED Listening to \(device.name) Connection Events.")
             } catch {
-                logger.debug("CAUGHT Error Listening to \(device.name) Connection Events.")
+                log.debug("CAUGHT Error Listening to \(device.name) Connection Events.")
                 if let bluetoothError = error as? BluetoothError, bluetoothError == .pairingRequired {
                     encounteredError(bluetoothError)
                     return
@@ -150,10 +150,10 @@ extension AppData {
         do {
             try await manager.upload(chunk, with: chunkAuth)
             scannedDevices[i].chunks[j].status = .success
-            logger.debug("Successfully Sent Chunk \(chunk.sequenceNumber).")
+            log.debug("Successfully Sent Chunk \(chunk.sequenceNumber).")
         } catch {
             scannedDevices[i].chunks[j].status = .errorUploading
-            logger.error("Error Uploading Chunk \(chunk.sequenceNumber).")
+            log.error("Error Uploading Chunk \(chunk.sequenceNumber).")
             throw error
         }
     }
@@ -162,12 +162,12 @@ extension AppData {
     
     func disconnect(from device: Device) {
         Task { @MainActor in
-            logger.info("Disconnecting from \(device.name)")
+            log.info("Disconnecting from \(device.name)")
             updateDeviceConnectionState(of: device, to: .disconnecting)
             
             await manager.disconnect(from: device)
             
-            logger.info("Disconnected from \(device.name)")
+            log.info("Disconnected from \(device.name)")
             updateDeviceConnectionState(of: device, to: .disconnected)
         }
     }
