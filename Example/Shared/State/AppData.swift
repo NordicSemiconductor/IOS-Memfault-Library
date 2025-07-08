@@ -37,11 +37,6 @@ final class AppData: ObservableObject {
         self.scannedDevices = []
         
         _ = bluetooth.turnOnBluetoothRadio()
-        Task { @MainActor in
-            for await newValue in bluetooth.$isScanning.values {
-                isScanning = newValue
-            }
-        }
     }
 }
 
@@ -80,7 +75,13 @@ extension AppData {
             scanningCancellables.removeAll()
             return
         }
-
+        
+        // Listen to Bluetooth @isScanning changes.
+        bluetooth.$isScanning
+            .assign(to: \.isScanning, on: self)
+            .store(in: &scanningCancellables)
+        
+        // Start Scanning
         let filters: [Bluetooth.ScannerFilter] = [.connectable]
         bluetooth.scan(with: filters)
             .map { (scanData: Bluetooth.ScanData) -> Device in
