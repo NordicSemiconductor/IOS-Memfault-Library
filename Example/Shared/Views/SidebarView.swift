@@ -46,9 +46,7 @@ struct SidebarView: View {
                     }
                 }
                 
-                Link(destination: URL(string: "https://devzone.nordicsemi.com/")!) {
-                    Label("Help (Nordic DevZone)", systemImage: "lifepreserver")
-                }
+                DevZoneLinkView()
             } header: {
                 Text("About")
             } footer: {
