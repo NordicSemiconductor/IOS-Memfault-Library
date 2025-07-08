@@ -57,9 +57,9 @@ struct AboutView: View {
             .listRowSeparator(.hidden)
             
             Section("Requirements") {
-                Label("The connected dvice must implement the Memfault Diagnostic Service or MDS.", systemImage: "cpu")
+                Label("The connected device must implement the Memfault Diagnostic Service or MDS.", systemImage: "cpu")
                 
-                Label("An Internet connection is required to upload Data back to the [Memfault Console](https://docs.memfault.com/docs/android/introduction). **If uploading a Chunk fails, the BLE connection with the device will be dropped** to minimise data loss.", systemImage: "wifi.router.fill")
+                Label("An Internet connection is required to upload data to the [Memfault Console](https://docs.memfault.com/docs/android/introduction). **If uploading a Chunk fails, the BLE connection with the device will be dropped** to minimise data loss.", systemImage: "wifi.router.fill")
                     .tint(.nordicBlue)
             }
             .listRowSeparator(.hidden)
