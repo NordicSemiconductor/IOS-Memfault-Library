@@ -27,6 +27,7 @@ final class AppData: ObservableObject {
     private let bluetooth: Bluetooth
     private lazy var manager = MemfaultManager()
     private lazy var log = NordicLog(Self.self)
+    private lazy var scanningCancellables = Set<AnyCancellable>()
     
     // MARK: init
     
@@ -53,6 +54,7 @@ extension AppData {
     func refresh() {
         let connectedDevices = scannedDevices.filter({ $0.state == .connected })
         if bluetooth.isScanning {
+            // Turn off.
             toggleScanner()
         }
         assert(!bluetooth.isScanning)
@@ -74,24 +76,27 @@ extension AppData {
     
     func toggleScanner() {
         guard !bluetooth.isScanning else {
+            // Turn off.
             bluetooth.toggleScanner()
+            scanningCancellables.removeAll()
             return
         }
 
-        Task { @MainActor in
-            var filters = [Bluetooth.ScannerFilter]()
-            filters.append(.connectable)
-            for await scanData in bluetooth.scan(with: filters).values {
+        let filters: [Bluetooth.ScannerFilter] = [.connectable]
+        bluetooth.scan(with: filters)
+            .map { (scanData: Bluetooth.ScanData) -> Device in
                 let state = ConnectedState.from(scanData.peripheral.state)
-                let device = Device(peripheral: scanData.peripheral, state: state, advertisementData: scanData.advertisementData, rssi: scanData.RSSI)
-                
-                if let i = scannedDevices.firstIndex(where: { $0.uuidString == device.uuidString }) {
-                    scannedDevices[i].update(from: scanData.advertisementData)
+                return Device(peripheral: scanData.peripheral, state: state, advertisementData: scanData.advertisementData, rssi: scanData.RSSI)
+            }
+            .receive(on: RunLoop.main)
+            .sink { [weak self] device in
+                if let i = self?.scannedDevices.firstIndex(where: \.uuidString, equals: device.uuidString) {
+                    self?.scannedDevices[i].update(from: device.advertisementData)
                 } else {
-                    scannedDevices.append(device)
+                    self?.scannedDevices.append(device)
                 }
             }
-        }
+            .store(in: &scanningCancellables)
     }
     
     // MARK: Connect
