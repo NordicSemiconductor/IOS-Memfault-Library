@@ -41,9 +41,7 @@ struct SidebarView: View {
                 }
                 
                 if let url = Self.sourceCodeURL {
-                    Link(destination: url) {
-                        Label("Source Code (GitHub)", systemImage: "keyboard")
-                    }
+                    SourceCodeLinkView(url: url)
                 }
                 
                 DevZoneLinkView()
