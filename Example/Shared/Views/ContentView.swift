@@ -20,6 +20,13 @@ struct ContentView: View {
     
     @AppStorage("showAboutScreen") private var showAboutScreen = true
     
+    // MARK: init
+    
+    init() {
+        // Override Status Bar to always be 'white'.
+        UIApplication.shared.statusBarStyle = .lightContent
+    }
+    
     // MARK: View
     
     var body: some View {
