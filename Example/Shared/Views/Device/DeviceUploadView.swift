@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import iOS_Common_Libraries
 
 // MARK: - DeviceUploadView
 
@@ -42,22 +43,13 @@ struct DeviceUploadView: View {
             }
             
             Section("Chunks") {
+                ForEach(device.chunks) { chunk in
+                    ChunkView(device: device, chunk: chunk)
+                }
+                
                 if device.chunks.isEmpty {
-                    VStack(alignment: .center) {
-                        Image(systemName: "eyedropper")
-                            .resizable()
-                            .frame(width: 20, height: 20)
-                            .foregroundColor(.nordicMiddleGrey)
-                        
-                        Text("No Chunks have been received as of this time.")
-                            .font(.subheadline)
-                            .foregroundColor(.nordicMiddleGrey)
-                    }
-                    .centerTextInsideForm()
-                } else {
-                    ForEach(device.chunks) { chunk in
-                        ChunkView(device: device, chunk: chunk)
-                    }
+                    NoContentView(title: "No Chunks Received", systemImage: "eyedropper",
+                                  description: "On a code sample, you may try pressing one of the devkit's buttons, such as Button 4, to generate some chunks.")
                 }
             }
         }
