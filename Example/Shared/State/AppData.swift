@@ -25,17 +25,15 @@ final class AppData: ObservableObject {
     // MARK: Private
     
     private let bluetooth: Bluetooth
-    private let manager: MemfaultManager
-    private let logger: NordicLog
+    private lazy var manager = MemfaultManager()
+    private lazy var logger = NordicLog(Self.self)
     
     // MARK: init
     
     init() {
         self.bluetooth = Bluetooth()
-        self.manager = MemfaultManager()
         self.isScanning = bluetooth.isScanning
         self.scannedDevices = []
-        self.logger = NordicLog(Self.self)
         
         _ = bluetooth.turnOnBluetoothRadio()
         Task { @MainActor in
