@@ -79,19 +79,21 @@ struct ChunkView: View {
                 }
                 
                 Button(action: {
-                    showFullData.toggle()
+                    withAnimation {
+                        showFullData.toggle()
+                    }
                 }) {
-                    Image(systemName: showFullData ? "chevron.up" : "chevron.down")
+                    Image(systemName: "chevron.down")
+                        .rotationEffect(showFullData ? .zero : .degrees(90))
                         .foregroundColor(.nordicBlue)
                 }
                 .padding(.leading, 8)
             }
             
-            if showFullData {
-                Text(chunk.data.hexEncodedString(options: [.upperCase]))
-                    .font(.caption)
-                    .foregroundColor(.nordicMiddleGrey)
-            }
+            Text(chunk.data.hexEncodedString(options: [.upperCase, .twoByteSpacing]))
+                .lineLimit(showFullData ? 10 : 1)
+                .font(.caption)
+                .foregroundColor(.nordicMiddleGrey)
             
             HStack {
                 Text("Received")
