@@ -10,7 +10,7 @@ import OSLog
 import Combine
 import iOS_BLE_Library
 import iOS_Common_Libraries
-import iOS_nRF_Memfault_Library
+@preconcurrency import iOS_nRF_Memfault_Library
 
 // MARK: - AppData
 
