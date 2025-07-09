@@ -119,11 +119,11 @@ extension AppData {
                     case .disconnected:
                         updateDeviceConnectionState(of: device, to: .disconnected)
                     case .notifications(let enabled):
-                        updateNotifyingStatus(of: device, to: enabled)
+                        update(\.notificationsEnabled, to: enabled, of: device)
                     case .streaming(let enabled):
-                        updateStreamingStatus(of: device, to: enabled)
+                        update(\.streamingEnabled, to: enabled, of: device)
                     case .authenticated(let deviceAuth):
-                        update(authData: deviceAuth, of: device)
+                        update(\.auth, to: deviceAuth, of: device)
                     case .updatedChunk(let chunk, status: let status):
                         received(chunk, from: device, with: status)
                     }
@@ -181,37 +181,29 @@ extension AppData {
 @MainActor
 private extension AppData {
     
+    // MARK: updateDeviceConnectionState(of:to:)
+    
     func updateDeviceConnectionState(of device: Device, to newState: ConnectedState) {
         guard let i = scannedDevices.firstIndex(where: \.uuidString, equals: device.uuidString) else { return
         }
         scannedDevices[i].connectionStateChanged(to: newState)
     }
     
+    // MARK: update(:to:of:)
+    
+    func update<T>(_ key: WritableKeyPath<Device, T>, to value: T, of device: Device) {
+        guard let i = scannedDevices.firstIndex(where: \.uuidString, equals: device.uuidString) else {
+            return
+        }
+        scannedDevices[i][keyPath: key] = value
+    }
+    
+    // MARK: received(:from:with:)
+    
     func received(_ chunk: MemfaultChunk, from device: Device, with status: MemfaultChunk.Status) {
         guard let i = scannedDevices.firstIndex(where: \.uuidString, equals: device.uuidString) else {
             return
         }
         scannedDevices[i].update(chunk, to: status)
-    }
-    
-    func updateNotifyingStatus(of device: Device, to isNotifying: Bool) {
-        guard let i = scannedDevices.firstIndex(where: \.uuidString, equals: device.uuidString) else {
-            return
-        }
-        scannedDevices[i].notificationsEnabled = isNotifying
-    }
-    
-    func updateStreamingStatus(of device: Device, to isStreaming: Bool) {
-        guard let i = scannedDevices.firstIndex(where: \.uuidString, equals: device.uuidString) else {
-            return
-        }
-        scannedDevices[i].streamingEnabled = isStreaming
-    }
-    
-    func update(authData: MemfaultDeviceAuth, of device: Device) {
-        guard let i = scannedDevices.firstIndex(where: \.uuidString, equals: device.uuidString) else {
-            return
-        }
-        scannedDevices[i].auth = authData
     }
 }
