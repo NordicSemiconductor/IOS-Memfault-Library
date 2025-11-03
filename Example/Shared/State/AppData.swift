@@ -134,10 +134,10 @@ extension AppData {
                 log.debug("STOPPED Listening to \(device.name) Connection Events.")
             } catch {
                 log.debug("CAUGHT Error Listening to \(device.name) Connection Events.")
-//                if let bluetoothError = error as? BluetoothError, bluetoothError == .pairingRequired {
-//                    encounteredError(bluetoothError)
-//                    return
-//                }
+                if let bluetoothError = error as? ObservabilityManagerError, bluetoothError == .pairingError {
+                    encounteredError(bluetoothError)
+                    return
+                }
                 encounteredError(error)
                 await disconnect(from: device)
             }
