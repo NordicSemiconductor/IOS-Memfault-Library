@@ -10,10 +10,11 @@ import OSLog
 import Combine
 import iOS_BLE_Library
 import iOS_Common_Libraries
-@preconcurrency import iOS_nRF_Memfault_Library
+import iOSOtaLibrary
 
 // MARK: - AppData
 
+@MainActor
 final class AppData: ObservableObject {
     
     // MARK: Public
@@ -24,19 +25,17 @@ final class AppData: ObservableObject {
     
     // MARK: Private
     
-    private let bluetooth: Bluetooth
-    private lazy var manager = MemfaultManager()
+    private let bluetooth: CentralManager
+    private lazy var manager = ObservabilityManager()
     private lazy var log = NordicLog(Self.self)
     private lazy var scanningCancellables = Set<AnyCancellable>()
     
     // MARK: init
     
     init() {
-        self.bluetooth = Bluetooth()
-        self.isScanning = bluetooth.isScanning
+        self.bluetooth = CentralManager()
+        self.isScanning = false
         self.scannedDevices = []
-        
-        _ = bluetooth.turnOnBluetoothRadio()
     }
 }
 
@@ -46,20 +45,19 @@ extension AppData {
     
     // MARK: UI
     
-    func refresh() {
+    func refresh() async {
         let connectedDevices = scannedDevices.filter({ $0.state == .connected })
-        if bluetooth.isScanning {
+        if isScanning {
             // Turn off.
-            toggleScanner()
+            await toggleScanner()
         }
-        assert(!bluetooth.isScanning)
+        assert(!isScanning)
         scannedDevices = connectedDevices
-        toggleScanner()
+        await toggleScanner()
     }
     
     // MARK: Error
     
-    @MainActor
     func encounteredError(_ error: Error) {
         let errorEvent = ErrorEvent(error)
         log.error("\(errorEvent.localizedDescription)")
@@ -68,34 +66,39 @@ extension AppData {
     
     // MARK: Scan
     
-    func toggleScanner() {
-        guard !bluetooth.isScanning else {
+    func toggleScanner() async {
+        guard !isScanning else {
             // Turn off.
-            bluetooth.toggleScanner()
+            bluetooth.stopScan()
             scanningCancellables.removeAll()
             return
         }
         
         // Listen to Bluetooth @isScanning changes.
-        bluetooth.$isScanning
+        bluetooth.isScanningChannel
             .assign(to: \.isScanning, on: self)
             .store(in: &scanningCancellables)
         
         // Start Scanning
-        let filters: [Bluetooth.ScannerFilter] = [.connectable]
-        bluetooth.scan(with: filters)
-            .map { (scanData: Bluetooth.ScanData) -> Device in
-                let state = ConnectedState.from(scanData.peripheral.state)
-                return Device(peripheral: scanData.peripheral, state: state, advertisementData: scanData.advertisementData, rssi: scanData.RSSI)
+        bluetooth.scanForPeripherals(withServices: nil)
+            .filter { scanResult in
+                scanResult.name != nil
+            }
+            .map { (scanResult: ScanResult) -> Device in
+                let state = ConnectedState.from(scanResult.peripheral.state)
+                return Device(peripheral: scanResult.peripheral, state: state,
+                              advertisementData: scanResult.advertisementData, rssi: scanResult.rssi)
             }
             .receive(on: RunLoop.main)
-            .sink { [weak self] device in
+            .sink(receiveCompletion: { _ in
+                
+            }, receiveValue: { [weak self] device in
                 if let i = self?.scannedDevices.firstIndex(where: \.uuidString, equals: device.uuidString) {
                     self?.scannedDevices[i].update(from: device.advertisementData)
                 } else {
                     self?.scannedDevices.append(device)
                 }
-            }
+            })
             .store(in: &scanningCancellables)
     }
     
@@ -104,11 +107,11 @@ extension AppData {
     func connect(to device: Device) {
         Task { @MainActor in
             if isScanning {
-                bluetooth.toggleScanner()
+                bluetooth.stopScan()
             }
             
             updateDeviceConnectionState(of: device, to: .connecting)
-            let connectionStream = await manager.connect(to: device)
+            let connectionStream = manager.connectToDevice(device.uuid)
             do {
                 log.debug("STARTED Listening to \(device.name) Connection Events.")
                 for try await newEvent in connectionStream {
@@ -131,10 +134,10 @@ extension AppData {
                 log.debug("STOPPED Listening to \(device.name) Connection Events.")
             } catch {
                 log.debug("CAUGHT Error Listening to \(device.name) Connection Events.")
-                if let bluetoothError = error as? BluetoothError, bluetoothError == .pairingRequired {
-                    encounteredError(bluetoothError)
-                    return
-                }
+//                if let bluetoothError = error as? BluetoothError, bluetoothError == .pairingRequired {
+//                    encounteredError(bluetoothError)
+//                    return
+//                }
                 encounteredError(error)
                 disconnect(from: device)
             }
@@ -143,17 +146,16 @@ extension AppData {
     
     // MARK: Upload
     
-    @MainActor
-    func upload(_ chunk: MemfaultChunk, from device: Device) async throws {
+    func upload(_ chunk: ObservabilityChunk, from device: Device) async throws {
         guard let i = scannedDevices.firstIndex(where: { $0.uuidString == device.uuidString }),
               let j = scannedDevices[i].chunks.firstIndex(where: { $0.sequenceNumber == chunk.sequenceNumber && $0.data == chunk.data }),
               let chunkAuth = device.auth else {
-            throw BluetoothError.cantRetrievePeripheral
+            throw ObservabilityManagerError.peripheralNotFound
         }
         
         scannedDevices[i].chunks[j].status = .uploading
         do {
-            try await manager.upload(chunk, with: chunkAuth)
+//            try await manager.upload(chunk, with: chunkAuth)
             scannedDevices[i].chunks[j].status = .success
             log.debug("Successfully Sent Chunk \(chunk.sequenceNumber).")
         } catch {
@@ -166,15 +168,11 @@ extension AppData {
     // MARK: Disconnect
     
     func disconnect(from device: Device) {
-        Task { @MainActor in
-            log.info("Disconnecting from \(device.name)")
-            updateDeviceConnectionState(of: device, to: .disconnecting)
-            
-            await manager.disconnect(from: device)
-            
-            log.info("Disconnected from \(device.name)")
-            updateDeviceConnectionState(of: device, to: .disconnected)
-        }
+        log.info("Disconnecting from \(device.name)")
+        updateDeviceConnectionState(of: device, to: .disconnecting)
+        
+        manager.disconnect(from: device.uuid)
+        updateDeviceConnectionState(of: device, to: .disconnected)
     }
 }
 
@@ -200,7 +198,7 @@ private extension AppData {
     
     // MARK: received(:from:with:)
     
-    func received(_ chunk: MemfaultChunk, from device: Device, with status: MemfaultChunk.Status) {
+    func received(_ chunk: ObservabilityChunk, from device: Device, with status: ObservabilityChunk.Status) {
         guard let i = scannedDevices.firstIndex(where: \.uuidString, equals: device.uuidString) else {
             return
         }

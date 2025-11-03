@@ -8,15 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		AA10062628B795860020820D /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA10062528B795860020820D /* AboutView.swift */; };
-		AA16171A28B8C8F600581766 /* iOS-nRF-Memfault-Library in Frameworks */ = {isa = PBXBuildFile; productRef = AA16171928B8C8F600581766 /* iOS-nRF-Memfault-Library */; };
 		AA22791428BF638D0009319A /* DeviceStatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA22791328BF638D0009319A /* DeviceStatsView.swift */; };
 		AA22DDCA289B4162003366FA /* DeviceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA22DDC9289B4162003366FA /* DeviceView.swift */; };
 		AA2ADBA228ABE32B00BF03D3 /* DeviceUploadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2ADBA128ABE32B00BF03D3 /* DeviceUploadView.swift */; };
 		AA38E93828B631C200CB082D /* DeviceConnectionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA38E93728B631C200CB082D /* DeviceConnectionButton.swift */; };
 		AA38E93C28B643D600CB082D /* ReceivingNewChunksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA38E93B28B643D600CB082D /* ReceivingNewChunksView.swift */; };
 		AA38E93F28B6444900CB082D /* DeviceStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA38E93E28B6444900CB082D /* DeviceStatusView.swift */; };
+		AA6401A12EB8D49800691F4E /* iOSOtaLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = AA6401A02EB8D49800691F4E /* iOSOtaLibrary */; };
 		AA8324CF2E1BE10A00D00F39 /* SidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA8324CE2E1BE10A00D00F39 /* SidebarView.swift */; };
-		AAEB284528B4DC38005BCA2E /* iOS-BLE-Library in Frameworks */ = {isa = PBXBuildFile; productRef = AAEB284428B4DC38005BCA2E /* iOS-BLE-Library */; };
 		AAFB2FE7289A8C48008207FE /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFB2FE6289A8C48008207FE /* Device.swift */; };
 		AAFB2FEA289A8C95008207FE /* NordicLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFB2FE9289A8C95008207FE /* NordicLog.swift */; };
 		AAFB2FF6289AB7EB008207FE /* ScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFB2FF5289AB7EB008207FE /* ScannerView.swift */; };
@@ -29,7 +28,6 @@
 
 /* Begin PBXFileReference section */
 		AA10062528B795860020820D /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
-		AA14D64428B8C53D0093C626 /* iOS-nRF-Memfault-Library */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = "iOS-nRF-Memfault-Library"; sourceTree = "<group>"; };
 		AA22791328BF638D0009319A /* DeviceStatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceStatsView.swift; sourceTree = "<group>"; };
 		AA22791928BF83D40009319A /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		AA22DDC9289B4162003366FA /* DeviceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceView.swift; sourceTree = "<group>"; };
@@ -55,8 +53,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AAEB284528B4DC38005BCA2E /* iOS-BLE-Library in Frameworks */,
-				AA16171A28B8C8F600581766 /* iOS-nRF-Memfault-Library in Frameworks */,
+				AA6401A12EB8D49800691F4E /* iOSOtaLibrary in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -96,7 +93,6 @@
 			isa = PBXGroup;
 			children = (
 				AA22791928BF83D40009319A /* README.md */,
-				AA14D64428B8C53D0093C626 /* iOS-nRF-Memfault-Library */,
 				AA3C2E9D28B3CB550075CB55 /* nRF-Memfault--iOS--Info.plist */,
 				AAFBF8452899554600A6655C /* Example */,
 				AAFBF8292899482B00A6655C /* Products */,
@@ -179,8 +175,7 @@
 			);
 			name = "nRF Memfault (iOS)";
 			packageProductDependencies = (
-				AAEB284428B4DC38005BCA2E /* iOS-BLE-Library */,
-				AA16171928B8C8F600581766 /* iOS-nRF-Memfault-Library */,
+				AA6401A02EB8D49800691F4E /* iOSOtaLibrary */,
 			);
 			productName = "nRF Memfault (iOS)";
 			productReference = AAFBF8282899482B00A6655C /* nRF Memfault.app */;
@@ -211,7 +206,7 @@
 			);
 			mainGroup = AAFBF81B2899482900A6655C;
 			packageReferences = (
-				AAEB284328B4DC38005BCA2E /* XCRemoteSwiftPackageReference "IOS-BLE-Library" */,
+				AA64019F2EB8D47200691F4E /* XCRemoteSwiftPackageReference "IOS-nRF-Connect-Device-Manager" */,
 			);
 			productRefGroup = AAFBF8292899482B00A6655C /* Products */;
 			projectDirPath = "";
@@ -485,25 +480,21 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		AAEB284328B4DC38005BCA2E /* XCRemoteSwiftPackageReference "IOS-BLE-Library" */ = {
+		AA64019F2EB8D47200691F4E /* XCRemoteSwiftPackageReference "IOS-nRF-Connect-Device-Manager" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/NordicPlayground/IOS-BLE-Library";
+			repositoryURL = "https://github.com/NordicSemiconductor/IOS-nRF-Connect-Device-Manager";
 			requirement = {
-				kind = revision;
-				revision = 2778b4400e079d2472306bd3d3ac5460e7277272;
+				branch = main;
+				kind = branch;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		AA16171928B8C8F600581766 /* iOS-nRF-Memfault-Library */ = {
+		AA6401A02EB8D49800691F4E /* iOSOtaLibrary */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = "iOS-nRF-Memfault-Library";
-		};
-		AAEB284428B4DC38005BCA2E /* iOS-BLE-Library */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = AAEB284328B4DC38005BCA2E /* XCRemoteSwiftPackageReference "IOS-BLE-Library" */;
-			productName = "iOS-BLE-Library";
+			package = AA64019F2EB8D47200691F4E /* XCRemoteSwiftPackageReference "IOS-nRF-Connect-Device-Manager" */;
+			productName = iOSOtaLibrary;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

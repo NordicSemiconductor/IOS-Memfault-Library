@@ -51,7 +51,9 @@ struct ScannerView: View {
         
         Button(appData.isScanning ? "Stop Scanning" : "Start Scanning",
                systemImage: appData.isScanning ? "stop.fill" : "play.fill") {
-            appData.toggleScanner()
+            Task {
+                await appData.toggleScanner()
+            }
         }
         .setAccent(.universalAccentColor)
         .centered()

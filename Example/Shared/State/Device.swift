@@ -8,31 +8,32 @@
 import Foundation
 import CoreBluetooth
 import iOS_BLE_Library
-import iOS_nRF_Memfault_Library
+import iOSOtaLibrary
 
 // MARK: - Device
 
-struct Device: Identifiable, BluetoothDevice {
+struct Device: Identifiable {
     
     // MARK: Computed Properties
     
-    var id: String { uuidString }
+    var id: UUID { uuid }
     
     var isConnectable: Bool { state != .notConnectable }
     
     // MARK: Properties
     
+    let uuid: UUID
     let uuidString: String
     let rssi: RSSI
     let advertisementData: AdvertisementData
     
-    var auth: MemfaultDeviceAuth?
+    var auth: ObservabilityAuth?
     var uptimeStartTimestamp: Date?
     
     private(set) var name: String
     var state: ConnectedState
     var services: [CBService]
-    var chunks: [MemfaultChunk]
+    var chunks: [ObservabilityChunk]
     var notificationsEnabled: Bool
     var streamingEnabled: Bool
     
@@ -41,6 +42,7 @@ struct Device: Identifiable, BluetoothDevice {
     init(name: String, uuid: UUID, rssi: RSSI, advertisementData: AdvertisementData,
          state: ConnectedState? = nil) {
         self.name = advertisementData.localName ?? name
+        self.uuid = uuid
         self.uuidString = uuid.uuidString
         self.rssi = rssi
         self.advertisementData = advertisementData
@@ -51,11 +53,11 @@ struct Device: Identifiable, BluetoothDevice {
         self.streamingEnabled = false
     }
     
-    init(peripheral: CBPeripheral, state: ConnectedState, advertisementData: [String: Any], rssi: NSNumber) {
-        let advertisementData = AdvertisementData(advertisementData)
+    init(peripheral: CBPeripheral, state: ConnectedState, advertisementData: AdvertisementData, rssi: RSSI) {
         self.name = advertisementData.localName ?? (peripheral.name ?? "N/A")
+        self.uuid = peripheral.identifier
         self.uuidString = peripheral.identifier.uuidString
-        self.rssi = RSSI(integerLiteral: rssi.intValue)
+        self.rssi = rssi
         self.advertisementData = advertisementData
         self.state = (advertisementData.isConnectable ?? false) ? state : .notConnectable
         self.services = []
@@ -87,7 +89,7 @@ struct Device: Identifiable, BluetoothDevice {
         }
     }
     
-    mutating func update(_ chunk: MemfaultChunk, to status: MemfaultChunk.Status) {
+    mutating func update(_ chunk: ObservabilityChunk, to status: ObservabilityChunk.Status) {
         guard let i = chunks.firstIndex(where: {
             $0.sequenceNumber == chunk.sequenceNumber && $0.data == chunk.data
         }) else {

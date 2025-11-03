@@ -56,12 +56,14 @@ struct SidebarView: View {
         .toolbar {
             ToolbarItem(placement: .automatic) {
                 Button("Refresh", systemImage: "arrow.counterclockwise") {
-                    appData.refresh()
+                    Task(name: "toolbarRefresh") {
+                        await appData.refresh()
+                    }
                 }
             }
         }
         .refreshable {
-            appData.refresh()
+            await appData.refresh()
         }
     }
 }

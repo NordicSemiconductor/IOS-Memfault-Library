@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import iOS_nRF_Memfault_Library
+import iOSOtaLibrary
 
 // MARK: - ChunkView
 
@@ -33,13 +33,13 @@ struct ChunkView: View {
     // MARK: Private
     
     private let device: Device
-    private let chunk: MemfaultChunk
+    private let chunk: ObservabilityChunk
     
     @State private var showFullData = false
     
     // MARK: Init
     
-    init(device: Device, chunk: MemfaultChunk) {
+    init(device: Device, chunk: ObservabilityChunk) {
         self.device = device
         self.chunk = chunk
     }
@@ -57,9 +57,9 @@ struct ChunkView: View {
                 Spacer()
                 
                 switch chunk.status {
-                case .ready, .errorUploading:
+                case .receivedAndPendingUpload, .errorUploading:
                     Button(action: {
-                        tryToUpload()
+                        retryToUpload()
                     }) {
                         if chunk.status == .errorUploading {
                             Text("Unable to Upload")
@@ -119,10 +119,9 @@ struct ChunkView: View {
     
     // MARK: API
     
-    func tryToUpload() {
+    func retryToUpload() {
         guard chunk.status != .success else { return }
-        
-        Task {
+        Task(name: #function) {
             do {
                 try await appData.upload(chunk, from: device)
             } catch {
