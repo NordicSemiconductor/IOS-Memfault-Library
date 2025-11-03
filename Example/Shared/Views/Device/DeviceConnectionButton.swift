@@ -41,7 +41,9 @@ struct DeviceConnectionButton: View {
             .foregroundColor(.nordicBlue)
         case .connected:
             Button("Disconnect", systemImage: "cable.connector.slash") {
-                appData.disconnect(from: device)
+                Task {
+                    await appData.disconnect(from: device)
+                }
             }
             .foregroundColor(.nordicRed)
         case .connecting:
@@ -50,7 +52,9 @@ struct DeviceConnectionButton: View {
                 .padding(.trailing)
             
             Button(device.state.description) {
-                appData.disconnect(from: device)
+                Task {
+                    await appData.disconnect(from: device)
+                }
             }
             .font(.callout)
             .foregroundColor(.nordicBlue)

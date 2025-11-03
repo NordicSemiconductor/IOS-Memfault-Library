@@ -139,7 +139,7 @@ extension AppData {
 //                    return
 //                }
                 encounteredError(error)
-                disconnect(from: device)
+                await disconnect(from: device)
             }
         }
     }
@@ -167,11 +167,11 @@ extension AppData {
     
     // MARK: Disconnect
     
-    func disconnect(from device: Device) {
+    func disconnect(from device: Device) async {
         log.info("Disconnecting from \(device.name)")
         updateDeviceConnectionState(of: device, to: .disconnecting)
         
-        manager.disconnect(from: device.uuid)
+        await manager.disconnect(from: device.uuid)
         updateDeviceConnectionState(of: device, to: .disconnected)
     }
 }
