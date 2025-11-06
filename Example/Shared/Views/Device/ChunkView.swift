@@ -57,11 +57,11 @@ struct ChunkView: View {
                 Spacer()
                 
                 switch chunk.status {
-                case .receivedAndPendingUpload, .errorUploading:
+                case .pendingUpload, .uploadError:
                     Button(action: {
                         retryToUpload()
                     }) {
-                        if chunk.status == .errorUploading {
+                        if chunk.status == .uploadError {
                             Text("Unable to Upload")
                                 .font(.caption)
                                 .foregroundColor(.nordicRed)

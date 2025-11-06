@@ -127,14 +127,16 @@ extension AppData {
                         update(\.streamingEnabled, to: enabled, of: device)
                     case .authenticated(let deviceAuth):
                         update(\.auth, to: deviceAuth, of: device)
-                    case .updatedChunk(let chunk, status: let status):
-                        received(chunk, from: device, with: status)
+                    case .updatedChunk(let chunk):
+                        received(chunk, from: device)
+                    case .unableToUpload:
+                        break
                     }
                 }
                 log.debug("STOPPED Listening to \(device.name) Connection Events.")
             } catch {
                 log.debug("CAUGHT Error Listening to \(device.name) Connection Events.")
-                if let bluetoothError = error as? ObservabilityManagerError, bluetoothError == .pairingError {
+                if let bluetoothError = error as? ObservabilityError, bluetoothError == .pairingError {
                     encounteredError(bluetoothError)
                     return
                 }
@@ -148,18 +150,15 @@ extension AppData {
     
     func upload(_ chunk: ObservabilityChunk, from device: Device) async throws {
         guard let i = scannedDevices.firstIndex(where: { $0.uuidString == device.uuidString }),
-              let j = scannedDevices[i].chunks.firstIndex(where: { $0.sequenceNumber == chunk.sequenceNumber && $0.data == chunk.data }),
-              let chunkAuth = device.auth else {
-            throw ObservabilityManagerError.peripheralNotFound
+              let j = scannedDevices[i].chunks.firstIndex(where: { $0.sequenceNumber == chunk.sequenceNumber && $0.data == chunk.data }) else {
+            throw ObservabilityError.peripheralNotFound
         }
         
         scannedDevices[i].chunks[j].status = .uploading
         do {
-//            try await manager.upload(chunk, with: chunkAuth)
-            scannedDevices[i].chunks[j].status = .success
-            log.debug("Successfully Sent Chunk \(chunk.sequenceNumber).")
+            try manager.continuePendingUploads(for: device.id)
         } catch {
-            scannedDevices[i].chunks[j].status = .errorUploading
+            scannedDevices[i].chunks[j].status = .uploadError
             log.error("Error Uploading Chunk \(chunk.sequenceNumber).")
             throw error
         }
@@ -198,10 +197,10 @@ private extension AppData {
     
     // MARK: received(:from:with:)
     
-    func received(_ chunk: ObservabilityChunk, from device: Device, with status: ObservabilityChunk.Status) {
+    func received(_ chunk: ObservabilityChunk, from device: Device) {
         guard let i = scannedDevices.firstIndex(where: \.uuidString, equals: device.uuidString) else {
             return
         }
-        scannedDevices[i].update(chunk, to: status)
+        scannedDevices[i].update(chunk)
     }
 }

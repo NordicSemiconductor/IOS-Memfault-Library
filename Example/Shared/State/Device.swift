@@ -89,14 +89,14 @@ struct Device: Identifiable {
         }
     }
     
-    mutating func update(_ chunk: ObservabilityChunk, to status: ObservabilityChunk.Status) {
+    mutating func update(_ chunk: ObservabilityChunk) {
         guard let i = chunks.firstIndex(where: {
             $0.sequenceNumber == chunk.sequenceNumber && $0.data == chunk.data
         }) else {
             chunks.insert(chunk, at: 0)
             return
         }
-        chunks[i].status = status
+        chunks[i] = chunk
     }
 }
 
