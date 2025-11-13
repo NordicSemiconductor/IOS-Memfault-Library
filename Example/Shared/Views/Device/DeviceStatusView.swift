@@ -44,8 +44,8 @@ struct DeviceStatusView: View {
             .foregroundColor(device.notificationsEnabled ? .nordicPower : disabledColor)
             .padding(.horizontal, 4)
         
-        Label(device.streamingEnabled ? "Data Streaming Enabled" : "Data Streaming Disabled", systemImage: "antenna.radiowaves.left.and.right")
-            .foregroundColor(device.streamingEnabled ? .nordicPower : disabledColor)
+        Label(device.online ? "Data Streaming Enabled" : "Data Streaming Disabled", systemImage: "antenna.radiowaves.left.and.right")
+            .foregroundColor(device.online ? .nordicPower : disabledColor)
             .padding(.horizontal, 4)
         
         DeviceConnectionButton(device)

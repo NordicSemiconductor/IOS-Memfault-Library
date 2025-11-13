@@ -38,7 +38,7 @@ struct DeviceUploadView: View {
                 DeviceStatusView(device)
             }
             
-            if device.streamingEnabled && device.notificationsEnabled {
+            if device.online && device.notificationsEnabled {
                 ReceivingNewChunksView()
             }
             

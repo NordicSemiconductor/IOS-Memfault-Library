@@ -35,7 +35,7 @@ struct Device: Identifiable {
     var services: [CBService]
     var chunks: [ObservabilityChunk]
     var notificationsEnabled: Bool
-    var streamingEnabled: Bool
+    var online: Bool
     
     // MARK: init
     
@@ -50,7 +50,7 @@ struct Device: Identifiable {
         self.services = []
         self.chunks = []
         self.notificationsEnabled = false
-        self.streamingEnabled = false
+        self.online = false
     }
     
     init(peripheral: CBPeripheral, state: ConnectedState, advertisementData: AdvertisementData, rssi: RSSI) {
@@ -63,7 +63,7 @@ struct Device: Identifiable {
         self.services = []
         self.chunks = []
         self.notificationsEnabled = false
-        self.streamingEnabled = false
+        self.online = false
     }
     
     // MARK: API
@@ -113,7 +113,7 @@ extension Device: Equatable {
             && lhs.state == rhs.state
             && lhs.chunks == rhs.chunks
             && lhs.notificationsEnabled == rhs.notificationsEnabled
-            && lhs.streamingEnabled == rhs.streamingEnabled
+            && lhs.online == rhs.online
     }
 }
 
@@ -126,7 +126,7 @@ extension Device: Hashable {
         hasher.combine(state)
         hasher.combine(chunks)
         hasher.combine(notificationsEnabled)
-        hasher.combine(streamingEnabled)
+        hasher.combine(online)
     }
 }
 

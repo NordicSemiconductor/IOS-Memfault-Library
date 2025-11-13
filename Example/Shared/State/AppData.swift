@@ -124,7 +124,7 @@ extension AppData {
                     case .notifications(let enabled):
                         update(\.notificationsEnabled, to: enabled, of: device)
                     case .online(let enabled):
-                        update(\.streamingEnabled, to: enabled, of: device)
+                        update(\.online, to: enabled, of: device)
                     case .authenticated(let deviceAuth):
                         update(\.auth, to: deviceAuth, of: device)
                     case .updatedChunk(let chunk):
@@ -200,5 +200,7 @@ private extension AppData {
             return
         }
         scannedDevices[i].update(chunk)
+        guard chunk.status == .success else { return }
+        update(\.online, to: true, of: device)
     }
 }
