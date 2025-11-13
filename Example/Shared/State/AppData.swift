@@ -123,14 +123,12 @@ extension AppData {
                         updateDeviceConnectionState(of: device, to: .disconnected)
                     case .notifications(let enabled):
                         update(\.notificationsEnabled, to: enabled, of: device)
-                    case .streaming(let enabled):
+                    case .online(let enabled):
                         update(\.streamingEnabled, to: enabled, of: device)
                     case .authenticated(let deviceAuth):
                         update(\.auth, to: deviceAuth, of: device)
                     case .updatedChunk(let chunk):
                         received(chunk, from: device)
-                    case .unableToUpload:
-                        break
                     }
                 }
                 log.debug("STOPPED Listening to \(device.name) Connection Events.")
