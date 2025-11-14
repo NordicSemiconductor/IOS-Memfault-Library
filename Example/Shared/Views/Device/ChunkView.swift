@@ -14,7 +14,14 @@ struct ChunkView: View {
     
     // MARK: Static
     
-    static let timestampFormatter: RelativeDateTimeFormatter = {
+    static let timeFormatter: DateFormatter = {
+        let timeFormatter = DateFormatter()
+        timeFormatter.dateStyle = .none
+        timeFormatter.timeStyle = .medium
+        return timeFormatter
+    }()
+    
+    static let relativeTimestampFormatter: RelativeDateTimeFormatter = {
         let relativeFormatter = RelativeDateTimeFormatter()
         relativeFormatter.dateTimeStyle = .named
         return relativeFormatter
@@ -96,10 +103,10 @@ struct ChunkView: View {
                 .foregroundColor(.nordicMiddleGrey)
             
             HStack {
-                Text("Received")
+                Text("Received at ").bold() + Text(ChunkView.timeFormatter.string(for: chunk.timestamp) ?? "N/A")
                 
                 TimelineView(.periodic(from: .now, by: 15.0)) { context in
-                    Text(ChunkView.timestampFormatter.string(for: chunk.timestamp) ?? "Unable to parse Timestamp.")
+                    Text("(\(ChunkView.relativeTimestampFormatter.string(for: chunk.timestamp) ?? "N/A"))")
                         .foregroundColor(.nordicMiddleGrey)
                 }
                 

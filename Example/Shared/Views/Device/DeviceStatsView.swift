@@ -81,7 +81,7 @@ struct DeviceStatsView: View {
                 
                 if device.state == .connected, let elapsedTimestamp = device.uptimeStartTimestamp {
                     TimelineView(.periodic(from: .now, by: 1.0)) { context in
-                        let elapsedString = ChunkView.timestampFormatter.string(for: elapsedTimestamp)?.replacingOccurrences(of: "ago", with: "")
+                        let elapsedString = ChunkView.relativeTimestampFormatter.string(for: elapsedTimestamp)?.replacingOccurrences(of: "ago", with: "")
                         Text(elapsedString ?? "N/A")
                             .foregroundColor(.nordicMiddleGrey)
                     }
