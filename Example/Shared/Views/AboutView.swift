@@ -30,7 +30,6 @@ struct AboutView: View {
                     .cornerRadius(8.0)
                     .centered()
                     .padding(.top)
-                    .iridescence()
                 
                 Text("nRF Memfault")
                     .centered()
