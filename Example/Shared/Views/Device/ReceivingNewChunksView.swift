@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import iOS_Common_Libraries
 
 // MARK: - ReceivingNewChunksView
 
@@ -18,6 +19,7 @@ struct ReceivingNewChunksView: View {
             Spacer()
            
             ProgressView()
+                .fixedCircularProgressView()
             
             Text("Receiving new Chunks...")
                 .padding(.horizontal)

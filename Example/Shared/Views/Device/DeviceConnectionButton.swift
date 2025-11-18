@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import iOS_Common_Libraries
 
 // MARK: - DeviceConnectionButton
 
@@ -48,6 +49,7 @@ struct DeviceConnectionButton: View {
             .foregroundColor(.nordicRed)
         case .connecting:
             ProgressView()
+                .fixedCircularProgressView()
                 .frame(width: 6, height: 6)
                 .padding(.trailing)
             
@@ -60,6 +62,7 @@ struct DeviceConnectionButton: View {
             .foregroundColor(.nordicBlue)
         case .disconnecting:
             ProgressView()
+                .fixedCircularProgressView()
                 .frame(width: 6, height: 6)
                 .padding(.trailing)
             
