@@ -156,7 +156,7 @@ extension AppData {
         do {
             try manager.continuePendingUploads(for: device.id)
         } catch {
-            scannedDevices[i].chunks[j].status = .uploadError
+            scannedDevices[i].chunks[j].status = .pendingUpload
             log.error("Error Uploading Chunk \(chunk.sequenceNumber).")
             throw error
         }

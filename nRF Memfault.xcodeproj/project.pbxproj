@@ -14,7 +14,7 @@
 		AA38E93828B631C200CB082D /* DeviceConnectionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA38E93728B631C200CB082D /* DeviceConnectionButton.swift */; };
 		AA38E93C28B643D600CB082D /* ReceivingNewChunksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA38E93B28B643D600CB082D /* ReceivingNewChunksView.swift */; };
 		AA38E93F28B6444900CB082D /* DeviceStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA38E93E28B6444900CB082D /* DeviceStatusView.swift */; };
-		AA6401A12EB8D49800691F4E /* iOSOtaLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = AA6401A02EB8D49800691F4E /* iOSOtaLibrary */; };
+		AA6ECD6B2ECB78D00054C0E5 /* iOSOtaLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = AA6ECD6A2ECB78D00054C0E5 /* iOSOtaLibrary */; };
 		AA8324CF2E1BE10A00D00F39 /* SidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA8324CE2E1BE10A00D00F39 /* SidebarView.swift */; };
 		AAFB2FE7289A8C48008207FE /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFB2FE6289A8C48008207FE /* Device.swift */; };
 		AAFB2FEA289A8C95008207FE /* NordicLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFB2FE9289A8C95008207FE /* NordicLog.swift */; };
@@ -53,7 +53,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AA6401A12EB8D49800691F4E /* iOSOtaLibrary in Frameworks */,
+				AA6ECD6B2ECB78D00054C0E5 /* iOSOtaLibrary in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -175,7 +175,7 @@
 			);
 			name = "nRF Memfault (iOS)";
 			packageProductDependencies = (
-				AA6401A02EB8D49800691F4E /* iOSOtaLibrary */,
+				AA6ECD6A2ECB78D00054C0E5 /* iOSOtaLibrary */,
 			);
 			productName = "nRF Memfault (iOS)";
 			productReference = AAFBF8282899482B00A6655C /* nRF Memfault.app */;
@@ -206,7 +206,7 @@
 			);
 			mainGroup = AAFBF81B2899482900A6655C;
 			packageReferences = (
-				AA64019F2EB8D47200691F4E /* XCRemoteSwiftPackageReference "IOS-nRF-Connect-Device-Manager" */,
+				AA6ECD692ECB78D00054C0E5 /* XCRemoteSwiftPackageReference "IOS-nRF-Connect-Device-Manager" */,
 			);
 			productRefGroup = AAFBF8292899482B00A6655C /* Products */;
 			projectDirPath = "";
@@ -480,20 +480,20 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		AA64019F2EB8D47200691F4E /* XCRemoteSwiftPackageReference "IOS-nRF-Connect-Device-Manager" */ = {
+		AA6ECD692ECB78D00054C0E5 /* XCRemoteSwiftPackageReference "IOS-nRF-Connect-Device-Manager" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/NordicSemiconductor/IOS-nRF-Connect-Device-Manager";
 			requirement = {
-				branch = main;
-				kind = branch;
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.11.5;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		AA6401A02EB8D49800691F4E /* iOSOtaLibrary */ = {
+		AA6ECD6A2ECB78D00054C0E5 /* iOSOtaLibrary */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = AA64019F2EB8D47200691F4E /* XCRemoteSwiftPackageReference "IOS-nRF-Connect-Device-Manager" */;
+			package = AA6ECD692ECB78D00054C0E5 /* XCRemoteSwiftPackageReference "IOS-nRF-Connect-Device-Manager" */;
 			productName = iOSOtaLibrary;
 		};
 /* End XCSwiftPackageProductDependency section */
