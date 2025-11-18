@@ -11,22 +11,15 @@ import SwiftUI
 
 struct DeviceStatsView: View {
     
-    // MARK: Private
-    
-    private let device: Device
-    
-    // MARK: Init
-    
-    init(_ device: Device) {
-        self.device = device
-    }
+    // MARK: elapsedTimeFormatter
     
     static let elapsedTimeFormatter: RelativeDateTimeFormatter = {
         let relativeFormatter = RelativeDateTimeFormatter()
         relativeFormatter.dateTimeStyle = .numeric
-        
         return relativeFormatter
     }()
+    
+    // MARK: byteCountFormatter
     
     static let byteCountFormatter: ByteCountFormatter = {
         let byteCountFormatter = ByteCountFormatter()
@@ -35,12 +28,22 @@ struct DeviceStatsView: View {
         return byteCountFormatter
     }()
     
+    // MARK: Private
+    
+    private let device: Device
+    
     private var isRunningOniPad: Bool {
         UIDevice.current.userInterfaceIdiom == .pad
     }
     
     private var deviceIsConnected: Bool {
         device.state == .connected
+    }
+    
+    // MARK: init
+    
+    init(_ device: Device) {
+        self.device = device
     }
     
     // MARK: View
