@@ -33,18 +33,12 @@ struct ScannerView: View {
         }
         
         if appData.isScanning {
-            VStack {
-                HStack {
-                    ProgressView()
-                        .fixedCircularProgressView()
-                    
-                    Text("Scanning...")
-                        .padding(.horizontal)
-                }
-                .padding(.top, 12)
+            HStack {
+                ProgressView()
+                    .fixedCircularProgressView()
                 
-                IndeterminateProgressView()
-                    .accentColor(.universalAccentColor)
+                Text("Scanning...")
+                    .padding(.horizontal)
             }
             .centered()
         }
