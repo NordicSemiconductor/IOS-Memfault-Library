@@ -93,7 +93,8 @@ struct Device: Identifiable {
         guard let i = chunks.firstIndex(where: {
             $0.sequenceNumber == chunk.sequenceNumber && $0.data == chunk.data
         }) else {
-            chunks.insert(chunk, at: 0)
+            chunks.append(chunk)
+            chunks.sort(by: <)
             return
         }
         chunks[i] = chunk
