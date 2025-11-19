@@ -32,7 +32,7 @@ struct AboutView: View {
                     .padding(.top)
                 
                 VStack(spacing: 8.0) {
-                    Text("nRF Memfault")
+                    Text("nRF Memfault [DEPRECATED]")
                         .font(.title)
                         .bold()
                     
