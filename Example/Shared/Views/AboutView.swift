@@ -31,26 +31,29 @@ struct AboutView: View {
                     .centered()
                     .padding(.top)
                 
-                Text("nRF Memfault")
-                    .centered()
-                    .font(.title)
-                    .bold()
-                
-                Text("Version \(Constant.appVersion(forBundleWithClass: AppData.self))")
-                    .centered()
-                    .foregroundStyle(.secondary)
-                    .font(.caption)
-                
-                Text(Constant.copyright)
-                    .centered()
-                    .foregroundStyle(.secondary)
-                    .font(.caption)
-                    .padding(.top, -8.0)
+                VStack(spacing: 8.0) {
+                    Text("nRF Memfault")
+                        .font(.title)
+                        .bold()
+                    
+                    Text("Version \(Constant.appVersion(forBundleWithClass: AppData.self))")
+                        .foregroundStyle(.secondary)
+                        .font(.caption)
+                    
+                    Text(Constant.copyright)
+                        .foregroundStyle(.secondary)
+                        .font(.caption)
+                }
+                .centered()
             }
             .listRowSeparator(.hidden)
             
             Section("Description") {
-                Text("An iOS Example App + Library that can connect to a Bluetooth LE device with the Memfault Diagnostic Service, receive Chunks of Data, and upload them to [Memfault](https://memfault.com/).")
+                Label("nRF Memfault is now deprecated.", systemImage: "exclamationmark.triangle")
+                    .bold()
+                    .centered()
+                
+                Text("The library has been superseeded by the newer [iOSOtaLibrary, which is part of the larger iOSMcuMgrLibrary Package](https://github.com/NordicSemiconductor/IOS-nRF-Connect-Device-Manager). The newer library is a superset of the previous one, so all functionalities remain, plus Over-The-Air capabilities, as well as on-device store of chunks that have been received, but not sent due to Network unavailability.")
                     .tint(.nordicBlue)
             }
             .listRowSeparator(.hidden)
@@ -58,10 +61,9 @@ struct AboutView: View {
             Section("Requirements") {
                 Label("The connected device must implement the Memfault Diagnostic Service or MDS.", systemImage: "cpu")
                 
-                Label("An Internet connection is required to upload data to the [Memfault Console](https://docs.memfault.com/docs/android/introduction). **If uploading a Chunk fails, the BLE connection with the device will be dropped** to minimise data loss.", systemImage: "wifi.router.fill")
+                Label("An Internet connection is required to upload data to the [Memfault Console](https://docs.memfault.com/docs/android/introduction). If the network is unavailable, received chunks will be stored locally until connectivity is restored.", systemImage: "wifi.router.fill")
                     .tint(.nordicBlue)
             }
-            .listRowSeparator(.hidden)
         }
         .listStyle(.insetGrouped)
         .navigationTitle("About App")
