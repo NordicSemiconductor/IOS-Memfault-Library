@@ -30,7 +30,7 @@ struct DeviceUploadView: View {
     
     var body: some View {
         List {
-            Section("Stats") {
+            Section {
                 DeviceStatsView(device)
             }
             
@@ -48,7 +48,7 @@ struct DeviceUploadView: View {
                 }
                 
                 if device.chunks.isEmpty {
-                    NoContentView(title: "No Chunks Received", systemImage: "eyedropper",
+                    NoContentView(title: "No Chunks Received", systemImage: "tray",
                                   description: "On a code sample, you may try pressing one of the devkit's buttons, such as Button 4, to generate some chunks.")
                 }
             }
