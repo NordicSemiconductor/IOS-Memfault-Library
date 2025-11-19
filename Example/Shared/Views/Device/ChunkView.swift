@@ -41,6 +41,8 @@ struct ChunkView: View {
     
     private let device: Device
     private let chunk: ObservabilityChunk
+    private let byteCountString: String
+    private let hexString: String
     
     @State private var showFullData = false
     
@@ -49,84 +51,78 @@ struct ChunkView: View {
     init(device: Device, chunk: ObservabilityChunk) {
         self.device = device
         self.chunk = chunk
+        self.byteCountString = Self.byteCountFormatter.string(fromByteCount: Int64(chunk.data.count))
+        self.hexString = chunk.data.hexEncodedString(options: [.upperCase, .twoByteSpacing])
     }
     
-    // MARK: View
+    // MARK: view
     
     var body: some View {
-        VStack(spacing: 8) {
-            HStack {
-                Text("#\(chunk.sequenceNumber)")
-                
-                Text(Self.byteCountFormatter.string(fromByteCount: Int64(chunk.data.count)))
-                    .foregroundColor(.nordicMiddleGrey)
-                
-                Spacer()
-                
-                switch chunk.status {
-                case .pendingUpload, .uploadError:
-                    Button(action: {
-                        retryToUpload()
-                    }) {
-                        if chunk.status == .uploadError {
-                            Text("Unable to Upload")
-                                .font(.caption)
-                                .foregroundColor(.nordicRed)
-                        } else {
-                            Image(systemName: "arrow.up")
-                                .foregroundColor(.nordicBlue)
-                        }
-                    }
-                case .uploading:
-                    ProgressView()
-                        .frame(width: 8, height: 8)
-                case .success:
-                    Image(systemName: "checkmark.circle")
-                        .foregroundColor(.nordicPower)
-                }
-                
-                Button(action: {
-                    withAnimation {
-                        showFullData.toggle()
-                    }
-                }) {
-                    Image(systemName: "chevron.down")
-                        .rotationEffect(showFullData ? .zero : .degrees(90))
-                        .foregroundColor(.nordicBlue)
-                }
-                .padding(.leading, 8)
-            }
-            
-            Text(chunk.data.hexEncodedString(options: [.upperCase, .twoByteSpacing]))
-                .lineLimit(showFullData ? 10 : 1)
+        DisclosureGroup(isExpanded: $showFullData) {
+            Text(hexString)
                 .font(.caption)
+                .monospaced()
                 .foregroundColor(.nordicMiddleGrey)
-            
-            HStack {
-                Text("Received at ").bold() + Text(ChunkView.timeFormatter.string(for: chunk.timestamp) ?? "N/A")
-                
-                TimelineView(.periodic(from: .now, by: 15.0)) { context in
-                    Text("(\(ChunkView.relativeTimestampFormatter.string(for: chunk.timestamp) ?? "N/A"))")
+                .contextMenu {
+                    Button(action: {
+                        UIPasteboard.general.string = chunk.data.hexEncodedString()
+                    }) {
+                        Text("Copy to clipboard")
+                        Image(systemName: "doc.on.doc")
+                    }
+                 }
+        } label: {
+            VStack(spacing: 4.0) {
+                HStack {
+                    Text("#\(chunk.sequenceNumber)")
+
+                    Text(byteCountString)
                         .foregroundColor(.nordicMiddleGrey)
+
+                    Spacer()
+
+                    switch chunk.status {
+                    case .pendingUpload, .uploadError:
+                        Button(action: {
+                            retryUpload()
+                        }) {
+                            if chunk.status == .uploadError {
+                                Text("Unable to Upload")
+                                    .font(.caption)
+                                    .foregroundColor(.nordicRed)
+                            } else {
+                                Image(systemName: "arrow.up")
+                                    .foregroundColor(.nordicBlue)
+                            }
+                        }
+                    case .uploading:
+                        ProgressView()
+                            .frame(width: 8, height: 8)
+                    case .success:
+                        Image(systemName: "checkmark.circle")
+                            .foregroundColor(.nordicPower)
+                    }
                 }
                 
-                Spacer()
+                HStack {
+                    Text("Received at ").bold() + Text(ChunkView.timeFormatter.string(for: chunk.timestamp) ?? "N/A")
+
+                    TimelineView(.periodic(from: .now, by: 15.0)) { context in
+                        Text("(\(ChunkView.relativeTimestampFormatter.string(for: chunk.timestamp) ?? "N/A"))")
+                            .foregroundColor(.nordicMiddleGrey)
+                    }
+
+                    Spacer()
+                }
+                .font(.caption)
             }
-            .font(.caption)
         }
-        .contextMenu {
-            Button(action: {
-                UIPasteboard.general.string = chunk.data.hexEncodedString()
-            }) {
-                Text("Copy to clipboard")
-                Image(systemName: "doc.on.doc")
-            }
-         }
+        .disclosureGroupStyle(.fixedOnTheRight)
     }
     
     // MARK: API
     
-    func retryToUpload() {
+    func retryUpload() {
         guard chunk.status != .success else { return }
         Task(name: #function) {
             do {
